@@ -1,7 +1,6 @@
 ----------- Disclaimer -----------
-
 This same posting can be seen on GitHub:
-
+https://github.com/fmv1992/data_analysis_and_interpretation_specialization/blob/master/02_data_analysis_tools/assignment_01.txt
 ----------- Post -----------
 
 For this assignment I used the Mars Crater Study. The population is made of n=381214 craters.
