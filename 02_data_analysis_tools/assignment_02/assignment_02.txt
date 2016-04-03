@@ -30,9 +30,9 @@ Your assessment will be based on the evidence you provide that you have complete
 ---------------------------------   Preamble   --------------------------------
 ----------- Disclaimer -----------
 This same posting can be seen on GitHub:
-
+https://github.com/fmv1992/data_analysis_and_interpretation_specialization/blob/master/02_data_analysis_tools/assignment_02/assignment_02.txt
 It is easier to read if you read there! The only difference is that the code is in a different file in the same github folder.
------------ Post ----------------------------------------------   Post   ----------------------------------
+--------------------------------------   Post   -------------------------------
 Data set: Mars Craters
 
 After glancing at the distribution of craters in Mars I have noticed that they are unevenly distributed. A couple of sample plots from the entire data set gave me the impression that for longitudes around -150 deg and latitudes +50 deg there are less craters. This assignment goes on to check this.
@@ -222,8 +222,3 @@ We can also notice that this region has a low density of craters and this gives 
 02_mars_craters_study.csv
 assignment_02.py
 n=2000_mars_craters.png
-
-
-
-WRONG: density is wrong because latitude and longitude chunks have different areas...
-WRONG: YOUR CROSS TAB IS BETWEEN LAT AND LONG NOT ABOUT DENSITY
