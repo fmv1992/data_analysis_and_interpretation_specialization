@@ -1,0 +1,150 @@
+----------- Disclaimer ----------
+I'm not starting with python neither pandas from scratch. I already have some experience with them. Do not feel discouraged if it looks too different from assignments from people who are starting from the scratch.
+
+This same posting can be seen on GitHub:
+https://github.com/fmv1992/data_analysis_and_interpretation_specialization/blob/master/01_data_management_and_visualization/02_assignment/assignment_02.txt
+It is easier to read if you read there!
+-----------------------------------   Post   ----------------------------------
+Data set: GapMinder
+
+For this assignment I imported the GapMinder dataset and tried some things out with the 'polityscore' variable:
+"2009 Democracy score (Polity). Overall polity score from the Polity IV dataset, calculated by subtracting an autocracy score from a democracy score. The summary
+measure of a country's democratic and free nature. -10 is the lowest value, 10 the highest."
+
+I did so because the data has a range of only 21 possible values so I would not have to group the data myself (that is possible with 'pd.cuts' function then groupby).
+
+-------------------------------   Code Section   ------------------------------
+--------   Software Versions   --------
+matplotlib.__version__ = '1.3.1'
+np.__version__ = '1.8.2'
+pd.__version__ = '0.17.1'
+---------------   Code   --------------
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Apr  3 21:39:04 2016
+
+Author: monteiro
+
+Description:
+
+Assignment 02
+"""
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# reads data set
+df = pd.read_csv('04_gapminder.csv', low_memory=False)
+# makes names uniform to lowercase
+df.country = df.country.apply(str.lower)
+# makes all columns numbers
+for column in df.columns:
+    if column == 'country':
+        continue
+    df[column] = pd.to_numeric(df[column], errors='coerce')
+
+# so i'm grouping by polityscore (2009 Democracy score (Polity))
+subset = df.loc[:, ['incomeperperson', 'armedforcesrate', 'internetuserate',
+               'polityscore']]
+g = subset.groupby('polityscore')
+
+# frequency distribution 01: armed forces rate
+armed_forces_per_country = g.armedforcesrate.mean()
+print('mean armed forces rate per country',armed_forces_per_country)
+armed_forces_per_country.plot.bar()
+plt.ylabel('Simple average of armed forces rate')
+plt.tight_layout()
+plt.savefig('armed_forces_rate.png', dpi=300)
+plt.show()
+plt.close()
+
+# frequency distribution 02: number of countries in each group
+countries_per_polity_score = g.size()/g.size().sum()
+print('number of countries per polity score:\n',countries_per_polity_score,
+'better shown graphically:')
+print('Proportion of countries with polityscores >= 5: {0:1.1%}'.format(
+g.size().loc[5:10].sum()/g.size().sum()))
+countries_per_polity_score.plot.bar()
+plt.savefig('countries_per_polity_score.png', dpi=300)
+plt.show()
+plt.close()
+
+# frequency distribution 03: internet rate in the extremes
+internet_use_low = g['internetuserate'].get_group(-10).sum() / g.size().loc[-10]
+internet_use_high = g['internetuserate'].get_group(10).sum() / g.size().loc[10]
+print('average internet use rate of high polity score countries:',
+      internet_use_high)
+print('averate internet use rate of low polity score countries:',
+      internet_use_low)
+------------   Code Output   ----------
+mean armed forces rate per country polityscore
+-10    1.976266
+-9     4.093189
+-8     3.139237
+-7     3.408092
+-6     1.651696
+-5     0.266122
+-4     0.805146
+-3     1.942329
+-2     2.511915
+-1     0.257651
+ 0     1.787914
+ 1     0.744087
+ 2     2.764936
+ 3     1.018906
+ 4     0.868352
+ 5     0.900625
+ 6     1.135822
+ 7     1.207472
+ 8     0.861164
+ 9     1.069523
+ 10    1.107886
+Name: armedforcesrate, dtype: float64
+
+￼
+number of countries per polity score:
+ polityscore
+-10    0.012422
+-9     0.024845
+-8     0.012422
+-7     0.074534
+-6     0.018634
+-5     0.012422
+-4     0.037267
+-3     0.037267
+-2     0.031056
+-1     0.024845
+ 0     0.037267
+ 1     0.018634
+ 2     0.018634
+ 3     0.012422
+ 4     0.024845
+ 5     0.043478
+ 6     0.062112
+ 7     0.080745
+ 8     0.118012
+ 9     0.093168
+ 10    0.204969
+dtype: float64 better shown graphically:
+Proportion of countries with polityscores >= 5: 60.2%
+
+￼
+average internet use rate of high polity score countries: 64.4460483031
+averate internet use rate of low polity score countries: 61.2952628661
+----------------------   Interpretation Of The Results   ----------------------
+I analyzed three distritbutions and plotted two of them (see files on github posting or run the code). The analyses were:
+
+1) Armed forces rate: One can see from the data or the graph that countries with lower polity scores tend to have a larger proportion of their workforce in the Army. This could be caused because countries with lower democratic ratings and not prone to diplomacy and tend to put emphasis on their military influence.
+
+2) Number of countries in each 'polityscore' group (or 'how is the world doing'?): One can clearly see that the world is mostly democratic nowadays. At least if number of countries (and not their 'weight' in the international scenario) are the metric considered. Countries with polityscore >= 5 corrispond to more than 60% of the number of countries in this dataset.
+
+3) Internet use rate: this time I decided to compare extreme countries: the ones with low polityscore = -10 and the ones with polityscore=10. Both countries 
+
+
+Notice that all the averages are not weighted by country. So USA has the same weight in an averge as do Uruguay (e.g. internetuserate).
+----------------------------------   Files   ----------------------------------
+04_gapminder.csv
+armed_forces_rate.png
+assignment_02.py
+assignment_02.txt
+countries_per_polity_score.png
