@@ -1,37 +1,8 @@
----------------------------   Orginal Instructions   --------------------------
-Instructions
 
-The second assignment deals with the Chi-Square Test of Independence. A Chi-Square Test of Independence compares frequencies of one categorical variable for different values of a second categorical variable. The null hypothesis is that the relative proportions of one variable are independent of the second variable; in other words, the proportions of one variable are the same for different values of the second variable. The alternate hypothesis is that the relative proportions of one variable are associated with the second variable. Note that if your research question only includes quantitative variables, you can categorize those just to get some practice with the tool.
-Review criterialess 
-
-Run a Chi-Square Test of Independence.
-
-You will need to analyze and interpret post hoc paired comparisons in instances where your original statistical test was significant, and you were examining more than two groups (i.e. more than two levels of a categorical, explanatory variable).
-
-Note: although it is possible to run large Chi-Square tables (e.g. 5 x 5, 4 x 6, etc.), the test is really only interpretable when your response variable has only 2 levels (see Graphing decisions flow chart in Bivariate Graphing chapter).
-
-WHAT TO SUBMIT:
-
-Following completion of the steps described above, create a blog entry where you submit syntax used to run a Chi-Square Test (copied and pasted from your program) along with corresponding output and a few sentences of interpretation.
-Instructionsless 
-
-Run a Chi-Square Test of Independence.
-
-You will need to analyze and interpret post hoc paired comparisons in instances where your original statistical test was significant, and you were examining more than two groups (i.e. more than two levels of a categorical, explanatory variable).
-
-Note: although it is possible to run large Chi-Square tables (e.g. 5 x 5, 4 x 6, etc.), the test is really only interpretable when your response variable has only 2 levels (see Graphing decisions flow chart in Bivariate Graphing chapter).
-
-WHAT TO SUBMIT:
-
-Following completion of the steps described above, create a blog entry where you submit syntax used to run a Chi-Square Test (copied and pasted from your program) along with corresponding output and a few sentences of interpretation.
-Review Criterialess 
-
-Your assessment will be based on the evidence you provide that you have completed all of the steps. In all cases, consider that the peer assessing your work is likely not an expert in the field you are analyzing.
----------------------------------   Preamble   --------------------------------
 ----------- Disclaimer -----------
 This same posting can be seen on GitHub:
 https://github.com/fmv1992/data_analysis_and_interpretation_specialization/blob/master/02_data_analysis_tools/assignment_02/assignment_02.txt
-It is easier to read if you read there! The only difference is that the code is in a different file in the same github folder.
+It is easier to read if you read there!
 --------------------------------------   Post   -------------------------------
 Data set: Mars Craters
 
@@ -213,7 +184,7 @@ Null hypothesis: there is no association between Mars' surface location and crat
 
 For all the tests p_observed < p_bonferoni_adjusted except for one. That means that for all these tests the null hypothesis should be rejected and we can affirm that for these pair of groups, under the considered longitudes regions, there is an association between location (latitude) and crater density.
 
-For one test with latitude (-10, 10] the p_value is high (0.736) and for this pair of latitudes there is no association between location and crater density.
+For one test with latitude (-10, 10] the p_value is high (0.736) and for this pair of latitudes there is no association between location and crater density. This is somewhat clear in the image as well.
 
 It is worth noting that for the region of latitude [-90, -70] p_observed is barely below p_bonferoni_adjusted:
 0.005 < 0.006 
