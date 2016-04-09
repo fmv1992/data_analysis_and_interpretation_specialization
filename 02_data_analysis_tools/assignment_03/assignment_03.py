@@ -4,10 +4,9 @@ Created on Thu Apr  7 07:41:45 2016
 
 @author: e061568
 """
-import pandas as pd
-import scipy
-import seaborn
-import matplotlib.pyplot as plt
+import pandas as pd  # version '0.18.0'
+import seaborn  # version '0.7.0'
+import matplotlib.pyplot as plt  # version'1.3.1'
 import itertools
 import scipy.stats
 
