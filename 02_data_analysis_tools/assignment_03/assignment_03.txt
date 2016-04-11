@@ -1,4 +1,8 @@
 -----------------------------------   Post   ----------------------------------
+---------- Disclaimer -----------
+This same posting can be seen on GitHub:
+https://github.com/fmv1992/data_analysis_and_interpretation_specialization/tree/master/02_data_analysis_tools/assignment_03
+It is easier to read if you read there!
 ---------------------------------   Summary   ---------------------------------
 Data set: GapMinder
 

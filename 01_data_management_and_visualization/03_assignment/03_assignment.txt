@@ -1,0 +1,63 @@
+--------------------------   Orginal Instructions   --------------------------
+-
+Instructions
+
+This week, you will be making and implementing decisions about data management for the variables that you have chosen to examine based on the steps reviewed in the videos and supplemental materials. This assignment is important because it offers you the opportunity to practice making sound data management decisions and think about how these decisions will impact your research.
+Review criteria
+
+Your assessment will be based on the evidence you provide that you have completed all of the steps. When relevant, gradients in the scoring will be available to reward clarity (for example, you will get one point for submitting output that is not understandable, but two points if it is understandable). In all cases, consider that the peer assessing your work is likely not an expert in the field you are analyzing. You will be assessed equally on your description of your frequency distributions.
+
+Specific rubric items, and their point values, are as follows:
+
+    Was the program output interpretable (i.e. organized and labeled)? (1 point)
+    Does the program output display three data managed variables as frequency tables? (1 point)
+    Did the summary describe the frequency distributions in terms of the values the variables take, how often they take them, the presence of missing data, etc.? (2 points)
+
+Instructions 
+
+Continue with the program you’ve successfully run.
+
+Decide how you will manage your variables.
+
+STEP 1: Make and implement data management decisions for the variables you selected.
+
+Data management includes such things as coding out missing data, coding in valid data, recoding variables, creating secondary variables and binning or grouping variables. Not everyone does all of these, but some is required.
+
+STEP 2: Run frequency distributions for your chosen variables and select columns, and possibly rows.
+
+Your output should be interpretable (i.e. organized and labeled).
+
+WHAT TO SUBMIT:
+
+Once you have written a successful program that manages your data, create a blog entry where you post your program and the results/output that displays at least 3 of your data managed variables as frequency distributions. Write a few sentences describing these frequency distributions in terms of the values the variables take, how often they take them, the presence of missing data, etc.
+------------------------------------------------------------   CUT ME HERE TO SUBMIT ON GITHUB   -------------------------------------------------------------
+---------------------------------   Preamble   --------------------------------
+-----------------------------------   Post   ----------------------------------
+-------------------------------   Introduction   ------------------------------
+In this assignment I decided to use the NESARC database because this is the one I have not used before. Since the database is huge I decided on three variables and isolated them:
+	- number of persons in the household (NUMPERS)
+	- number of children in the household (chld0 + chld1_4 + chld5_12)
+	- number of years born in the US (S1Q1G)
+	these were renamed to
+	- n_persons
+	- n_children
+	- years_in_us
+
+Notes on the database: the database provided here is for checking and all the columns which were not used were discarded.
+---------------------------------   Summary   ---------------------------------
+-------------------------------   Code Section   ------------------------------
+----------   Code Overview   ----------
+--------   Software Versions   --------
+---------------   Code   --------------
+-----------   Code Output   -----------
+----------------------   Interpretation Of The Results   ----------------------
+Data set: abc
+Research Question: abc
+Null Hypothesis: abc
+--------------------------------   Assignment   -------------------------------
+- readable output
+- three variables as frequency tables and count tables
+---------------------------   Worked Instructions   ---------------------------
+----------------------------------   Files   ----------------------------------
+------------------------------------------------------------   CUT ME HERE TO SUBMIT ON GITHUB   -------------------------------------------------------------
+-----------------------------   Self Assessment   -----------------------------
