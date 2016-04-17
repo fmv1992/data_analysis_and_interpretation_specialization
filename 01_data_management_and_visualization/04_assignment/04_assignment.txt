@@ -1,0 +1,78 @@
+———————————   Preamble   ——————————–
+This same posting can be seen on GitHub:
+https://github.com/fmv1992/data_analysis_and_interpretation_specialization/tree/master/01_data_management_and_visualization/04_assignment
+It is easier to read if you read there!
+-----------------------------------   Post   ----------------------------------
+-------------------------------   Introduction   ------------------------------
+Data set: Gapminder
+
+For this assigment I used two sets of variables for univariate and bivariate analysis.
+For the univariate analysis my variable is 'polityscore': 2009 Democracy score (Polity); Overall polity score from the Polity IV dataset, calculated by subtracting an autocracy score from a democracy score. The summary measure of a country's democratic and free nature. -10 is the lowest value, 10 the highest.
+This variable is categorical as there is no way to measure one country's democratic score accurately.
+
+For the bivariate analysis I used income per person and CO2 emissions. Note that the emissions are not per year but an aggregate in metric tons from 1751 until 2006.
+-------------------------------   Code Section   ------------------------------
+---------------   Code   --------------
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Apr 17 14:00:51 2016
+
+Author: monteiro
+
+"""
+
+import pandas as pd  # version '0.18.0'
+import seaborn  # version '0.7.0'
+import matplotlib.pyplot as plt  # version'1.3.1'
+import numpy as np
+
+# importing and cleaning of the database
+gapminder = pd.read_csv('04_gapminder.csv', index_col='country')
+gapminder.rename(index=lambda x: str(x).lower(), inplace=True)
+gapminder.dropna(inplace=True)
+
+#gapminder = gapminder.applymap(lambda x: np.nan if x == ' ' else x)
+gapminder = gapminder.apply(pd.to_numeric, args=('coerce',))
+
+# univariate analysis of polity score
+plt.figure(0)
+plt.hist(gapminder.polityscore.dropna(), bins=np.arange(-10.5, 11, 0.5),
+         normed=True)
+plt.xticks(range(-10, 11, 1))
+plt.xlabel('Polity Score')
+plt.ylabel('Normalized Frequency')
+plt.tight_layout()
+plt.savefig('univariate_polity_score.png', dpi=500)
+plt.show()
+plt.close(0)
+print('Univariate analysis: polity score:\nMean: \t{0:2.2f}\nMedian: '
+      '\t{1:2.2f}\nMode: \t{2:2.2f}\nStandard Deviation: \t{3:2.2f}'.format(
+            gapminder.polityscore.dropna().mean(),
+            gapminder.polityscore.dropna().median(),
+            gapminder.polityscore.dropna().mode()[0],
+            gapminder.polityscore.dropna().std()
+))
+
+# bivariate analysis of co2emissions and incomeperperson
+plt.figure(1)
+plt.scatter(gapminder.dropna().incomeperperson,
+            gapminder.dropna().co2emissions)
+plt.xlabel('Income per Person')
+plt.ylabel('CO2 emissions')
+plt.tight_layout()
+plt.savefig('bivariate_income_versus_co2emissions.png', dpi=500)
+plt.show()
+plt.close(1)
+-----------   Code Output   -----------
+[FIGURE]
+Univariate analysis: polity score:
+Mean:   3.69
+Median:         6.00
+Mode:   10.00
+Standard Deviation:     6.31
+[FIGURE]
+----------------------   Interpretation Of The Results   ----------------------
+We can see that for the univariate analysis the mean is around 3.7. This indicates that the countries are somewhat democratic (3.7 > 0). From the graph we can see that the distribution is not symmetric nor does it have any defined skewnewss. The distribution is multi modal with modes in -7; 0; 8 and 10. The median is 6 and this indicates again in favor of a 'democratic trend' because the greater the number of countries with a 10 score the higher the median should be (the same behavior for mean as well).
+On the other hand a standard deviation of 6 in a total range of 21 values shows there there is a lot of spread in the data.
+
+For the bivariate analysis we can intuitively see that the more higher income per person the higher are the CO2 emissions. A positive correlation exists between the two variables. However we can see that income per person is far from defining the CO2 emissions: consider for example countries with incomes around 40 000. There are 4 points of CO2 emissions ranging from 3.5e11 to near zero. The second highest point (China) also demonstrates that there are a lot of other variables involved. For its income per person ~ 2 500 there are a lot of other countries with much smaller CO2 emissions.
