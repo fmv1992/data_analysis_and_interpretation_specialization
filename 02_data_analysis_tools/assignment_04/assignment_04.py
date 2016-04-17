@@ -69,7 +69,7 @@ cross_tab_full = cross_tab_full.iloc[:-1, :-1]
 # does the chi squared test
 chi1, p1, dof1, expected1 = scipy.stats.chi2_contingency(cross_tab_exact)
 print('Original group: happiness and doing great in exact sciences:\n\tchi '
-      'squared: {0:2f}\n\tp-value: {1:1.4f}'.format(chi1, p1))
+      'squared: {0:2f}\n\tp-value: {1:1.4f}\n\n'.format(chi1, p1))
 
 # does the chi squared test for polymaths
 chi2, p2, dof2, expected2 = scipy.stats.chi2_contingency(
@@ -77,9 +77,11 @@ chi2, p2, dof2, expected2 = scipy.stats.chi2_contingency(
 print('Moderated group: happiness and doing great in exact sciences and '
       'doing great in human sciences:\n\tchi squared: '
       '{0:2f}\n\tp-value: {1:1.4f}'.format(chi2, p2))
+print(cross_tab_full.loc[:, (slice(None), True)], '\n\n')
 
 chi3, p3, dof3, expected3 = scipy.stats.chi2_contingency(
     cross_tab_full.loc[:, (slice(None), False)])
 print('Moderated group: happiness and doing great in exact sciences and '
       'NOT doing great in human sciences:\n\tchi squared: '
       '{0:2f}\n\tp-value: {1:1.4f}'.format(chi3, p3))
+print(cross_tab_full.loc[:, (slice(None), False)])
