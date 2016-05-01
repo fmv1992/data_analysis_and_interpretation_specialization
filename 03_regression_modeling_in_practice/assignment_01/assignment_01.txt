@@ -1,0 +1,35 @@
+/* vim: set textwidth=0 : */
+
+Instructions
+It’s important to know how the data set you’re working with was generated, and how to describe your data management steps to others. This week’s assignment is to submit a blog entry in which you describe 1) your sample, 2) the data collection procedure, and 3) a measures section describing your variables and how you managed them to address your own research question. All of the data sets provided for the course have web sites that describe the study sample and the procedures used to collect the data. A simple Google search for the name of the study/data set will give you the link to the study web sites.
+
+WHAT TO SUBMIT:
+
+Following completion of the steps described above, create a blog entry and submit the URL. In your blog entry, you should describe your sample, the data collection procedure, and how you managed your data.
+Review criterialess 
+
+Your assessment will be based on the evidence you provide that you have completed all of the steps. When relevant, gradients in the scoring will be available to reward clarity (for example, you will get one point for submitting text that indicates an attempt to address the the criteria for each step, but two points for being clear). In all cases, consider that the peer assessing your work is likely not an expert in the field you are analyzing. You will be assessed equally for each step of the assignment.
+---------------------------------   Preamble   --------------------------------
+This same posting can be seen on GitHub:
+__LINK__
+It is easier to read if you read there!
+-----------------------------------   Post   ----------------------------------
+-------------------------------   Introduction   ------------------------------
+Data set:
+
+Research Question:
+
+Null hypothesis:
+
+---------------------------------   Summary   ---------------------------------
+-------------   Methods   -------------
+.A. how was your research conducted?
+.B. what is the level of your analysis? (individual, group, aggregate)
+.C. characterize your sample: n of individuals; location and time
+
+-------------------------------   Code Section   ------------------------------
+----------   Code Overview   ----------
+--------   Software Versions   --------
+---------------   Code   --------------
+-----------   Code Output   -----------
+----------------------   Interpretation Of The Results   ----------------------
