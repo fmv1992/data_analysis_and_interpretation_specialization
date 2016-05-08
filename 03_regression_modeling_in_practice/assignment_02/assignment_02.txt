@@ -2,7 +2,7 @@
 
 ---------------------------------   Preamble   --------------------------------
 This same posting can be seen on GitHub:
-__LINK__
+https://github.com/fmv1992/data_analysis_and_interpretation_specialization/blob/master/03_regression_modeling_in_practice/assignment_02/assignment_02.txt
 It is easier to read if you read there!
 -----------------------------------   Post   ----------------------------------
 -------------------------------   Introduction   ------------------------------
