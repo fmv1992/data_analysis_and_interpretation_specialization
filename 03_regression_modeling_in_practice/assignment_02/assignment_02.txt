@@ -1,0 +1,133 @@
+/* vim: set textwidth=0 : */
+
+---------------------------------   Preamble   --------------------------------
+This same posting can be seen on GitHub:
+__LINK__
+It is easier to read if you read there!
+-----------------------------------   Post   ----------------------------------
+-------------------------------   Introduction   ------------------------------
+Data set: World bank (http://data.worldbank.org/indicator/all)
+
+Sample: 214 countries
+(see all of them in the code output below)
+
+Time: data from 2012 is considered here
+
+Variables:
+  Explanatory variable: Quality of port infrastructure, WEF (1=extremely underdeveloped to 7=well developed and efficient by international standards); quantitative 
+  Response variable: Liner shipping connectivity index (maximum value in 2004 = 100); quantitative
+
+Quality of port infrastructure: The Quality of Port Infrastructure measures business executives' perception of their country's port facilities. Data are from the World Economic Forum's Executive Opinion Survey, conducted for 30 years in collaboration with 150 partner institutes. The 2009 round included more than 13,000 respondents from 133 countries. Sampling follows a dual stratification based on company size and the sector of activity. Data are collected online or through in-person interviews. Responses are aggregated using sector-weighted averaging. The data for the latest year are combined with the data for the previous year to create a two-year moving average. Scores range from 1 (port infrastructure considered extremely underdeveloped) to 7 (port infrastructure considered efficient by international standards). Respondents in landlocked countries were asked how accessible are port facilities (1 = extremely inaccessible; 7 = extremely accessible).
+Variable code: IQ.WEF.PORT.XQ
+
+Liner shipping connectivity index: The Liner Shipping Connectivity Index captures how well countries are connected to global shipping networks. It is computed by the United Nations Conference on Trade and Development (UNCTAD) based on five components of the maritime transport sector: number of ships, their container-carrying capacity, maximum vessel size, number of services, and number of companies that deploy container ships in a country's ports. For each component a country's value is divided by the maximum value of each component in 2004, the five components are averaged for each country, and the average is divided by the maximum average for 2004 and multiplied by 100. The index generates a value of 100 for the country with the highest average index in 2004. . The underlying data come from Containerisation International Online.
+Variable code: IS.SHP.GCNW.XQ
+
+Research Question: (please read the description of the variables)
+  Does the quality of port infrastructure correlates with the liner shipping connectivity?
+
+Null hypothesis:
+
+---------------------------------   Summary   ---------------------------------
+-------------   Methods   -------------
+.A. how was your research conducted?
+.B. what is the level of your analysis? (individual, group, aggregate)
+.C. characterize your sample: n of individuals; location and time
+
+-------------------------------   Code Section   ------------------------------
+---------------   Code   --------------
+# -*- coding: utf-8 -*-
+'''
+Created on Tue May  3 07:24:49 2016
+
+@author: monteiro
+'''
+import pandas as pd  # version '0.17.0'
+import seaborn  # version '0.7.0'
+import matplotlib.pyplot as plt  # version'1.3.1'
+import scipy  # version 0.16.1
+import numpy as np  # version 1.10.4
+import pandas_utilities  # for cosmetic adjustments and data standardization
+import statsmodels.formula.api as smf  # version 0.6.1
+
+db = pd.read_csv('world_bank_infrastructure_indicators_from_1960_to_2015.csv',
+                 engine='python', skiprows = 4)
+pandas_utilities.clean_dataframe(db)
+
+# data cleaning
+db.drop(['unnamed_60'], axis=1, inplace=True)
+
+# data selection
+db = db[['country_code', 'indicator_code', '2012']]
+# IQ.WEF.PORT.XQ	Quality of port infrastructure,
+#   WEF (1=extremely underdeveloped to 7=well developed and efficient by
+#   international standards)
+# IS.SHP.GCNW.XQ	Liner shipping connectivity index
+#   (maximum value in 2004 = 100)
+db = db[(db.indicator_code == 'IS.SHP.GCNW.XQ') |
+        (db.indicator_code == 'IQ.WEF.PORT.XQ')]
+db.indicator_code = db.indicator_code.map({'IS.SHP.GCNW.XQ':
+                                           'liner_connectivity',
+                                           'IQ.WEF.PORT.XQ':'port_infra'})
+db['port_infra'] = db.where(db.indicator_code == 'port_infra').loc[:, '2012']
+db['liner_connectivity'] = db.where(db.indicator_code ==
+                                    'liner_connectivity').loc[:, '2012']
+
+db.drop(['indicator_code','2012'], axis=1, inplace=True)
+
+db = pd.pivot_table(db, index=['country_code'])
+db.dropna(inplace=True)
+
+# centering the explanatory variable
+print('Old mean: {0:2.2f}'.format(db.port_infra.mean()))
+db.port_infra = db.port_infra - db.port_infra.mean()
+print('New mean: {0:2.2f}'.format(db.port_infra.mean()))
+
+# plotting
+plt.figure(1)
+scat1 = seaborn.regplot(x='port_infra', y='liner_connectivity',
+                        scatter=True, data=db)
+plt.xlabel('Quality of port infrastructure')
+plt.ylabel('Liner shipping connectivity index')
+plt.title ('Scatterplot for the Association Between Quality of port '
+           'infrastructure and Liner shipping connectivity index')
+plt.tight_layout()
+plt.savefig('scatterplot_for_the_association_between_quality_of_port_'
+            'infrastructure_and_liner_shipping_connectivity_index', dpi=500)
+
+# producing summary statistics
+print ('OLS regression model for the association between quality of port '
+       'infrastructure and liner shipping connectivity index')
+reg1 = smf.ols('port_infra ~ liner_connectivity', data=db).fit()
+print (reg1.summary())
+pearson_r = scipy.stats.pearsonr(db.port_infra, db.liner_connectivity)
+linregress = scipy.stats.linregress(db.port_infra, db.liner_connectivity)
+print('Scipy results for Pearson\'s correlation:')
+print('p-value: {0:2.2f}\nr-coefficient:{1:2.2f}'.format(pearson_r[1],
+                                                         pearson_r[0]))
+print('Regression results:')
+print('Slope: {0:2.2f}\nIntercept: {1:2.2f}'.format(linregress.slope,
+                                                    linregress.intercept))
+print('Formula: liner_connectivity = port_infra * {0:2.2f} + {1:2.2f}'.format(
+linregress.slope, linregress.intercept))
+#plt.scatter(db.liner_connectivity, db.port_infra)
+----------------------   Interpretation Of The Results   ----------------------
+The coding for this lesson generated a lot of data. In the end it is better to use Scipy's scipy.stats.linregress function as it evaluates a lot of useful data at once. All the following are returned:
+	- slope
+	- intercept
+	- r-value
+	- p-value
+	- standard error
+The ols function in the statsmodels does not return all of these values except for the p value.
+
+The mean of the explanatory variable was centered.
+
+A significant value of p < 0.05 was found which means that the two variables do correlate with each other linearly. Their correlation is moderate and positive as indicated by the r-value of 0.46.
+
+The regression coefficients are:
+Slope: 12.68
+Intercept: 31.18
+Which yields the formula:
+liner_connectivity = port_infra * 12.68 + 31.18
+
+The lesson discussed the confounding and multicolinerity etc but did not include those in the assignment.
