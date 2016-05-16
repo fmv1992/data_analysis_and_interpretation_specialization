@@ -2,7 +2,7 @@
 
 ---------------------------------   Preamble   --------------------------------
 This same posting can be seen on GitHub:
-__LINK__
+https://github.com/fmv1992/data_analysis_and_interpretation_specialization/blob/master/03_regression_modeling_in_practice/assignment_03/assignment_03.txt
 It is easier to read if you read there!
 -----------------------------------   Post   ----------------------------------
 -------------------------------   Introduction   ------------------------------
@@ -33,10 +33,7 @@ Response variable:
 	1) Agriculture value added per worker (constant 2005 US$) / Agricultural land (sq. km)
 
 Notice that all the variables are relative to land area (with a slight variation for fertilizer consumption which is per hectare of arable land) except for the response variable which divides it by worker.
----------------------------------   Summary   ---------------------------------
--------------   Methods   -------------
 -------------------------------   Code Section   ------------------------------
-----------   Code Overview   ----------
 ---------------   Code   --------------
 # -*- coding: utf-8 -*-
 """
@@ -129,11 +126,15 @@ plt.xlabel('Observation Number')
 plt.savefig('std_res.png', dpi=500)
 plt.close()
 
-# leverage plot# leverage plot
+# leverage plot
 plt.figure(3)
 fig3 = sm.graphics.influence_plot(reg1)
 plt.savefig('leverage_plot.png', dpi=500)
 plt.close()
+
+# checking for confounding between arable land and agricultural land
+conf = scipy.stats.pearsonr(ct.loc['arable_land'], ct.loc['agricultural_land'])
+print('R value between arable land and agricultural land: {0:2.3f}\np-value: {1:2.3f}'.format(conf[0], conf[1]))
 -----------   Code Output   -----------
 Mean before centering for agr_land: 40.76
 Mean after centering for agr_land: -2.26e-14
@@ -149,7 +150,7 @@ Dep. Variable:     agr_value_added_per_worker_per_land   R-squared:             
 Model:                                             OLS   Adj. R-squared:                  0.153
 Method:                                  Least Squares   F-statistic:                     9.420
 Date:                                 Mon, 16 May 2016   Prob (F-statistic):           1.06e-05
-Time:                                         00:12:43   Log-Likelihood:                -1035.0
+Time:                                         00:46:27   Log-Likelihood:                -1035.0
 No. Observations:                                  141   AIC:                             2078.
 Df Residuals:                                      137   BIC:                             2090.
 Df Model:                                            3                                         
@@ -170,8 +171,8 @@ Kurtosis:                      93.021   Cond. No.                         612.
 
 Warnings:
 [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
-<matplotlib.figure.Figure at 0x7fd17c5bd6a0>
-<matplotlib.figure.Figure at 0x7fd171c28780>
+R value between arable land and agricultural land: -0.084
+p-value: 0.323
 ----------------------   Interpretation Of The Results   ----------------------
 This is a long assignment. Let's divide it in parts:
 

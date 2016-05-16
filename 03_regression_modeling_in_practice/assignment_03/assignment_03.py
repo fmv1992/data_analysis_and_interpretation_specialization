@@ -89,7 +89,7 @@ plt.xlabel('Observation Number')
 plt.savefig('std_res.png', dpi=500)
 plt.close()
 
-# leverage plot# leverage plot
+# leverage plot
 plt.figure(3)
 fig3 = sm.graphics.influence_plot(reg1)
 plt.savefig('leverage_plot.png', dpi=500)
