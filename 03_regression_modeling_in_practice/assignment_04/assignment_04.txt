@@ -1,0 +1,273 @@
+/* vim: set textwidth=0 : */
+
+---------------------------------   Preamble   --------------------------------
+This same posting can be seen on GitHub:
+__LINK__
+It is easier to read if you read there!
+-----------------------------------   Post   ----------------------------------
+-------------------------------   Introduction   ------------------------------
+Data set: World bank, data from years between 2006 and 2016.
+
+Research Question: Evaluation of various explanatory variables (see below) on the presence or absence of law mandating non discrimination based on gender in hiring.
+
+Explanatory variables:
+GDP per capita (constant 2005 US$)
+    code: NY.GDP.PCAP.KD
+Women who believe a husband is justified in beating his wife (any of five reasons) (%)
+    code: SG.VAW.REAS.ZS
+Women who were first married by age 18 (% of women ages 20-24)
+    code: SP.M18.2024.FE.ZS
+Firms with female top manager (% of firms)
+    code: IC.FRM.FEMM.ZS
+Female legislators, senior officials and managers (% of total)
+    code: SG.GEN.LSOM.ZS
+Female headed households (% of households with a female head)
+    code: SP.HOU.FEMA.ZS
+Proportion of seats held by women in national parliaments (%)
+    code: SG.GEN.PARL.ZS
+
+Response variable:
+Law mandates nondiscrimination based on gender in hiring (1=yes; 0=no)
+    code: SG.LAW.NODC.HR
+
+Details:
+	
+Law mandates nondiscrimination based on gender in hiring (1=yes	 0=no):
+	Law mandates nondiscrimination based on gender in hiring is whether the law
+	specifically prevents or penalizes gender-based discrimination in the
+	hiring process; the law may prohibit discrimination in employment on the
+	basis of gender but be silent about whether job applicants are protected
+	from discrimination. Hiring refers to the process of employing a person for
+	wages and making a selection by presenting a candidate with a job offer.
+	Job advertisements, selection criteria and recruitment, although equally
+	important, are not considered “hiring” for purposes of this question.
+	World Bank: Women, Business and the Law.
+
+Details for the explanatory variables can be found on file 'world_bank_codebook_definitions_and_sources.csv'.
+
+Null hypothesis: The explanatory variables do not have any statistical correlation with the response variable.
+
+-------------------------------   Code Section   ------------------------------
+---------------   Code   --------------
+# -*- coding: utf-8 -*-
+"""
+Created on Tue May 17 07:49:53 2016
+
+Author: monteiro
+
+Description: Logistic regression model
+
+Explanatory variables:
+GDP per capita (constant 2005 US$)
+    NY.GDP.PCAP.KD
+Women who believe a husband is justified in beating his wife (any of five reasons) (%)
+    SG.VAW.REAS.ZS
+Women who were first married by age 18 (% of women ages 20-24)
+    SP.M18.2024.FE.ZS
+Firms with female top manager (% of firms)
+    IC.FRM.FEMM.ZS
+Female legislators, senior officials and managers (% of total)
+    SG.GEN.LSOM.ZS
+Female headed households (% of households with a female head)
+    SP.HOU.FEMA.ZS
+Proportion of seats held by women in national parliaments (%)
+    SG.GEN.PARL.ZS
+
+Response variable:
+Law mandates nondiscrimination based on gender in hiring (1=yes; 0=no)
+    SG.LAW.NODC.HR
+"""
+import pandas as pd  # version '0.17.0'
+import seaborn  # version '0.7.0'
+import matplotlib.pyplot as plt  # version'1.3.1'
+import scipy  # version 0.16.1
+import numpy as np  # version 1.10.4
+import pandas_utilities  # for cosmetic adjustments and data standardization
+import statsmodels.api as sm
+import statsmodels.formula.api as smf  # version 0.6.1
+
+# data reading, selecting and managing
+db = pd.read_csv('world_bank_selected_non_discriminating_based_on_gender_indicators.csv')
+
+db['latest_indicator'] = pd.to_numeric(db['latest_indicator'], errors='coerce')
+
+print('Data management:')
+# data renaming to meaningful names
+d = {'SG.GEN.PARL.ZS': 'propr_seats_woman_parliaments',
+     'NY.GDP.PCAP.KD': 'gdp_per_capita',
+     'SG.VAW.REAS.ZS': 'believes_beating_by_hus_justified',
+     'SP.M18.2024.FE.ZS': 'fem_first_married_by_18',
+     'IC.FRM.FEMM.ZS': 'firms_with_fem_top_manag',
+     'SG.GEN.LSOM.ZS': 'fem_leg_senoff_manag',
+     'SG.LAW.NODC.HR': 'law_mandates_non_discr', # variable is not available...
+     'SP.HOU.FEMA.ZS': 'fem_headed_households'}
+     
+db['series_code'] = db['series_code'].map(d)
+
+# rearranging data and excluding bogus variables
+ct = db.pivot(index='series_code', columns='country_code', values='latest_indicator')
+print('A lot of good variables should be excluded because there is not'
+      'enough data on them:\n(number of missing countries for each variable)')
+print(ct.isnull().sum(axis=1).sort_values(ascending=False))
+
+print('\nDropping bogus variables (too few entries):')
+# drops empty variables in the data set until there are at least 60 countries
+for empty_variable in ct.isnull().sum(axis=1).sort_values(ascending=False).index:
+    if len(ct.dropna(axis=1).columns) > 60:
+        ct.dropna(axis=1, inplace=True)
+        break
+    else:
+        print('Dropping variable {0}'.format(empty_variable))
+        ct.drop(empty_variable, inplace=True)
+
+print('\nCentering the quantitative variables:')
+# centering the quantitative variables
+for quantitative in ['fem_leg_senoff_manag', 'firms_with_fem_top_manag',
+                     'gdp_per_capita', 'propr_seats_woman_parliaments']:
+    print('Centering variable {0}: mean before: {1:2.2f}'.format(quantitative, ct.loc[quantitative, :].mean(axis=0)))
+    ct.loc[quantitative, :] -= ct.loc[quantitative, :].mean(axis=0)
+    print('After centering: {0:2.2e}'.format(ct.loc[quantitative, :].mean(axis=0)))
+    
+# logistic regression:
+print('\nThe variables left in the model (see code above for the rationale) are:\n{0} where \'law_mandates_non_discr\' is the response variable.'.format('\n'.join(list(ct.index))))
+
+# first with only one variable: fem_leg_senoff_manag
+lreg1 = smf.logit(formula='law_mandates_non_discr ~ fem_leg_senoff_manag', data=ct.T).fit()
+print('Investigating confounding: one variable')
+print (lreg1.summary())
+
+# first with only two variables: fem_leg_senoff_manag
+lreg1 = smf.logit(formula='law_mandates_non_discr ~ fem_leg_senoff_manag + firms_with_fem_top_manag', data=ct.T).fit()
+print('Investigating confounding: two variables')
+print (lreg1.summary())
+
+# full with all variables
+lreg1 = smf.logit(formula='law_mandates_non_discr ~ fem_leg_senoff_manag + firms_with_fem_top_manag + gdp_per_capita', data=ct.T).fit()
+print('Full report (all variables)')
+print (lreg1.summary())
+# odds ratios
+print ("Odds Ratios")
+print (np.exp(lreg1.params))
+
+-----------   Code Output   -----------
+
+Data management:
+A lot of good variables should be excluded because there is notenough data on them:
+(number of missing countries for each variable)
+series_code
+fem_headed_households                188
+believes_beating_by_hus_justified    181
+fem_first_married_by_18              132
+fem_leg_senoff_manag                 130
+firms_with_fem_top_manag              95
+law_mandates_non_discr                76
+propr_seats_woman_parliaments         24
+gdp_per_capita                        18
+dtype: int64
+
+Dropping bogus variables (too few entries):
+Dropping variable fem_headed_households
+Dropping variable believes_beating_by_hus_justified
+Dropping variable fem_first_married_by_18
+
+Centering the quantitative variables:
+Centering variable fem_leg_senoff_manag: mean before: 30.97
+After centering: 5.36e-15
+Centering variable firms_with_fem_top_manag: mean before: 18.19
+After centering: -4.83e-15
+Centering variable gdp_per_capita: mean before: 6242.75
+After centering: 1.09e-12
+Centering variable propr_seats_woman_parliaments: mean before: 21.37
+After centering: -3.55e-15
+
+The variables left in the model (see code above for the rationale) are:
+fem_leg_senoff_manag
+firms_with_fem_top_manag
+gdp_per_capita
+law_mandates_non_discr
+propr_seats_woman_parliaments where 'law_mandates_non_discr' is the response variable.
+Optimization terminated successfully.
+         Current function value: 0.671583
+         Iterations 4
+Investigating confounding: one variable
+                             Logit Regression Results                             
+==================================================================================
+Dep. Variable:     law_mandates_non_discr   No. Observations:                   67
+Model:                              Logit   Df Residuals:                       65
+Method:                               MLE   Df Model:                            1
+Date:                    Fri, 20 May 2016   Pseudo R-squ.:                0.003887
+Time:                            08:29:41   Log-Likelihood:                -44.996
+converged:                           True   LL-Null:                       -45.172
+                                            LLR p-value:                    0.5534
+========================================================================================
+                           coef    std err          z      P>|z|      [95.0% Conf. Int.]
+----------------------------------------------------------------------------------------
+Intercept               -0.3953      0.250     -1.582      0.114        -0.885     0.094
+fem_leg_senoff_manag     0.0117      0.020      0.589      0.556        -0.027     0.051
+========================================================================================
+Optimization terminated successfully.
+         Current function value: 0.655659
+         Iterations 5
+Investigating confounding: two variables
+                             Logit Regression Results                             
+==================================================================================
+Dep. Variable:     law_mandates_non_discr   No. Observations:                   67
+Model:                              Logit   Df Residuals:                       64
+Method:                               MLE   Df Model:                            2
+Date:                    Fri, 20 May 2016   Pseudo R-squ.:                 0.02751
+Time:                            08:29:41   Log-Likelihood:                -43.929
+converged:                           True   LL-Null:                       -45.172
+                                            LLR p-value:                    0.2887
+============================================================================================
+                               coef    std err          z      P>|z|      [95.0% Conf. Int.]
+--------------------------------------------------------------------------------------------
+Intercept                   -0.4109      0.255     -1.613      0.107        -0.910     0.088
+fem_leg_senoff_manag         0.0391      0.028      1.373      0.170        -0.017     0.095
+firms_with_fem_top_manag    -0.0594      0.042     -1.409      0.159        -0.142     0.023
+============================================================================================
+Optimization terminated successfully.
+         Current function value: 0.594903
+         Iterations 6
+Full report (all variables)
+                             Logit Regression Results                             
+==================================================================================
+Dep. Variable:     law_mandates_non_discr   No. Observations:                   67
+Model:                              Logit   Df Residuals:                       63
+Method:                               MLE   Df Model:                            3
+Date:                    Fri, 20 May 2016   Pseudo R-squ.:                  0.1176
+Time:                            08:29:41   Log-Likelihood:                -39.858
+converged:                           True   LL-Null:                       -45.172
+                                            LLR p-value:                   0.01393
+============================================================================================
+                               coef    std err          z      P>|z|      [95.0% Conf. Int.]
+--------------------------------------------------------------------------------------------
+Intercept                   -0.3581      0.274     -1.307      0.191        -0.895     0.179
+fem_leg_senoff_manag         0.0063      0.031      0.201      0.841        -0.055     0.067
+firms_with_fem_top_manag    -0.0312      0.045     -0.695      0.487        -0.119     0.057
+gdp_per_capita               0.0002   6.33e-05      2.384      0.017      2.69e-05     0.000
+============================================================================================
+Odds Ratios
+Intercept                   0.698997
+fem_leg_senoff_manag        1.006276
+firms_with_fem_top_manag    0.969294
+gdp_per_capita              1.000151
+dtype: float64
+----------------------   Interpretation Of The Results   ----------------------
+Explanation of the code:
+	First to have access to the database one has to go to the world bank website or download it on github (link provided in the first lines of this post). Second there are auxiliary code not posted here relating to data management (for brevity reasons; the data management is discussed below).
+	The data management for this assignment was a challenge. Three variables were dropped because they were absent in all or most of the countries (fem_headed_households, believes_beating_by_hus_justified, fem_first_married_by_18). I kept a threshold of at least 60 countries (N>=60) to achieve statistical significance.
+	Also a lot of data were missing for most of the years. My decision was to consider that those do not change abruptly in one decade. So I started with year 2016 down to 2006 and chose the 'latest_indicator', that is, choose the values for each variable for each country prioritizing the most recent years. Even after all that I could only gather n=67.
+	
+	Now for the logistic regression itself.
+
+	The remaining variables, namely:
+		Female legislators, senior officials and managers (% of total)
+		Firms with female top manager (% of firms)
+		GDP per capita (constant 2005 US$)
+	 were considered as explanatory variables for the logistic regression. We can be surprised now because no statistical evidence of significance was found for the first two of them (p > alpha = 0.05) but was found for the third which is the only one 'woman agnostic'. Thus we can conclude that there is no correlation between the proportion of 'Female legislators, senior officials and managers' and the presence of 'Law mandates nondiscrimination based on gender in hiring'. Neither there is correlation between the proportion of 'Firms with female top manager' with the presence of 'Law mandates nondiscrimination based on gender in hiring'.
+	 On the other hand there is a statistical significance between the 'GDP per capita' and the response variable (p = 0.02 < 0.05).
+
+	 The odds ratio for the significant variable is 1.000151 and the confidence interval ranges from 2.69e-5 to 1e-4
+
+http://www.ats.ucla.edu/stat/stata/faq/oratio.htm
+http://www.theanalysisfactor.com/why-use-odds-ratios/

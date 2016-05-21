@@ -1,0 +1,24 @@
+/* vim: set textwidth=0 : */
+
+---------------------------------   Preamble   --------------------------------
+This same posting can be seen on GitHub:
+__LINK__
+It is easier to read if you read there!
+-----------------------------------   Post   ----------------------------------
+-------------------------------   Introduction   ------------------------------
+Data set:
+
+Research Question:
+
+Null hypothesis:
+
+---------------------------------   Summary   ---------------------------------
+-------------   Methods   -------------
+.A. how was your research conducted?
+.B. what is the level of your analysis? (individual, group, aggregate)
+.C. characterize your sample: n of individuals; location and time
+
+-------------------------------   Code Section   ------------------------------
+---------------   Code   --------------
+-----------   Code Output   -----------
+----------------------   Interpretation Of The Results   ----------------------
