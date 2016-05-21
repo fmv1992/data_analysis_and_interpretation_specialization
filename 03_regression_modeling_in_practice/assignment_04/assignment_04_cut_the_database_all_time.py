@@ -13,7 +13,7 @@ import numpy as np
 import pandas as pd  # version '0.17.0'
 import pandas_utilities  # for cosmetic adjustments and data standardization
 
-db = pd.read_csv('wdi_data_all_time_utf8_encoded.csv', index_col=0)
+db = pd.read_csv('wdi_data_all_time_utf8_encoded_and_compressed.csv.gz', index_col=0)
 
 pandas_utilities.clean_dataframe(db)
 db.rename(columns={'indicator_code': 'series_code'}, inplace=True)
