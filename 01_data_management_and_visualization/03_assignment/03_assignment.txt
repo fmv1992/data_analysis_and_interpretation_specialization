@@ -1,0 +1,108 @@
+---------------------------------   Preamble   --------------------------------
+This same posting can be seen on GitHub:
+https://github.com/fmv1992/data_analysis_and_interpretation_specialization/tree/master/01_data_management_and_visualization/03_assignment
+It is easier to read if you read there!
+-----------------------------------   Post   ----------------------------------
+-------------------------------   Introduction   ------------------------------
+In this assignment I decided to use the NESARC database because this is the one I have not used before. Since the database is huge I decided on three variables and isolated them:
+	- number of persons in the household (NUMPERS)
+	- number of children in the household (chld0 + chld1_4 + chld5_12)
+	- number of years born in the US (S1Q1G)
+	these were renamed to
+	- n_persons
+	- n_children
+	- years_in_us
+
+Notes on the database: the database provided here is for checking and all the columns which were not used were discarded. Thus the csv file is a subset of the original NESARC data.
+---------------------------------   Summary   ---------------------------------
+Most of americans households do not have children at home (more than 70%).
+
+Most households either live alone or with someone else. Groups of more than 3 people in one home is slightly above 40%.
+
+American immigrants were grouped by time lived in the US. Considering all american population they represent 17% of the whole sample. The groups stedily decrease their participation from ~5% for those with less than 10 years living in the US to less than 1% for those living between 60 and 70 years. A break on this trend happens for the 80-90 years lived in the us group. This group is larger than the previous one and this may allow us to affirm that that is because a former 'big wave' of immigration into the US around 1940.
+-------------------------------   Code Section   ------------------------------
+---------------   Code   --------------
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Apr 10 17:54:35 2016
+
+@author: e061568
+"""
+import pandas as pd  # version '0.18.0'
+import seaborn  # version '0.7.0'
+import matplotlib.pyplot as plt  # version'1.3.1'
+import numpy as np
+
+# reads the input file
+db = pd.read_csv('03_assignment_nesarc_subset.csv',
+                 index_col=0, low_memory=False)
+
+# renames some columns to meaningful names
+db.rename(columns={'numpers':'n_persons',
+                   's1q1g':'years_in_us'}, inplace=True)
+
+# converts years in us to int
+db.years_in_us = pd.to_numeric(db.years_in_us, errors='coerce')
+db['n_children'] = db['chld0'] + db['chld1_4'] + db['chld5_12']
+
+# aggregates years in us into 5 years range since there is a 100 long range
+# of values
+range_of_years = np.arange(0, 101, 10)
+db['years_in_us_grouped'] = pd.cut(db.years_in_us, range_of_years,
+                                   include_lowest=True)
+
+# prints
+for c in ['n_children', 'years_in_us_grouped', 'n_persons']:
+    v_counts = db[c].value_counts(normalize=True, sort=False)
+    print(c, v_counts, sep='\n')
+    v_counts.plot.bar()
+    plt.ylabel('frequency of ' + c)
+    plt.tight_layout()
+    plt.savefig('{0}_plot.png'.format(c), dpi=500)
+    plt.show()
+    plt.close()
+-----------   Code Output   -----------
+n_children
+0     0.700044
+1     0.144780
+2     0.104750
+3     0.037431
+4     0.009770
+5     0.002437
+6     0.000650
+7     0.000116
+12    0.000023
+Name: n_children, dtype: float64
+
+years_in_us_grouped
+[0, 10]      0.054255
+(10, 20]     0.046852
+(20, 30]     0.030121
+(30, 40]     0.020235
+(40, 50]     0.010187
+(50, 60]     0.003945
+(60, 70]     0.001067
+(70, 80]     0.001300
+(80, 90]     0.000371
+(90, 100]    0.005036
+dtype: float64
+
+n_persons
+1     0.300026
+2     0.299840
+3     0.162254
+4     0.136774
+5     0.062284
+6     0.023763
+7     0.008586
+8     0.003806
+9     0.001346
+10    0.000696
+11    0.000255
+12    0.000186
+13    0.000093
+14    0.000023
+15    0.000023
+17    0.000046
+Name: n_persons, dtype: float64
+

@@ -1,0 +1,137 @@
+-----------------------------------   Post   ----------------------------------
+---------- Disclaimer -----------
+This same posting can be seen on GitHub:
+https://github.com/fmv1992/data_analysis_and_interpretation_specialization/blob/master/02_data_analysis_tools/assignment_04/assignment_04.txt
+It is easier to read if you read there!
+Data set: National Longitudinal Study of Adolescent Health (Add Health).
+
+Method: Chi-Square Test.
+
+Research question: My theory is that people who are excelent at math and sciences have trouble getting along at school. I think this is mitigated if they are more of a polymath (that is they have aptitude with other disciplines).
+
+Explanatory Variable: Doing great in Math and Sciences.
+
+Response variable: Student is happy at school.
+
+Moderator Variable: Doing great in Humanities.
+
+Definition of the groups:
+	- (categorical) Student is exceptional in math AND sciences, that is their grade in both disciplines are A
+		value of 1 if True
+		value of 0 if False
+	- (categorical) Student is exceptional in Humanities, that is their grade in both disciplines are A
+		value of 1 if True
+		value of 0 if False
+	- (categorical) Student is happy at school.
+		value of 1 if True (either 'strongly agree' or 'agree')
+		value of 0 if False ('neither agree nor disagree', 'disagree' or 'strongly disagree')
+
+Variables:
+H1ED11 - At the {MOST RECENT GRADING PERIOD/LAST GRADING PERIOD IN THE SPRING}, what was your grade in English or language arts?
+H1ED12 - And what was your grade in mathematics?
+H1ED13 - 3nd what was your grade in history or social studies?
+H1ED14 - And what was your grade in science?
+H1ED22 - (How much do you agree or disagree with the following:) [If SCHOOL YEAR:] You are happy to be at your school. [If SUMMER:] Last year, you were happy to be at your school.
+
+-------------------------------   Code Section   ------------------------------
+----------   Code Overview   ----------
+---------------   Code   --------------
+----------------   CODE 01: SUBSETTING THE ORIGINAL DATABASE   ----------------
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Apr 15 08:17:14 2016
+
+@author: e061568
+"""
+import pandas as pd  # version '0.18.0'
+
+# creates a map from meaningless names to meaningful ones
+col_map = {
+    'H1ED11': 'grade_language_arts',
+    'H1ED13': 'grade_history_social_studies',
+
+    'H1ED12': 'grade_math',
+    'H1ED14': 'grade_science',
+
+    'H1ED22': 'happy_at_school'
+}
+
+# imports the data set and manages it
+db_subset = pd.read_csv('03_national_longitudinal_study_of_adolescent_health_'
+                        'addhealth.csv', usecols=col_map.keys())
+db_subset.index.name = 'id'
+db_subset.rename(columns=col_map, inplace=True)
+
+db_subset.to_csv('03_national_longitudinal_study_of_adolescent_health_'
+                 'addhealth_subset.csv', col_map=col_map.values())
+-----------------   CODE 02: MODERATING THE CHI SQUARED TEST   ----------------
+-----------   Code Output   -----------
+First cross tabulation: performance on exact sciences and happiness at school:
+does_great_exact_sciences  False  True   All
+is_happy_at_school                          
+False                       2113   188  2301
+True                        3622   581  4203
+All                         5735   769  6504
+Percent of happy students who do great in exact sciences and are happy: 75.6%
+Percent of happy students overall: 64.6%
+
+
+Second cross tabulation: performance on exact sciences, human sciences and happiness at school:
+does_great_exact_sciences False       True        All
+does_great_human_sciences False True False True      
+is_happy_at_school                                   
+False                      1964  149    92   96  2301
+True                       3196  426   251  330  4203
+All                        5160  575   343  426  6504
+Percent of happy students who do great in exact sciences and human sciences and are happy: 77.5%
+Percent of happy students who do great in exact sciences but NOT in human sciences and are happy: 73.2%
+Percent of happy students overall: 64.6%
+
+
+Original group: happiness and doing great in exact sciences:
+        chi squared: 45.038915
+        p-value: 0.0000
+
+
+Moderated group: happiness and doing great in exact sciences and doing great in human sciences:
+        chi squared: 1.333220
+        p-value: 0.2482
+does_great_exact_sciences False True 
+does_great_human_sciences  True  True
+is_happy_at_school                   
+False                       149    96
+True                        426   330 
+
+
+Moderated group: happiness and doing great in exact sciences and NOT doing great in human sciences:
+        chi squared: 16.885074
+        p-value: 0.0000
+does_great_exact_sciences False True 
+does_great_human_sciences False False
+is_happy_at_school                   
+False                      1964    92
+True                       3196   251
+----------------------   Interpretation Of The Results   ----------------------
+We can see that the percentage of students that are happy at their schools is:
+64.6%
+For the students performing well at school in exact sciences the percentage is:
+75.6%
+If on top of that they perform well in human sciences the percentage is:
+77.5%
+If they perform well in exact sciences but not in human sciences the percentage is:
+73.2%
+
+We can conclude that there is a correlation between performing well in exact sciences and being happy at school (with p = 0.0000 < 0.05). On top of that my research question is: is performing well in human sciences a moderating variable? That is: does performing well in human sciences changes the strenght and direction of the interaction between performing well on exact sciences and being happy at school?
+
+In this case there is no way of changing the direction of the variable since I only considered being happy at school or not being happy. To give a possible direction another categorical variable (being unhappy for example) would have to exist or some degree of happiness would have to exist.
+
+Therefore we are left with assessing the changing in the strenght of the explanatory variable and the response variable.
+
+In the first moderated group the students perform great in human sciences. Changing their performance in exact sciences does not significantly changes their happiness at school (p = 0.24 > 0.05). 
+
+In the second group the students do not perform great in human sciences. Changing their performance in exact sciences does alter their happiness at school (p = 0.0000 < 0.05).
+
+We reject the hypothesis that for high performing students in human sciences there is a correlation between performing well in exact sciences and being happy at school.
+We accept the hypothesis that for NOT high performing students in human sciences there is a correlation between performing well in exact sciences and being happy at school.
+
+Therefore changing the performance in human sciences from great to not great changed the statistic significance of the high performing students in exact sciences happiness at school. 

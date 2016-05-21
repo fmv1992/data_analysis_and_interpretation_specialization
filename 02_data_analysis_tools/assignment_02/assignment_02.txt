@@ -1,0 +1,197 @@
+
+----------- Disclaimer -----------
+This same posting can be seen on GitHub:
+https://github.com/fmv1992/data_analysis_and_interpretation_specialization/blob/master/02_data_analysis_tools/assignment_02/assignment_02.txt
+It is easier to read if you read there!
+--------------------------------------   Post   -------------------------------
+Data set: Mars Craters
+
+After glancing at the distribution of craters in Mars I have noticed that they are unevenly distributed. A couple of sample plots from the entire data set gave me the impression that for longitudes around -150 deg and latitudes +50 deg there are less craters. This assignment goes on to check this.
+
+Null hypothesis: there is no association between Mars' surface location and crater density.
+
+Alternative hypothesis: there is an association between Mars' surface location and crater density.
+-------------------------------   Code Section   ------------------------------
+----------   Code Overview   ----------
+First the code ilustrates my research question with a plot. A sample of 2000 craters is plotted against latitude and longitude. Notice the 'emptiness' around the (long=-150, lat=50) point.
+
+Then the code proceeds to categorize latitude and longitude into 10 categories each. After that the code sorts the craters' database into those 100 regions.
+
+I will only compare the crater in the region (lat=(50, 70], long=[-180,140]) with other latitudes otherwise the number of comparisons would be too large. The central region of long=(-20,+20] was chosen as the second parameter for longitude.
+
+Summarizing: I noticed the 'emptiness' of region (lat=(50, 70], long=[-180,140]). I chose a latitude where I think the craters are more 'crowded' long=(-20,+20]. Then I iterated over all other latitude regions (from -90 to +90, excluding the selected/fixed region) and performed chi squared tests.
+
+The print results are the following:
+
+Overall chi2 test:
+chi2: 35391.9
+p: 0.000
+
+
+
+
+Parwise test count:0
+Pairwise chi2 test for:
+longitude_cuts  [-180, -140]  (-20, 20]
+latitude_cuts                          
+[-90, -70]               562        873
+(50, 70]                1639       3043.
+chi2: 8.1
+p: 0.005
+
+Parwise test count:1
+Pairwise chi2 test for:
+longitude_cuts  [-180, -140]  (-20, 20]
+latitude_cuts                          
+(-70, -50]              3347       4670
+(50, 70]                1639       3043.
+chi2: 56.1
+p: 0.000
+
+Parwise test count:2
+Pairwise chi2 test for:
+longitude_cuts  [-180, -140]  (-20, 20]
+latitude_cuts                          
+(-50, -30]              8051       8540
+(50, 70]                1639       3043.
+chi2: 268.6
+p: 0.000
+
+Parwise test count:3
+Pairwise chi2 test for:
+longitude_cuts  [-180, -140]  (-20, 20]
+latitude_cuts                          
+(-30, -10]             12822      10985
+(50, 70]                1639       3043.
+chi2: 555.6
+p: 0.000
+
+Parwise test count:4
+Pairwise chi2 test for:
+longitude_cuts  [-180, -140]  (-20, 20]
+latitude_cuts                          
+(-10, 10]               5394       9891
+(50, 70]                1639       3043.
+chi2: 0.1
+p: 0.736
+
+Parwise test count:5
+Pairwise chi2 test for:
+longitude_cuts  [-180, -140]  (-20, 20]
+latitude_cuts                          
+(10, 30]                2727      13005
+(50, 70]                1639       3043.
+chi2: 669.2
+p: 0.000
+
+Parwise test count:6
+Pairwise chi2 test for:
+longitude_cuts  [-180, -140]  (-20, 20]
+latitude_cuts                          
+(30, 50]                 964       6890
+(50, 70]                1639       3043.
+chi2: 920.0
+p: 0.000
+
+Parwise test count:7
+Pairwise chi2 test for:
+longitude_cuts  [-180, -140]  (-20, 20]
+latitude_cuts                          
+(70, 90]                 319        359
+(50, 70]                1639       3043.
+chi2: 36.5
+p: 0.000
+
+Parwise test count:8
+Pairwise chi2 test for:
+longitude_cuts  [-180, -140]  (-20, 20]
+latitude_cuts                          
+All                    35825      58256
+(50, 70]                1639       3043.
+chi2: 17.8
+p: 0.000
+--------   Software Versions   --------
+matplotlib.__version__
+Out[39]: '1.3.1'
+seaborn.__version__
+Out[38]: '0.7.0'
+scipy.__version__
+Out[37]: '0.16.1'
+np.__version__
+Out[36]: '1.8.2'
+pd.__version__
+Out[35]: '0.17.1'
+---------------   Code   --------------
+import pandas as pd
+import numpy as np
+import scipy.stats
+import seaborn
+import matplotlib.pyplot as plt
+
+# loads the data base
+mars = pd.read_csv('02_mars_craters_study.csv', usecols=[0, 2, 3])
+# rename columns to lower case
+mars = mars.rename(columns=dict(zip(mars.columns,
+                                    [x.lower() for x in mars.columns]),
+                   inplace=True))
+# takes a sample to plot and give a hunch on the unvenvess of the distribution
+mars_coords = mars[['latitude_circle_image',
+                    'longitude_circle_image']].sample(n=2000)
+plt.scatter(mars_coords.iloc[:, 1], mars_coords.iloc[:, 0])
+plt.title(r'Mars Craters plot for $\mathbf{N = 2000}$')
+plt.xlabel(mars_coords.columns[1])
+plt.ylabel(mars_coords.columns[0])
+plt.savefig('n=2000_mars_craters.png', dpi=300)
+plt.show()
+plt.close('all')
+del mars_coords
+
+# grouping of the data
+latitude_interval = np.linspace(-90, 90, 10)
+longitude_interval = np.linspace(-180, 180, 10)
+
+mars['latitude_cuts'] = pd.cut(mars.latitude_circle_image, latitude_interval,
+                               include_lowest=True)
+mars['longitude_cuts'] = pd.cut(mars.longitude_circle_image,
+                                longitude_interval, include_lowest=True)
+
+# use pandas built in functionality to create a observed contingency table
+observed_results_table = pd.crosstab(mars.latitude_cuts, mars.longitude_cuts,
+                                     margins=True)
+
+# perform the chi squared test
+chi2, p, dof, ex = scipy.stats.chi2_contingency(observed_results_table)
+print('Overall chi2 test:\nchi2: {0:.1f}\np: {1:0.3f}\n'.format(chi2, p))
+
+# holds  [-180, -140] and (20, 60] longitudes constant
+# holds  (-70, -50] latitude constant
+# iterates over all other latitudes to compare with the 'lower density' point
+col_of_interest = 1
+line_of_interest = 7
+p_bonferoni_adjusted = 0.05/9
+print('Bonferoni Adjusted P: {0:.3f}\n\n'.format(p_bonferoni_adjusted))
+for enum_count, i in enumerate([0, 1, 2, 3, 4, 5, 6, 8, 9]):
+    subset = observed_results_table.iloc[[i, line_of_interest], [0, 4]]
+    chi2, p, dof, ex = scipy.stats.chi2_contingency(subset)
+    print('Parwise test count: {3}\nPairwise chi2 test for:\n{0}.\n'
+          'chi2: {1:.1f}\np: {2:0.3f}\nIs Null Hyphothesis rejected?'
+          ' {4}\n'.format(subset, chi2, p, enum_count,
+                          p < p_bonferoni_adjusted))
+
+
+----------------------   Interpretation Of The Results   ----------------------
+Null hypothesis: there is no association between Mars' surface location and crater density.
+
+Overall we can reject the null hypothesis because p = 0.000 < 0.05. This means that there is an association between Mars' surface location and crater density. We can proceed to ad hoc tests to see which groups are responsible for this.
+
+For all the tests p_observed < p_bonferoni_adjusted except for one. That means that for all these tests the null hypothesis should be rejected and we can affirm that for these pair of groups, under the considered longitudes regions, there is an association between location (latitude) and crater density.
+
+For one test with latitude (-10, 10] the p_value is high (0.736) and for this pair of latitudes there is no association between location and crater density. This is somewhat clear in the image as well.
+
+It is worth noting that for the region of latitude [-90, -70] p_observed is barely below p_bonferoni_adjusted:
+0.005 < 0.006 
+We can also notice that this region has a low density of craters and this gives strenght to the null hypothesis in this case since we are comparing two regions of low crater density.
+----------------------------------   Files   ----------------------------------
+02_mars_craters_study.csv
+assignment_02.py
+n=2000_mars_craters.png
