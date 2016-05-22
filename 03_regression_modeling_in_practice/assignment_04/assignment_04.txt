@@ -256,17 +256,17 @@ Explanation of the code:
 	The data management for this assignment was a challenge. Three variables were dropped because they were absent in all or most of the countries (fem_headed_households, believes_beating_by_hus_justified, fem_first_married_by_18). I kept a threshold of at least 60 countries (N>=60) to achieve statistical significance.
 	Also a lot of data were missing for most of the years. My decision was to consider that those do not change abruptly in one decade. So I started with year 2016 down to 2006 and chose the 'latest_indicator', that is, choose the values for each variable for each country prioritizing the most recent years. Even after all that I could only gather n=67.
 	
-	Now for the logistic regression itself.
+Now for the logistic regression itself:
 
-	The remaining variables, namely:
-		Female legislators, senior officials and managers (% of total)
-		Firms with female top manager (% of firms)
-		GDP per capita (constant 2005 US$)
-	 were considered as explanatory variables for the logistic regression. We can be surprised now because no statistical evidence of significance was found for the first two of them (p > alpha = 0.05) but was found for the third which is the only one 'woman agnostic'. Thus we can conclude that there is no correlation between the proportion of 'Female legislators, senior officials and managers' and the presence of 'Law mandates nondiscrimination based on gender in hiring'. Neither there is correlation between the proportion of 'Firms with female top manager' with the presence of 'Law mandates nondiscrimination based on gender in hiring'.
-	 On the other hand there is a statistical significance between the 'GDP per capita' and the response variable (p = 0.02 < 0.05).
+The remaining variables, namely:
+	Female legislators, senior officials and managers (% of total)
+	Firms with female top manager (% of firms)
+	GDP per capita (constant 2005 US$)
+ were considered as explanatory variables for the logistic regression. We can be surprised now because no statistical evidence of significance was found for the first two of them (p > alpha = 0.05) but was found for the third which is the only one 'woman agnostic'. Thus we can conclude that there is no correlation between the proportion of 'Female legislators, senior officials and managers' and the presence of 'Law mandates nondiscrimination based on gender in hiring'. Neither there is correlation between the proportion of 'Firms with female top manager' with the presence of 'Law mandates nondiscrimination based on gender in hiring'.
+ On the other hand there is a statistical significance between the 'GDP per capita' and the response variable (p = 0.02 < 0.05).
 
-	 The odds ratio for the significant variable is 1.000151 and the confidence interval ranges from 2.69e-5 to 1e-4. An odds ratio greater than one allows one to say that there is association between the two variables.
+ The odds ratio for the significant variable is 1.000151 and the confidence interval ranges from 2.69e-5 to 1e-4. An odds ratio greater than one allows one to say that there is association between the two variables.
 
-	 The value of the pseudo-R-squared is 2% indicating that this model is very bad to predict the response variable. Only 2% of the variability in the response variable is accounted by the variability in the explanatory variables.
+ The value of the pseudo-R-squared is 2% indicating that this model is very bad to predict the response variable. Only 2% of the variability in the response variable is accounted by the variability in the explanatory variables.
 
-	 There is no evidence of confounding when the variables were added one by one. First of all two of them are not significant and neither their coefficient values nor their p-value changed from significant to non-significant (p-value) or form positive to negative (or vice versa) (coefficient/beta). Thus we can conclude that there is no confounding between those 3 variables.
+ There is no evidence of confounding when the variables were added one by one. First of all two of them are not significant and neither their coefficient values nor their p-value changed from significant to non-significant (p-value) or form positive to negative (or vice versa) (coefficient/beta). Thus we can conclude that there is no confounding between those 3 variables.
