@@ -1,4 +1,6 @@
-u"""
+"""
+This work creates all the data needed for the analyzes on the pdf.
+
 From the description:
     Locations of Earthquakes off Fiji
     Description
@@ -19,6 +21,8 @@ From the description:
     [,5] 	stations 	numeric 	Number of stations reporting
 
 """
+# pylama:ignore=C901,W0611,R0914
+# Too complex and import not used
 import os
 import pandas as pd
 import seaborn
@@ -31,6 +35,7 @@ from mpl_toolkits.basemap import Basemap
 
 
 def main():
+    u"""Main function."""
     # Data reading and managing.
     db = pd.read_csv('quakes.csv')
     db.drop('index', axis=1, inplace=True)
@@ -43,7 +48,7 @@ def main():
 
     # Creation of qualitative variables
     def mag_quali(x):
-        u"""Maps a magnitude to a qualitative variable."""
+        u"""Map a magnitude to a qualitative variable."""
         if x <= 4.75:
             return 'l'
         elif x <= 5.25:
@@ -52,7 +57,7 @@ def main():
             return 'h'
 
     def depth_quali(x):
-        u"""Maps a depth to a categorical variable."""
+        u"""Map a depth to a categorical variable."""
         if x <= 1*700e3/3:
             return 'l'
         elif x <= 2*700e3/3:
@@ -79,15 +84,12 @@ def main():
             urcrnrlon=MAXLONG,    # upper-right corner longitude
             urcrnrlat=MAXLAT,     # upper-right corner latitude
             resolution='i',
-            area_thresh=100000.0,
-                        )
+            area_thresh=100000.0)
         themap.drawcoastlines()
         themap.drawcountries()
         themap.fillcontinents(color='gainsboro')
         themap.drawmapboundary(fill_color='steelblue')
         x, y = themap(
-#            db[db[qualitative_variable] == category].long.tolist(),
-#            db[db[qualitative_variable] == category].lat.tolist())
             db.long.tolist(),
             db.lat.tolist())
         x = pd.Series(x, index=list(range(1000)))
@@ -113,8 +115,7 @@ def main():
                         color=color,             # marker colour
                         markersize=4,            # marker size
                         label=str.capitalize(
-                            full_sentence_for_category[category])
-                        )
+                            full_sentence_for_category[category]))
         # Now add the legend with some customizations.
         legend = ax1.legend(loc='best', frameon=True, fancybox=True,
                             shadow=True, markerscale=1.7)
@@ -139,11 +140,11 @@ def main():
         ax1.set_xlim([MINLONG, MAXLONG])
         ax1.set_ylim([MINLAT, MAXLAT])
         if qualitative_variable == 'mag_quali':
-            plt.title('Latitude and Longitude plotting of earthquakes'
+            plt.title('Latitude and Longitude plotting of earthquakes '
                       'by magnitude.'
                       '\nNorth of New Zealand.')
         else:
-            plt.title('Latitude and Longitude plotting of earthquakes'
+            plt.title('Latitude and Longitude plotting of earthquakes '
                       'by depth.'
                       '\nNorth of New Zealand.')
         plt.tight_layout()
@@ -154,20 +155,19 @@ def main():
         plt.close('all')
         del ax1, fig
 
-
     # A bunch of histograms would also be nice to better understand the
     # distribution of our variables
     histogram_vars = {'mag': 'earthquake\'s magnitude',
                       'depth': 'depth of the earthquake',
                       'stations': 'number of stations that detected the '
-                      'eartquake'}
+                                  'eartquake'}
     for col in histogram_vars.keys():
         plt.hist(db[col], bins=12)
         plt.title('Histogram for {0}.'.format(histogram_vars[col]))
         plt.tight_layout()
         plt.savefig(
-         os.path.join(
-            'images', 'histogram_for_{}.png'.format(col)),
+            os.path.join(
+                'images', 'histogram_for_{}.png'.format(col)),
             dpi=500)
         plt.close('all')
 
@@ -177,14 +177,15 @@ def main():
     # Lets start with a linear regression:
 
     def linear_regression(v1, v2):
+        u"""Create a linear regression."""
         plt.scatter(db[v1], db[v2])
         plt.title(
             '{0} versus {1} scatter plot.'.format(
                 histogram_vars[v1].capitalize(),
                 histogram_vars[v2].capitalize()))
         print('Regression for {0} versus {1}:'.format(
-                histogram_vars[v1].capitalize(),
-                histogram_vars[v2].capitalize()))
+            histogram_vars[v1].capitalize(),
+            histogram_vars[v2].capitalize()))
         reg1 = smf.ols('db[v1] ~ db[v2]', data=db).fit()
         print(reg1.summary(), '\n'*3)
         plt.tight_layout()
@@ -194,9 +195,9 @@ def main():
         plt.close('all')
 
     for var1, var2 in [
-        ['mag', 'depth'],
-        ['mag', 'stations'],
-        ['depth', 'stations']
+            ['mag', 'depth'],
+            ['mag', 'stations'],
+            ['depth', 'stations']
     ]:
         linear_regression(var1, var2)
 
