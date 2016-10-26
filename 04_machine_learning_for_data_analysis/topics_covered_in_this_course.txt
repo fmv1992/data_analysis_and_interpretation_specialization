@@ -1,14 +1,22 @@
+/* vim: set filetype=votl wrap: */
+
 About this Course
 
 Are you interested in predicting future outcomes using your data? This course helps you do just that! Machine learning is the process of developing, testing, and applying predictive algorithms to achieve this goal. Make sure to familiarize yourself with course 3 of this specialization before diving into these machine learning concepts. Building on Course 3, which introduces students to integral supervised machine learning concepts, this course will provide an overview of many additional concepts, techniques, and algorithms in machine learning, from basic classification to decision trees and clustering. By completing this course, you will learn how to apply, test, and interpret machine learning algorithms as alternative methods for addressing your research questions.
 
-LESSON 01
-LESSON 02
-LESSON 03
-LESSON 04
+[_] LESSON 01
+    [_] We typically do not use ML to do hypothesis testing
+    [_] Training set -> test set
+        : Obviously it fits the training set well but it might not fit the test
+        : set so well
+    [_] Test error rate
+        : Goal: find a model that will minimize the test error rate.
+[_] LESSON 02
+[_] LESSON 03
+[_] LESSON 04
 
-Topics of this course:
-    LESSON 01
-    LESSON 02
-    LESSON 03
-    LESSON 04
+[_] Topics of this course:
+    [_] LESSON 01
+    [_] LESSON 02
+    [_] LESSON 03
+    [_] LESSON 04
