@@ -2,10 +2,25 @@
 
 About this Course
 
-Are you interested in predicting future outcomes using your data? This course helps you do just that! Machine learning is the process of developing, testing, and applying predictive algorithms to achieve this goal. Make sure to familiarize yourself with course 3 of this specialization before diving into these machine learning concepts. Building on Course 3, which introduces students to integral supervised machine learning concepts, this course will provide an overview of many additional concepts, techniques, and algorithms in machine learning, from basic classification to decision trees and clustering. By completing this course, you will learn how to apply, test, and interpret machine learning algorithms as alternative methods for addressing your research questions.
+Are you interested in predicting future outcomes using your data? This course
+helps you do just that! Machine learning is the process of developing,
+testing, and applying predictive algorithms to achieve this goal. Make sure to
+familiarize yourself with course 3 of this specialization before diving into
+these machine learning concepts. Building on Course 3, which introduces
+students to integral supervised machine learning concepts, this course will
+provide an overview of many additional concepts, techniques, and algorithms in
+machine learning, from basic classification to decision trees and clustering.
+By completing this course, you will learn how to apply, test, and interpret
+machine learning algorithms as alternative methods for addressing your
+research questions.
 
 [_] LESSON 01: What is ML?
-    [_] We typically do not use ML to do hypothesis testing
+	: Statistical methods including linear and logistic regressions
+	: Can be used to:
+	:	- Describe associations
+	:	- Search for patterns
+	:	- Make predictions
+    [_] <<< WE TYPICALLY DO NOT USE ML TO DO HYPOTHESIS TESTING >>>
     [_] Training set -> test set
         : Obviously it fits the training set well but it might not fit the test
         : set so well
@@ -18,10 +33,15 @@ Are you interested in predicting future outcomes using your data? This course he
 		: Ideal statistical model: low variance, low bias
 			: Overfitted model: low bias; high variance; like a high deg polynomial
 			: Underfitted model: high bias; low variance
-	Supervised prediction
-		: a set of explanatory varibales -> response variable
-		: variables can appear more than once
-		: 
+	[_] Supervised prediction
+		: A set of explanatory varibales -> response variable
+		: Variables can appear more than once
+	Decision Trees
+		: When a data has a large number of expl. variables that interact in a complicated way.
+		: A data mining method that allows us to explore the presencial of potentiall complicated interactions in data
+		: Creates segmentation
+		: Is a method of supervised prediction
+
 [_] LESSON 02
 [_] LESSON 03
 [_] LESSON 04
