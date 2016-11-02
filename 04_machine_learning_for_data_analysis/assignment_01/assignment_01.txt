@@ -1,0 +1,39 @@
+---------------------------------   Preamble   --------------------------------
+This same posting can be seen on GitHub:
+??link??
+It is easier to read if you read there!
+-----------------------------------   Post   ----------------------------------
+-------------------------------   Introduction   ------------------------------
+Data set: ??
+
+Research Question: ??
+
+Explanatory variables:
+    - V1??
+        Explanation??
+
+Response variable:
+    - V2??
+        Explanation??
+
+Details:
+	??
+
+Notes:
+    As said in the video 'Building a Decision Tree with Python' does not
+    support pruning.
+
+Goal: ??
+
+Tip: random seed/state
+
+-------------------------------   Code Section   ------------------------------
+---------------   Code   --------------
+??
+-----------   Code Output   -----------
+??
+----------------------   Interpretation Of The Results   ----------------------
+??
+-----------------------------   Further Reading   -----------------------------
+Decision trees:
+    - http://scikit-learn.org/stable/modules/tree.html
