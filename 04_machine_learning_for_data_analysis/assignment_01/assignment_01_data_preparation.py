@@ -40,6 +40,13 @@ def return_processed_diamonds_data_set():
 
     # Categorize expensive or cheap (our output variable).
     is_expensive = df.price > df.price.quantile(PRICE_QUANTILE)
+    print(
+        'The {0} quantile for price is {1} USD. There are a total of {2} '
+        '({3:1.1%}) diamonds which are expensive.'.format(
+            PRICE_QUANTILE,
+            df.price.quantile(PRICE_QUANTILE),
+            is_expensive.sum(),
+            is_expensive.sum()/df.price.shape[0]))
     df['price_expensive'] = pd.Categorical.from_codes(
         is_expensive,
         categories=['cheap', 'expensive'])
