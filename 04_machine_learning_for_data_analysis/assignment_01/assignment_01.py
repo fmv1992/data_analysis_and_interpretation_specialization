@@ -80,12 +80,39 @@ def main():
     with open('graph.png', 'wb') as f:
         f.write(graph.create_png())
 
+    # Histogram of Clarity Variable
     plt.figure(0)
     df.clarity.value_counts(sort=False).plot.bar()
     plt.title('Histogram of Clarity values (0: least clear)')
     plt.tight_layout()
     plt.savefig('diamonds_clarity_histogram.png', dpi=500)
     plt.close()
+
+    # Histogram of Cut Variable
+    plt.figure(0)
+    df.cut.value_counts(sort=False).plot.bar()
+    plt.title('Histogram of Cut values (4: ideal)')
+    plt.tight_layout()
+    plt.savefig('diamonds_cut_histogram.png', dpi=500)
+    plt.close()
+
+    # Histogram of Color Variable
+    plt.figure(0)
+    df.color.value_counts(sort=False).plot.bar()
+    plt.title('Histogram of Color values (0: worst)')
+    plt.tight_layout()
+    plt.savefig('diamonds_color_histogram.png', dpi=500)
+    plt.close()
+
+    # Histogram of the mass Variable
+    plt.figure(0)
+    df.mass.plot.hist()
+    plt.title('Mass of the diamong (kg)')
+    plt.tight_layout()
+    plt.savefig('diamonds_mass_histogram.png', dpi=500)
+    plt.close()
+
+    return df
 
 
 if __name__ == '__main__':
