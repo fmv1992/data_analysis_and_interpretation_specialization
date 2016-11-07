@@ -11,7 +11,7 @@ from sklearn.metrics import classification_report
 import sklearn.metrics
 
 import zipfile
-with zipfile.ZipFile('../data_set/tree_addhealth.zip', 'r') as zipfileobj:
+with zipfile.ZipFile('../../data_sets/tree_addhealth.zip', 'r') as zipfileobj:
     with zipfileobj.open('tree_addhealth.csv', 'r') as csvfile:
         db = pd.read_csv(csvfile)
 
