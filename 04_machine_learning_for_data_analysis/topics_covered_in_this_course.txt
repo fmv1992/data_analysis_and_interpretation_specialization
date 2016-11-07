@@ -22,10 +22,10 @@ research questions.
 	:	- Make predictions
     [_] <<< WE TYPICALLY DO NOT USE ML TO DO HYPOTHESIS TESTING >>>
     [_] Training set -> test set
-        : Obviously it fits the training set well but it might not fit the test
-        : set so well
+        [_] : Obviously it fits the training set well but it might not fit the test
+        [_] : set so well
     [_] Test error rate
-        : Goal: find a model that will minimize the test error rate.
+        [_] : Goal: find a model that will minimize the test error rate.
 	[_] Bias variance trade-off
 		: Accuracy = mean squared error
 		: Variance: change in parameter estimates across different data sets
@@ -36,16 +36,47 @@ research questions.
 	[_] Supervised prediction
 		: A set of explanatory varibales -> response variable
 		: Variables can appear more than once
-	Decision Trees
+	[_] Decision Trees
 		: When a data has a large number of expl. variables that interact in a complicated way.
 		: A data mining method that allows us to explore the presencial of potentiall complicated interactions in data
 		: Creates segmentation
 		: Is a method of supervised prediction
-
+		: Not so good for prediction since they are poorly reproducible but good for data exploration and interpretation
+[_] 
 [_] LESSON 02
+	[_] Random forests
+		: Random forets grow a lot of decision trees
+		: For each of those trees there are a training group (~60%) and a test group (~40%)
+		: On each grown trees a random subset of random variables is chosen
+		: For each tree all the variables are tested and the ones which better discriminate the sample get 'votes'
+		: The random forest outputs the most voted variables
+		:
+		: Notice that the output of random forests is not itself interpreted
+		: They are used collectively to rank the importance of variables in predicting the target of interest
+	[_] Validation
+		: Test and training sets:
+		:	[] can result in different results for the model
+		:	[] does not use all the data available for the model
+	[_] Cross validation
+		: Leave one out: create a model with N - 1 elements and test it against 1. Pick a different single one and repeat the procedure.
+		:	Benefits:
+		:	[] get an average of the test errors
+		:	[] less bias in regression coefficients
+		:	[] parameter estimations dont vary accross training samples
+		:	Disadvantages:
+		:	[] time consuming and computationally intensive
+		:
+		: K-fold cross validation: Divide the group in k 'folds' (groups).
+		:	Benefits:
+		:	[] requires fewer computational resources
+		:	[] nice compromise with single set validation and 'leave one out'
+		:	[] provides more accurate esimates of test error than 'leave one out'
+		:	Disadvantages:
+		:	[] 'leave one out' has less bias, but k-fold has less variance
+
 [_] LESSON 03
 [_] LESSON 04
-
+[_] 
 [_] Topics of this course:
     [_] LESSON 01
     [_] LESSON 02
