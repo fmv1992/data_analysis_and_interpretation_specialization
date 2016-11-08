@@ -75,6 +75,12 @@ for idx in range(len(trees)):
    predictions=classifier.predict(pred_test)
    accuracy[idx]=sklearn.metrics.accuracy_score(tar_test, predictions)
 
+# Clear current plots.
 plt.cla()
+plt.close('all')
+# Plot number of trees and accuracy.
 plt.plot(trees, accuracy)
-
+plt.xlabel('Number of trees in the model')
+plt.ylabel('Accuracy of the result')
+plt.tight_layout()
+plt.savefig('random_forest_mod.png', dpi=500)
