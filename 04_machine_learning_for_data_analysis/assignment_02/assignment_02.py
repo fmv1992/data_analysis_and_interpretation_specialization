@@ -18,6 +18,7 @@ import matplotlib.pylab as plt
 
 # sklearn imports
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 import sklearn.metrics
@@ -31,8 +32,7 @@ def main():
     u"""Main function for assignment 01."""
     # Load prepared data.
     df = return_processed_diamonds_data_set()
-    create_price_histogram(df)
-    # raise Exception
+    df.drop(['carat'], inplace=True, axis=1)
 
     # A bit of error checking.
     if df.isnull().sum().sum() != 0:
@@ -52,7 +52,21 @@ def main():
     input_training, input_test, output_training, output_test = train_test_split(
         input_variables, output_variable, test_size=0.3, random_state=0)
 
-    classifier = RandomForestClassifier(
+    # Random forests and extra tree classifiers (extremely randomized trees) are
+    # two ways of improving the bias-variance trade off
+
+    # IN RANDOM FORESTS: 'each tree in the ensemble is built from a sample drawn
+    # with replacement (i.e., a bootstrap sample) from the training set. In
+    # addition, when splitting a node during the construction of the tree, the
+    # split that is chosen is no longer the best split among all features.
+    # Instead, the split that is picked is the best split among a random subset
+    # of the features. As a result of this randomness, the bias of the forest
+    # usually slightly increases (with respect to the bias of a single
+    # non-random tree) but, due to averaging, its variance also decreases,
+    # usually more than compensating for the increase in bias, hence yielding an
+    # overall better model.'
+
+    rf_classifier = RandomForestClassifier(
         n_estimators=400,
         max_depth=5,
         min_samples_split=500,
@@ -61,17 +75,58 @@ def main():
         # verbose=True,
         n_jobs=-1)
 
-    classifier.fit(input_training, output_training)
-    predictions = classifier.predict(input_test)
+    rf_classifier.fit(input_training, output_training)
+    predictions = rf_classifier.predict(input_test)
 
     print('Random Forest')
     print('confusion matrix:\n:',
           sklearn.metrics.confusion_matrix(output_test, predictions))
     print('accuracy score:\n',
           sklearn.metrics.accuracy_score(output_test, predictions))
+    rf_classifier.variable_feature_importances = dict(
+        zip(predictors, rf_classifier.feature_importances_))
 
-    return df
+    # EXTREMELY RANDOMIZED TREES: In extremely randomized trees (see
+    # ExtraTreesClassifier and ExtraTreesRegressor classes), randomness goes one
+    # step further in the way splits are computed. As in random forests, a
+    # random subset of candidate features is used, but instead of looking for
+    # the most discriminative thresholds, thresholds are drawn at random for
+    # each candidate feature and the best of these randomly-generated thresholds
+    # is picked as the splitting rule. This usually allows to reduce the
+    # variance of the model a bit more, at the expense of a slightly greater
+    # increase in bias:
+
+    er_classifier = ExtraTreesClassifier(
+        n_estimators=400,
+        max_depth=5,
+        min_samples_split=500,
+        min_samples_leaf=100,
+        random_state=0,
+        # verbose=True,
+        n_jobs=-1)
+
+    er_classifier.fit(input_training, output_training)
+    predictions = er_classifier.predict(input_test)
+    er_classifier.variable_feature_importances = dict(
+        zip(predictors, er_classifier.feature_importances_))
+
+    print('Extreme Classifier Tree')
+    print('confusion matrix:\n:',
+          sklearn.metrics.confusion_matrix(output_test, predictions))
+    print('accuracy score:\n',
+          sklearn.metrics.accuracy_score(output_test, predictions))
+
+    return {'extreme': er_classifier,
+            'random_forest': rf_classifier}
 
 
 if __name__ == '__main__':
-    main()
+    result = main()
+    etree, rforest = result['extreme'], result['random_forest']
+    print('Random forest most important variables:',
+          sorted(rforest.variable_feature_importances.items(),
+                 key=lambda x: x[1], reverse=True))
+    print()
+    print('Extreme Random Tree most important variables:',
+          sorted(etree.variable_feature_importances.items(),
+                 key=lambda x: x[1], reverse=True))

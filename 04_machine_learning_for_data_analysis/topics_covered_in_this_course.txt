@@ -63,6 +63,7 @@ research questions.
 		:	[] get an average of the test errors
 		:	[] less bias in regression coefficients
 		:	[] parameter estimations dont vary accross training samples
+		:	[] has less bias than K-fold
 		:	Disadvantages:
 		:	[] time consuming and computationally intensive
 		:
@@ -71,6 +72,8 @@ research questions.
 		:	[] requires fewer computational resources
 		:	[] nice compromise with single set validation and 'leave one out'
 		:	[] provides more accurate esimates of test error than 'leave one out'
+		:	[] has less variance than 'leave one out'
+		:	[] usually: k=5 or k=10
 		:	Disadvantages:
 		:	[] 'leave one out' has less bias, but k-fold has less variance
 
