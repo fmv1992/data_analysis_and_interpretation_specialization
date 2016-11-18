@@ -11,14 +11,29 @@ Data set: R dataset: "Prices of 50,000 round cut diamonds"
         https://github.com/fmv1992/data_analysis_and_interpretation_specialization/blob/course_04_machine_learning/04_machine_learning_for_data_analysis/data_sets/r_data_sets/ggplot2/diamonds.csv
 
 Research Question: How can we categorize diamonds in 'expensive' versus 'cheap'
-taking the cut, color, clarity and mass into account using machine learning?
+taking the:
+	- cut, 
+	- color, 
+	- clarity, 
+	- depth, 
+	- table, 
+	- x, 
+	- y, 
+	- z, 
+	- mass
+as input variables?
 
 Explanatory variables:
-    - Cut: quality of the cut.
-    - Color: diamond color from J (worst) to D (best)
-    - Clarity: a measurement of how clear the diamond is (I1 (worst), SI1, SI2,
-      VS1, VS2, VVS1, VVS2, IF (best))
-    - Mass: mass of the diamong (in kilograms)
+price. price in US dollars (\$326–\$18,823)
+	 - Carat: weight of the diamond (0.2–5.01)
+	 - Cut: quality of the cut (Fair, Good, Very Good, Premium, Ideal)
+	 - Colour: diamond colour, from J (worst) to D (best)
+	 - Clarity: a measurement of how clear the diamond is (I1 (worst), SI1, SI2, VS1, VS2, VVS1, VVS2, IF (best))
+	 - X: length in mm (0–10.74)
+	 - Y: width in mm (0–58.9)
+	 - Z: depth in mm (0–31.8)
+	 - Depth: total depth percentage = z / mean(x, y) = 2 * z / (x + y) (43–79)
+	 - Table: width of top of diamond relative to widest point (43–95)
 
 Response variable:
     - 'price_expensive': is considered expensive if diamond has a value of 
@@ -30,11 +45,10 @@ Details:
           worst to greater -> best.
 
 Notes:
-    As said in the video 'Building a Decision Tree with Python' does not
-    support pruning.
+    -
 
-Goal: obtain a categorization of the 'price_expensive' variable considering
-the: cut, color, clarity and mass variables.
+Goal: Obtain the most important variables when classifying diamonds according
+to a binary variable: 'is expensive' or not (see details above).
 
 Tip:
     - For the results to become reproducible we can give a random seed/state
@@ -43,7 +57,6 @@ Tip:
 
 -------------------------------   Code Section   ------------------------------
                     ---------------   Code 1 --------------
-
 u"""
 Coursera Course: Machine Learning for Data Analysis.
 
@@ -52,7 +65,7 @@ Coursera Course: Machine Learning for Data Analysis.
 
 This course is one in a series of: Data Analysis and Interpretation
 
-Assignment 01: Decision Trees.
+Assignment 02: Random Forests.
 """
 
 # # pylama: skip=1
@@ -61,109 +74,138 @@ Assignment 01: Decision Trees.
 import pandas as pd
 import numpy as np
 import matplotlib.pylab as plt
-from sklearn.model_selection import train_test_split
+
+# sklearn imports
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import classification_report
+from sklearn.model_selection import train_test_split
 import sklearn.metrics
-from assignment_01_data_preparation import return_processed_diamonds_data_set
-import seaborn
-import pydotplus
-from IPython.display import Image
-from io import StringIO
-from sklearn import tree
+
+from assignment_02_data_preparation import return_processed_diamonds_data_set
+from assignment_02_data_preparation import create_price_histogram
+import seaborn as sns
 
 
 def main():
     u"""Main function for assignment 01."""
+    # Load prepared data.
     df = return_processed_diamonds_data_set()
+    # Mass is already included as mass in SI units.
+    df.drop(['carat'], inplace=True, axis=1)
 
+    # A bit of error checking.
     if df.isnull().sum().sum() != 0:
         raise ValueError('Your data has unintended nulls.')
 
-    df.describe()
+    # A bit of data description. See histograms from assignment 01.
+    # print('Data description:\n', df.describe())
 
     # Split into training and testing sets
-    input_variables = df[['cut', 'color', 'clarity', 'mass']]
-    output_variable = df.price_expensive_binary  # Categorized price
+    # The predictirs should not include any price variable since this was used
+    # to create the output variable
+    predictors = [x for x in df.columns.tolist() if 'price' not in x]
+    print('Input variables:', predictors)
+    input_variables = df[predictors]
+    output_variable = df.price_expensive_binary.copy()  # Categorized price
 
     input_training, input_test, output_training, output_test = train_test_split(
         input_variables, output_variable, test_size=0.3, random_state=0)
 
-    # Build model on training data
-    tree_classifier = DecisionTreeClassifier(
-        max_depth=4,
-        min_samples_split=1000,
-        random_state=0,  # This is to keep data reproducible.
-    )
+    # Random forests and extra tree classifiers (extremely randomized trees) are
+    # two ways of improving the bias-variance trade off
 
-    tree_classifier = tree_classifier.fit(input_training, output_training)
+    # IN RANDOM FORESTS: 'each tree in the ensemble is built from a sample drawn
+    # with replacement (i.e., a bootstrap sample) from the training set. In
+    # addition, when splitting a node during the construction of the tree, the
+    # split that is chosen is no longer the best split among all features.
+    # Instead, the split that is picked is the best split among a random subset
+    # of the features. As a result of this randomness, the bias of the forest
+    # usually slightly increases (with respect to the bias of a single
+    # non-random tree) but, due to averaging, its variance also decreases,
+    # usually more than compensating for the increase in bias, hence yielding an
+    # overall better model.'
 
-    predictions = tree_classifier.predict(input_test)
+    rf_classifier = RandomForestClassifier(
+        n_estimators=400,
+        max_depth=5,
+        min_samples_split=500,
+        min_samples_leaf=100,
+        random_state=0,
+        # verbose=True,
+        n_jobs=-1)
 
-    print('conf matrix', sklearn.metrics.confusion_matrix(output_test,
-                                                          predictions))
-    print('accuracy', sklearn.metrics.accuracy_score(output_test, predictions))
+    rf_classifier.fit(input_training, output_training)
+    predictions = rf_classifier.predict(input_test)
 
-    # Displaying the decision tree
-    # from StringIO import StringIO
-    # from StringIO import StringIO
-    # from IPython.display import Image
-    # out = StringIO()
-    # tree.export_graphviz(classifier, out_file=out)
-    # import pydotplus
-    # graph=pydotplus.graph_from_dot_data(out.getvalue())
-    # Image(graph.create_png())
+    print('Random Forest')
+    print('confusion matrix:\n:',
+          sklearn.metrics.confusion_matrix(output_test, predictions))
+    print('accuracy score:\n',
+          sklearn.metrics.accuracy_score(output_test, predictions))
+    rf_classifier.variable_feature_importances = dict(
+        zip(predictors, rf_classifier.feature_importances_))
 
-    out = StringIO()
-    tree.export_graphviz(
-        tree_classifier,
-        out_file=out,
-        feature_names=input_variables.columns.tolist(),
-        class_names=['cheap', 'expensive'],
-        filled=True,
-        impurity=True,)
-    graph = pydotplus.graph_from_dot_data(out.getvalue())
-    with open('graph.png', 'wb') as f:
-        f.write(graph.create_png())
+    # EXTREMELY RANDOMIZED TREES: In extremely randomized trees (see
+    # ExtraTreesClassifier and ExtraTreesRegressor classes), randomness goes one
+    # step further in the way splits are computed. As in random forests, a
+    # random subset of candidate features is used, but instead of looking for
+    # the most discriminative thresholds, thresholds are drawn at random for
+    # each candidate feature and the best of these randomly-generated thresholds
+    # is picked as the splitting rule. This usually allows to reduce the
+    # variance of the model a bit more, at the expense of a slightly greater
+    # increase in bias:
 
-    # Histogram of Clarity Variable
-    plt.figure(0)
-    df.clarity.value_counts(sort=False).plot.bar()
-    plt.title('Histogram of Clarity values (0: least clear)')
-    plt.tight_layout()
-    plt.savefig('diamonds_clarity_histogram.png', dpi=500)
-    plt.close()
+    er_classifier = ExtraTreesClassifier(
+        n_estimators=400,
+        max_depth=5,
+        min_samples_split=500,
+        min_samples_leaf=100,
+        random_state=0,
+        # verbose=True,
+        n_jobs=-1)
 
-    # Histogram of Cut Variable
-    plt.figure(0)
-    df.cut.value_counts(sort=False).plot.bar()
-    plt.title('Histogram of Cut values (4: ideal)')
-    plt.tight_layout()
-    plt.savefig('diamonds_cut_histogram.png', dpi=500)
-    plt.close()
+    er_classifier.fit(input_training, output_training)
+    predictions = er_classifier.predict(input_test)
+    er_classifier.variable_feature_importances = dict(
+        zip(predictors, er_classifier.feature_importances_))
 
-    # Histogram of Color Variable
-    plt.figure(0)
-    df.color.value_counts(sort=False).plot.bar()
-    plt.title('Histogram of Color values (0: worst)')
-    plt.tight_layout()
-    plt.savefig('diamonds_color_histogram.png', dpi=500)
-    plt.close()
+    print('Extreme Classifier Tree')
+    print('confusion matrix:\n:',
+          sklearn.metrics.confusion_matrix(output_test, predictions))
+    print('accuracy score:\n',
+          sklearn.metrics.accuracy_score(output_test, predictions))
+    print()
 
-
-    # Histogram of the mass Variable
-    plt.figure(0)
-    df.mass.plot.hist()
-    plt.title('Mass of the diamong (kg)')
-    plt.tight_layout()
-    plt.savefig('diamonds_mass_histogram.png', dpi=500)
-    plt.close()
-
-    return df
+    return {'extreme': er_classifier,
+            'random_forest': rf_classifier,
+            'dataframe': df}
 
 
 if __name__ == '__main__':
-    main()
+    result = main()
+    etree, rforest = result['extreme'], result['random_forest']
+    print('Random forest most important variables:',
+          sorted(rforest.variable_feature_importances.items(),
+                 key=lambda x: x[1], reverse=True))
+    print()
+    print('Extreme Random Tree most important variables:',
+          sorted(etree.variable_feature_importances.items(),
+                 key=lambda x: x[1], reverse=True))
+
+    # From the results I got the impression that the 'y' variable could be
+    # related to mass. Lets check that out:
+    dataframe = result['dataframe']
+    lm = sns.lmplot('y', 'mass',
+                    data=dataframe,)
+    axes = lm.axes
+    axes[0, 0].set_ylim(-1, 1.1)
+    axes[0, 0].set_xlim(-1, 15)
+    plt.title('Scatter plot for diamond\'s width versus mass')
+    plt.xlabel('Diamond width')
+    plt.ylabel('Diamon mass')
+    plt.tight_layout()
+    plt.savefig('scatter_width_mass.png', dpi=500)
                     ---------------   Code 2 --------------
 """
 Data preparation for assignment 01.
@@ -178,10 +220,12 @@ Some categorical variables are mapped to integers ranging from:
     max: best value in that categorical
 
 """
-# # pylama:skip=1
-# pylama:ignore=W:ignore=C101
+# pylama:skip=1
+# pylama:ignore=W0611
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 def return_processed_diamonds_data_set():
@@ -205,15 +249,8 @@ def return_processed_diamonds_data_set():
     # Load data set.
     df = pd.read_csv(CSVPATH, index_col=0, dtype=DTYPES)
 
-    # Categorize expensive or cheap (our output variable).
+    # Categorize expensive, medium or cheap (our output variable).
     is_expensive = df.price > df.price.quantile(PRICE_QUANTILE)
-    print(
-        'The {0} quantile for price is {1} USD. There are a total of {2} '
-        '({3:1.1%}) diamonds which are expensive.'.format(
-            PRICE_QUANTILE,
-            df.price.quantile(PRICE_QUANTILE),
-            is_expensive.sum(),
-            is_expensive.sum()/df.price.shape[0]))
     df['price_expensive'] = pd.Categorical.from_codes(
         is_expensive,
         categories=['cheap', 'expensive'])
@@ -274,68 +311,143 @@ def return_processed_diamonds_data_set():
     return df
 
 
+def create_price_histogram(df, fname='diamonds_price_histogram.png'):
+    u"""Create a histogram for diamond prices.
+    Create a histogram for diamond prices to enable classification of price ranges.
+
+    Arguments:
+        df (Dataframe): The dataframe which has the price column.
+
+    Returns:
+        bool: True if successful. False otherwise.
+
+    """
+    # print(df.price.describe())
+    plt.cla()
+    plt.close('all')
+    plt.figure(1)
+    xticks_range = range(0, 20000, 1000)
+    price_plot = sns.distplot(df.price, rug=False, kde=False)
+    price_plot.set(
+        xticks=xticks_range,
+        title='title', #TODO
+    )
+    price_plot.set_xticklabels(labels=price_plot.get_xticks(),
+                               rotation=90)
+    plt.tight_layout()
+    plt.savefig(fname, dpi=500)
+    plt.close('all')
+    return True
+
 if __name__ == '__main__':
     return_processed_diamonds_data_set()
                     -----------   Code Output   -----------
-The 0.75 quantile for price is 5324.25 USD. There are a total of 13485 (25.0%) diamonds which are expensive.
+Input variables: ['cut', 'color', 'clarity', 'depth', 'table', 'x', 'y', 'z', 'mass']
+Random Forest
+confusion matrix:
+: [[11819   337]
+ [  313  3713]]
+accuracy score:
+ 0.959831912001
+Extreme Classifier Tree
+confusion matrix:
+: [[12113    43]
+ [ 1643  2383]]
+accuracy score:
+ 0.895810159436
 
-conf matrix [[11893   263]
- [  405  3621]]
+Random forest most important variables: [('y', 0.3549206203031135),
+ ('mass', 0.26810260962590771),
+ ('x', 0.14961729486552111),
+ ('z', 0.11479539222413282),
+ ('clarity', 0.085454515784486804),
+ ('color', 0.021235907166075877),
+ ('cut', 0.0023549648210732604),
+ ('table', 0.0022482893100162151),
+ ('depth', 0.0012704058996720763)]
 
-accuracy 0.958719564949
-
+Extreme Random Tree most important variables: [('mass', 0.33924753667974195),
+ ('x', 0.27214891658111912),
+ ('z', 0.12450582418207355),
+ ('y', 0.11876408766614097),
+ ('color', 0.031160011426681723),
+ ('clarity', 0.015181819193398621),
+ ('cut', 0.0091080626211933954),
+ ('table', 0.0020384796560689918),
+ ('depth', 0.00034526199358183408)]
                   -----------   Files Generated   -----------
-
-- graph.png: the decision tree output.
-
-- diamonds_color_histogram.png: a histogram of the diamonds by color.
-- diamonds_mass_histogram.png: a histogram of the diamonds by mass.
-- diamonds_cut_histogram.png: a histogram of the diamonds by cut.
-- diamonds_clarity_histogram.png: a histogram of the diamonds by clarity.
-
 ----------------------   Interpretation Of The Results   ----------------------
+Random Forest:
+    Random forest is an ensemble method which runs a lot of Decision Trees and
+    outputs the mode (or other metric of representativeness) of the variables
+    which are most important to classifying the data. The method for splitting
+    is maximizing 'information gain' in each split. In other words the splits
+    are not made at random (in contrast with ERF; see below).
 
-A decision tree was used to gather insight on the 'price_expensive' variable
-(see above). The objective was to consider a diamond's cut, color, clarity and
-mass ('weight') to determine if it has a great financial value or not.
+    It capitalizes on the fact that it does not use the same training set but
+    instead different training/test sets for each tree.
+    Another distinctive feature is that it considers for each split a random
+    subset of the features, choosing the best one to actually use in this split
+    from this subset.
 
-Decision tree learning is a subfield in the Machine Learning field. Its
-ultimate aim is to correctly classificate an output variable based on several
-input variables. 
+    In our example (see data set description above) the most 'voted' variable
+    was y (width of the diamond). This is surprising if you take into account
+    that it has significantly more value than x and z (other measures of
+    sizing). Probably this variable is correlated with mass.*
+    The second most voted variable in our case is mass. This goes in accordance
+    with assignment 01 which ran a Decision Tree. In that assignment mass
+    accounted for 5 nodes, most of which were top nodes.
 
-The first and the second variables to define the split between being expensive
-or not was mass. This indicates the importance of such variable in determining
-the price of a diamond. There are a total of 5 nodes which use this variable to
-determine the split. This reinforces the importances of mass as a variable to
-determine diamond price. Also the split goes along the intuition that the
-higher the mass the more expensive the diamond shoud be (in this case the more
-the likelihood of being categorized as expensivel).
+    The other variables were not as important as the two mentioned above in our
+    classification model.
 
-Most of the other nodes were based on clarity (a total of 7). Again the
-separation goes along with our intution that the more clear the diamond the
-more expensive it tends to be.
+    The accuracy score of this model was of 95% having just a little of
+    incorrect classifcation which was about equally distributed into false
+    positive and false negatives.
 
-There was just one node which differentiated by color. It yielded a small gini
-coefficient leaf node and a big gini coef. leaf node  which indicates hat the
-separation was ok by this variable. In hindsight since this variable
-contributes poorly to the overall classification, it could be discarded.
+    * : This motivated me to do a scatter plot for 'y' and 'mass' and indeed it
+      has a positive strong correlation.
 
-Surprisingly enough the variable cut was not used to classificate the diamonds.
-Therefore it could be considered of small relevance in classificating this data
-set.
+Extremely Randomized Forest:
+    Extremely randomized forest is an ensemble method which runs a lot of
+    Decision Trees and outputs the mode (or other metric of representativeness)
+    of the variables which are most important to classifying the data. This
+    method is similar to Random Forest but differ in one respect:
 
-The confusion matrix had an accuracy of more than 95%. We can conclude that we
-were successful in our classification. There were 405 false positives, that is:
-there were 405 unexpensive diamonds which were classified as expensive.
+        - When choosing a split locally in a tree it does not select the
+          locally optimal split but the best split among random splits with
+          random tresholds. This means that the algorithm is not greedy.
 
-An application of this program could be a machine based classificator/evaluator
-of diamond prices. The user could just input the diamond's characteristics and
-the computer could classificate it without human intervention. This could save
-up on labor costs for example.
+    In our example the most voted variable was again mass. So far for this
+    course both the Decision Tree, the Random Forest and the Extremely
+    Randomized Forest chose this variable as the most important. After this
+    variable there were 3 dimension related variables, x, y and z which are the
+    length, width and depth respectively. All the other variables had
+    a significantly lower importance (even cut and color).
 
-The sensitivity was of SE = (true positives) / (all positives) = 96% and the
-specificity SP = (true negatives) / (all negatives) = 93%.
+    Top variables and their importance scores for ERF:
+            ('mass',    0.33924753667974195),
+            ('x',       0.27214891658111912),
+            ('z',       0.12450582418207355),
+            ('y',       0.11876408766614097),
+
+            ('color',   0.031160011426681723)  # Not a top variable
+                                     (...)
+    
+    A result that is worth mentioning is the confusion matrix for the ERF
+        - True positive:    12113
+        - False negative:   43
+        - False positive:   1643
+        - True negative:    2383
+
+    Note that false positives (that is, diamonds which are not expensive but
+    were labeled as such) is a high number. This is a major unacceptable flaw
+    if such a model were to be used in real life. In the business context
+    a classification like this could damage the reputation of a diamond seller
+    who would probably would try to sell his diamonds for a price above what
+    they are worth.
 
 -----------------------------   Further Reading   -----------------------------
-Decision trees:
-    - http://scikit-learn.org/stable/modules/tree.html
+Random Forests:
+Extremely Randomized Trees:
+     - http://www.montefiore.ulg.ac.be/services/stochastic/pubs/2006/WEG06/robust-trees.pdf

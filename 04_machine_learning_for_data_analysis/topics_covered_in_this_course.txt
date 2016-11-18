@@ -53,6 +53,10 @@ research questions.
 		:
 		: Notice that the output of random forests is not itself interpreted
 		: They are used collectively to rank the importance of variables in predicting the target of interest
+	[_] Extreme random forest
+		: This type of forest is almost the same as the random forest.
+		: Both grow different trees with different training/test sets but when choosing a feature as the split, random forests chooses the local best split for that feature.
+		: ERF on the other hand chooses a random feature to split from the subset of possible features.
 	[_] Validation
 		: Test and training sets:
 		:	[] can result in different results for the model
