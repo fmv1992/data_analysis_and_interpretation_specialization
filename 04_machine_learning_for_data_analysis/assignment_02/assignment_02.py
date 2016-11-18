@@ -25,13 +25,14 @@ import sklearn.metrics
 
 from assignment_02_data_preparation import return_processed_diamonds_data_set
 from assignment_02_data_preparation import create_price_histogram
-import seaborn
+import seaborn as sns
 
 
 def main():
     u"""Main function for assignment 01."""
     # Load prepared data.
     df = return_processed_diamonds_data_set()
+    # Mass is already included as mass in SI units.
     df.drop(['carat'], inplace=True, axis=1)
 
     # A bit of error checking.
@@ -115,9 +116,11 @@ def main():
           sklearn.metrics.confusion_matrix(output_test, predictions))
     print('accuracy score:\n',
           sklearn.metrics.accuracy_score(output_test, predictions))
+    print()
 
     return {'extreme': er_classifier,
-            'random_forest': rf_classifier}
+            'random_forest': rf_classifier,
+            'dataframe': df}
 
 
 if __name__ == '__main__':
@@ -130,3 +133,17 @@ if __name__ == '__main__':
     print('Extreme Random Tree most important variables:',
           sorted(etree.variable_feature_importances.items(),
                  key=lambda x: x[1], reverse=True))
+
+    # From the results I got the impression that the 'y' variable could be
+    # related to mass. Lets check that out:
+    dataframe = result['dataframe']
+    lm = sns.lmplot('y', 'mass',
+                    data=dataframe,)
+    axes = lm.axes
+    axes[0, 0].set_ylim(-1, 1.1)
+    axes[0, 0].set_xlim(-1, 15)
+    plt.title('Scatter plot for diamond\'s width versus mass')
+    plt.xlabel('Diamond width')
+    plt.ylabel('Diamon mass')
+    plt.tight_layout()
+    plt.savefig('scatter_width_mass.png', dpi=500)
