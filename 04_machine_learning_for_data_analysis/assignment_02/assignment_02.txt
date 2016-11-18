@@ -24,7 +24,6 @@ taking the:
 as input variables?
 
 Explanatory variables:
-price. price in US dollars (\$326–\$18,823)
 	 - Carat: weight of the diamond (0.2–5.01)
 	 - Cut: quality of the cut (Fair, Good, Very Good, Premium, Ideal)
 	 - Colour: diamond colour, from J (worst) to D (best)
@@ -376,6 +375,7 @@ Extreme Random Tree most important variables: [('mass', 0.33924753667974195),
  ('table', 0.0020384796560689918),
  ('depth', 0.00034526199358183408)]
                   -----------   Files Generated   -----------
+- scatter_width_mass.png
 ----------------------   Interpretation Of The Results   ----------------------
 Random Forest:
     Random forest is an ensemble method which runs a lot of Decision Trees and
@@ -446,6 +446,12 @@ Extremely Randomized Forest:
     a classification like this could damage the reputation of a diamond seller
     who would probably would try to sell his diamonds for a price above what
     they are worth.
+
+    The accuracy score of this ensemble method was ~90% which is good but it
+    was outperformed by the accuracy score of the Random Forest. Furthermore
+    the Random Forest have less bias with false positives. I conclude that for
+    this case I would rather use the Random Forest method instead of the
+    Extreme Random Forests (for diamond classification).
 
 -----------------------------   Further Reading   -----------------------------
 Random Forests:
