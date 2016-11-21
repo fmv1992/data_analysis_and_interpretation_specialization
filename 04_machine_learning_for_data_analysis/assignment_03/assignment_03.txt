@@ -1,6 +1,6 @@
 ---------------------------------   Preamble   --------------------------------
 This same posting can be seen on GitHub:
-??link??
+https://github.com/fmv1992/data_analysis_and_interpretation_specialization/blob/course_04_machine_learning/04_machine_learning_for_data_analysis/assignment_03/assignment_03.txt
 It is easier to read if you read there!
 -----------------------------------   Post   ----------------------------------
 -------------------------------   Introduction   ------------------------------
