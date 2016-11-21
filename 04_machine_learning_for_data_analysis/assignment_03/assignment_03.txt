@@ -10,37 +10,43 @@ Data set: R dataset: "Prices of 50,000 round cut diamonds"
     - Weblink:
         https://github.com/fmv1992/data_analysis_and_interpretation_specialization/blob/course_04_machine_learning/04_machine_learning_for_data_analysis/data_sets/r_data_sets/ggplot2/diamonds.csv
 
-Research Question: What are the important variables to do a linear regression for diamond pricing?
+Research Question: What are the important variables to do a linear regression
+for diamond pricing?
 
 Explanatory variables:
-	- Carat: weight of the diamond (0.2–5.01)
-	- Cut: quality of the cut (Fair, Good, Very Good, Premium, Ideal)
+    - Carat: weight of the diamond (0.2–5.01)
+    - Cut: quality of the cut (Fair, Good, Very Good, Premium, Ideal)
         - is_cut_ideal: binary variable (True if the cut is equal to ideal)
         - is_cut_premium: similar as above.
         - is_cut_good: similar as above.
         - is_cut_very_good: similar as above.
         - is_cut_fair: similar as above.
-	- Colour: diamond colour, from J (worst) to D (best)
-	- Clarity: a measurement of how clear the diamond is (I1 (worst), SI1, SI2, VS1, VS2, VVS1, VVS2, IF (best))
-	- X: length in mm (0–10.74)
-	- Y: width in mm (0–58.9)
-	- Z: depth in mm (0–31.8)
-	- Depth: total depth percentage = z / mean(x, y) = 2 * z / (x + y) (43–79)
-	- Table: width of top of diamond relative to widest point (43–95)
-	- Mass: mass of the diamong (kg)
+    - Colour: diamond colour, from J (worst) to D (best)
+    - Clarity: a measurement of how clear the diamond is (I1 (worst), SI1, SI2,
+      VS1, VS2, VVS1, VVS2, IF (best))
+    - X: length in mm (0–10.74)
+    - Y: width in mm (0–58.9)
+    - Z: depth in mm (0–31.8)
+    - Depth: total depth percentage = z / mean(x, y) = 2 * z / (x + y) (43–79)
+    - Table: width of top of diamond relative to widest point (43–95)
+    - Mass: mass of the diamong (kg)
 
 Response variable:
     - Price: the price of the diamond in USD.
 
-Methodology: A linear LASSO regression using the Least Angle Regression algorithm was performed in a total of 15 input variables. This regression was also cross validated using the k-fold cross validation method (k=10).
+Methodology: A linear LASSO regression using the Least Angle Regression
+algorithm was performed in a total of 15 input variables. This regression was
+also cross validated using the k-fold cross validation method (k=10).
 
 Details:
-	- All the categorical variables (cut, color and clarity) were mapped into numbers:
+    - All the categorical variables (cut, color and clarity) were mapped into
+      numbers:
         - In all the categories the corrisponding number are from lower ->
           worst to greater -> best.
 
 Notes:
-    - The variables were scaled to have a mean of zero and an SD = 1. (so the final binary variables do not have the 0 and 1 valu anymore.
+    - The variables were scaled to have a mean of zero and an SD = 1. (so the
+      final binary variables do not have the 0 and 1 valu anymore.
 
 Tip:
     - For the results to become reproducible we can give a random seed/state
@@ -49,55 +55,104 @@ Tip:
 
 -----------------------------------   Theory   --------------------------------
 # LINEAR REGRESSION and OLS:
-    Linear regression is a technique which tries to predict a response variable based on a weighted sum of input varibles:
+    Linear regression is a technique which tries to predict a response variable
+    based on a weighted sum of input varibles:
 
     y = w_1 * x_1 + w_2 * x_2 + ... + w_n * x_n
 
-    The Ordinary Least Square regression computes those 'w' weights minimizing the function f:
+    The Ordinary Least Square regression computes those 'w' weights minimizing
+    the function f:
 
     f = sum ( ( y_i - w_1 * x_1_i + w_2 * x_2_i + ... + w_n * x_n_i ) ** 2 )
 
     where _i is the index for the ith observation.
 
 # LASSO:
-    LASSO (least absolute shrinkage and selection operator) is a technique for variable selection and regularization . This enhances model interpratability and prevents overfitting as you end up with a smaller set of variables to interpret and fit.
+    LASSO (least absolute shrinkage and selection operator) is a technique for
+    variable selection and regularization . This enhances model
+    interpratability and prevents overfitting as you end up with a smaller set
+    of variables to interpret and fit.
     Lasso adds up a term to the f function above which is:
 
     added_term = alpha * ( sum ( abs(w_i) ) )
 
-    Thus adjusting the alpha value above increases or decreases the importance of this term in comparison to the OLS term (f above). For completeness, the LASSO regression minimizes the function:
+    Thus adjusting the alpha value above increases or decreases the importance
+    of this term in comparison to the OLS term (f above). For completeness, the
+    LASSO regression minimizes the function:
 
-    f_lasso = sum ( ( y_i - w_1 * x_1_i + w_2 * x_2_i + ... + w_n * x_n_i ) ** 2 ) + alpha * ( sum ( abs(w_i) ) )
+    f_lasso = sum ( ( y_i - w_1 * x_1_i + w_2 * x_2_i + ... + w_n * x_n_i ) **
+    2 ) + alpha * ( sum ( abs(w_i) ) )
 
     for a given alpha. Notice that for alpha = 0 then you have an OLS problem.
 
-    Also notice that this is just a modelling setting; it does not give you an algorithm or method to actually minimnize f_lasso.
+    Also notice that this is just a modelling setting; it does not give you an
+    algorithm or method to actually minimnize f_lasso.
 
 # LARS:
-    Finally the LARS method gives a possible algorithm for minimizing the LASSO problem. It has a couple of benefits which can be checked out here (too technical for the scope of this assignment) (see: http://scikit-learn.org/stable/modules/linear_model.html#lars-lasso).
+    Finally the LARS method gives a possible algorithm for minimizing the LASSO
+    problem. It has a couple of benefits which can be checked out here (too
+    technical for the scope of this assignment) (see:
+    http://scikit-learn.org/stable/modules/linear_model.html#lars-lasso).
 
 # CROSS VALIDATION:
-    It is a statistical technique to tackle the problem of overfitting and validation. Instead of the single 'training group' and 'test group' in the machine learning context, cross validation attempts to create more groups for both testing and training.
-    On the k-fold CV the universe of observations is divided into k groups. Each of this group is then used to test the algorithm and the training is conducted in the remaining k-1 folds. The average of the results (the weights in the context of linear regression) is then used as the final result.
+    It is a statistical technique to tackle the problem of overfitting and
+    validation. Instead of the single 'training group' and 'test group' in the
+    machine learning context, cross validation attempts to create more groups
+    for both testing and training.
+    On the k-fold CV the universe of observations is divided into k groups.
+    Each of this group is then used to test the algorithm and the training is
+    conducted in the remaining k-1 folds. The average of the results (the
+    weights in the context of linear regression) is then used as the final
+    result.
     The advantage is that each observation is used only once for validation.
 ----------------------   Interpretation Of The Results   ----------------------
 # LASSO:
-    The LassoLarsCV regression was succesful in sieving the variables. The result of the linear model sieved out the 'is_cut_very_good', 'is_cut_premium' and 'y' variables (that is their weights are equal to zero).
+    The LassoLarsCV regression was succesful in sieving the variables. The
+    result of the linear model sieved out the 'is_cut_very_good',
+    'is_cut_premium' and 'y' variables (that is their weights are equal to
+    zero).
 
-    That is to say that in the linear context it does not matter wheter the diamond receives a very good cut and its width. It is also worth noticing that the depth variable ('z') got a multiplier close to zero.
-    Our conclusion is that again, in the linear context, it does not matter wheter the diamond receives a very good cut or premium cut, nor does it matter its width and depth. Their correlation to a diamond's price is not existent.
+    That is to say that in the linear context it does not matter wheter the
+    diamond receives a very good cut and its width. It is also worth noticing
+    that the depth variable ('z') got a multiplier close to zero.
+    Our conclusion is that again, in the linear context, it does not matter
+    wheter the diamond receives a very good cut or premium cut, nor does it
+    matter its width and depth. Their correlation to a diamond's price is not
+    existent.
 
 # LINEAR MODEL AND IMPORTANT VARIABLES:
-    For the third time the most important variable for a diamond's price estimation was mass (this also happened in the assignments before these). Its weight was way higher than the other variables (more than five times the weight of the second variable). We can see that there is a positive correlation between a diamonds' mass and its price.
+    For the third time the most important variable for a diamond's price
+    estimation was mass (this also happened in the assignments before these).
+    Its weight was way higher than the other variables (more than five times
+    the weight of the second variable). We can see that there is a positive
+    correlation between a diamonds' mass and its price.
 
-    The second most important variable was 'x': the diamond's length. It has a strong negative correlation with the diamond's price. Considering that the others diamond's dimension variables were not relevant we can assume that a 'lenghty' diamond has a smaller price than a 'unlenghty' one. This suggests that the more spherical shaped diamonds probably have more value (since its x, y and z dimensions are either unimportant or have negative importance in determining its price).
+    The second most important variable was 'x': the diamond's length. It has
+    a strong negative correlation with the diamond's price. Considering that
+    the others diamond's dimension variables were not relevant we can assume
+    that a 'lenghty' diamond has a smaller price than a 'unlenghty' one. This
+    suggests that the more spherical shaped diamonds probably have more value
+    (since its x, y and z dimensions are either unimportant or have negative
+    importance in determining its price).
 
-    The other most important variables (the ones most strongly correlated with our response variables) were clarity and color. Both are on a scale of increasing values according to their valuation impact. Thus both correctly displayed a positive correlation with the diamond's price.
+    The other most important variables (the ones most strongly correlated with
+    our response variables) were clarity and color. Both are on a scale of
+    increasing values according to their valuation impact. Thus both correctly
+    displayed a positive correlation with the diamond's price.
 
 # MEAN SQUARED ERROR AND R-SQUARED:
-    We can notice from the figure of mean squared error for each fold that it was decreasing as the cross validation helped choose the best alpha for fitting. The tightness of all the fold's curves indicates that the data set is large and its division in ten parts yields parts that represent its entirety in a consistent way.
+    We can notice from the figure of mean squared error for each fold that it
+    was decreasing as the cross validation helped choose the best alpha for
+    fitting. The tightness of all the fold's curves indicates that the data set
+    is large and its division in ten parts yields parts that represent its
+    entirety in a consistent way.
 
-    Finally our R-squared for the test data set was around 89% which means that 89% of the variance in the response variable can be explained by the input variables. An R-squared in this case is very good as the pricing of the diamonds is not a phyisical measurement but rather a result of human judgement. This is true for other variables as well (such as color and cut which are a result of human judgment).
+    Finally our R-squared for the test data set was around 89% which means that
+    89% of the variance in the response variable can be explained by the input
+    variables. An R-squared in this case is very good as the pricing of the
+    diamonds is not a phyisical measurement but rather a result of human
+    judgement. This is true for other variables as well (such as color and cut
+    which are a result of human judgment).
 
 # CONCLUSION:
 I conclude that a linear model taking into account the variables:
@@ -114,7 +169,8 @@ I conclude that a linear model taking into account the variables:
  - is_cut_premium
  - y
  - is_cut_very_good
-is a fair model in predicting the price of a diamond and that LASSO regression was useful in discarding variables in this case.
+is a fair model in predicting the price of a diamond and that LASSO regression
+was useful in discarding variables in this case.
 -------------------------------   Code Section   ------------------------------
 ---------------   Code 1 --------------
 """
@@ -288,7 +344,8 @@ def main():
     # Mass is already included as mass in SI units.
     df.drop(['carat'], inplace=True, axis=1)
     # Those are dummy variables not needed in our data set anymore.
-    df.drop(['price_expensive', 'price_expensive_binary'], inplace=True, axis=1)
+    df.drop(['price_expensive', 'price_expensive_binary'], inplace=True,
+    axis=1)
 
     # A bit of error checking.
     if df.isnull().sum().sum() != 0:
@@ -318,7 +375,8 @@ def main():
     output_variable = df.price.copy()  # Categorized price
     print_separator()
 
-    input_training, input_test, output_training, output_test = train_test_split(
+    input_training, input_test, output_training, output_test
+    = train_test_split(
         input_variables, output_variable, test_size=0.3, random_state=0)
 
     # A few words about the LassoLarsCV:
@@ -328,7 +386,8 @@ def main():
 
         # LARS: least angle regression: algorithm for linear regression models
         # to high-dimensional data (aka 'a lot of categories').
-        # Compared to simple LASSO this model uses the LARS algorithm instead of
+        # Compared to simple LASSO this model uses the LARS algorithm instead
+        of
         # the 'vanilla' 'coordinate_descent' of simple LASSO.
 
         # CV: cross validation: this sets the alpha parameter (refered to as
@@ -380,7 +439,8 @@ def main():
     # print('Resulting alpha is not different than path alpha (difference):')
     # difference = model.alpha_ - model.alphas_
     # pprint(model.alpha_ - model.alphas_)
-    # print('Resulting coefficients are very different than path coefficients (difference):')
+    # print('Resulting coefficients are very different than path coefficients
+    (difference):')
     # pprint(model.coef_ - model.coef_path_.T)
     # print_separator()
 
