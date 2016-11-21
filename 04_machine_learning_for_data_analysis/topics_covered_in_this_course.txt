@@ -14,7 +14,7 @@ By completing this course, you will learn how to apply, test, and interpret
 machine learning algorithms as alternative methods for addressing your
 research questions.
 
-[_] LESSON 01: What is ML?
+[_] LESSON 01: What is ML and Single Decision Trees?
 	: Statistical methods including linear and logistic regressions
 	: Can be used to:
 	:	- Describe associations
@@ -42,8 +42,7 @@ research questions.
 		: Creates segmentation
 		: Is a method of supervised prediction
 		: Not so good for prediction since they are poorly reproducible but good for data exploration and interpretation
-[_] 
-[_] LESSON 02
+[_] LESSON 02: Ensemble methods and Validation x Cross-Validation.
 	[_] Random forests
 		: Random forets grow a lot of decision trees
 		: For each of those trees there are a training group (~60%) and a test group (~40%)
@@ -80,8 +79,22 @@ research questions.
 		:	[] usually: k=5 or k=10
 		:	Disadvantages:
 		:	[] 'leave one out' has less bias, but k-fold has less variance
-
-[_] LESSON 03
+[_] LESSON 03: Lasso Regression:
+	: Used in linear regression models.
+	: Penalized regression method.
+	: Supervised ML method.
+	: Shrinkage and variable selection method for LINEAR REGRESSION.
+	: Shrinkage stage
+	: Selection stage
+	: Results in a greater prediction accuracy
+	: Can increase mdoel interpretability
+	: Tuning parameter: lambda: as lambda increases fewer predictors are allowed to stay
+	: There is a need for rescaling the quantitative and binary variables in order for the tuning parameter to be 'fair'.
+	:
+	: Drawbacks:
+	:	selection of variables is not statistically driven
+	:	if predictors are correlated lasso arbitrarily selects one
+	:	estimating p-values is not straightforward
 [_] LESSON 04
 [_] 
 [_] Topics of this course:
