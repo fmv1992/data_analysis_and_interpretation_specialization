@@ -2,7 +2,7 @@
 """
 Created on Mon Dec 14 16:26:46 2015
 
-@author: jrose01
+@author: jrose01 (modified by fmvieira)
 """
 
 # pylama: skip=1
