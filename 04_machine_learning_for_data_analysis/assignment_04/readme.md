@@ -2,7 +2,7 @@
 
 ## Machine Learning for Data Analysis
 
-### Assignment 01: K-Means Cluster Analysis
+### Assignment 04: Cluster Analysis
 
 Specialization: https://www.coursera.org/specializations/data-analysis
 

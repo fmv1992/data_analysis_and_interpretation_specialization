@@ -1,0 +1,56 @@
+---------------------------------   Preamble   --------------------------------
+This same posting can be seen on GitHub:
+??link??
+It is easier to read if you read there!
+-----------------------------------   Post   ----------------------------------
+-------------------------------   Introduction   ------------------------------
+Data set: R dataset: "Prices of 50,000 round cut diamonds"
+    - Description: "A dataset containing the prices and other attributes of
+    almost 54,000 diamonds."
+    - Weblink:
+        https://github.com/fmv1992/data_analysis_and_interpretation_specialization/blob/course_04_machine_learning/04_machine_learning_for_data_analysis/data_sets/r_data_sets/ggplot2/diamonds.csv
+
+Research Question: When doing a clustering analysis there is no predefined
+research question. All we can hope for is that the clustering discriminates the
+individuals in meaningful distinct groups.
+
+Explanatory variables:
+    - Carat: weight of the diamond (0.2–5.01)
+            -> Transformed to mass (SI units; kg)
+    - Cut: quality of the cut (Fair, Good, Very Good, Premium, Ideal)
+            -> Dropped since it is a result of human judgment (may not reflect
+            real differentiation)
+    - Colour: diamond colour, from J (worst) to D (best)
+    - Clarity: a measurement of how clear the diamond is (I1 (worst), SI1, SI2,
+      VS1, VS2, VVS1, VVS2, IF (best))
+    - X: length in mm (0–10.74)
+    - Y: width in mm (0–58.9)
+    - Z: depth in mm (0–31.8)
+    - Depth: total depth percentage = z / mean(x, y) = 2 * z / (x + y) (43–79)
+    - Table: width of top of diamond relative to widest point (43–95)
+    - Mass: mass of the diamong (kg)
+
+Response variable: we hope that the clusters will group diamonds with different
+mass and prices mostly.
+
+Methodology: K-Means Cluster Analysis.
+Details:
+	??
+
+Goal: ??
+
+-------------------------------   Code Section   ------------------------------
+The instructors' code for this assignment had two flaws:
+    1) It divided the initial data set into test and training set which does
+       not make sense for cluster analysis. In clustering problems there is no
+       way of checking that the labeling was done correctly. There is nothing
+       to be 'learn and tested'. No overfitting is possible.
+    2) The code is overcomplicated to insert the cluster labels and GPA into
+       the processed dataframe. There is no need to 'reset_index' then merge
+       the dataframe.
+---------------   Code   --------------
+??
+-----------   Code Output   -----------
+??
+----------------------   Interpretation Of The Results   ----------------------
+??
