@@ -9,7 +9,6 @@ This course is one in a series of: Data Analysis and Interpretation
 Assignment 01: Decision Trees.
 """
 
-# # pylama: skip=1
 # pylama:ignore=C101,W0611
 
 import pandas as pd
