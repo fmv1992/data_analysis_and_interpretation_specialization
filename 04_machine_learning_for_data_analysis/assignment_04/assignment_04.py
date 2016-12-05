@@ -9,7 +9,6 @@ This course is one in a series of: Data Analysis and Interpretation
 Assignment 04: K-Means cluster analysis.
 """
 
-# # pylama: skip=1
 # pylama:ignore=C101,W0611,W0612,R0914
 
 import pandas as pd
@@ -46,7 +45,13 @@ def main():
     # Drop variables:
     #   1) Related to price. This will be our analyzed variable.
     #   2) Cut (quality) since it is a result of human assessment.
-    df.drop(['price_expensive', 'price_expensive_binary', 'price', 'cut'],
+    df.drop(['price_expensive',
+             'price_expensive_binary',
+             'price',
+             # 'cut',
+             'depth',
+             'table',
+             ],  # noqa
             axis=1,
             inplace=True)
 

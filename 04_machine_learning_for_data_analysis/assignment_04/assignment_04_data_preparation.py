@@ -123,4 +123,4 @@ def return_processed_diamonds_data_set():
 #         return_processed_diamonds_data_set())
 
 if __name__ == '__main__':
-    return_proc_and_transf_data_set()
+    return_processed_diamonds_data_set()
