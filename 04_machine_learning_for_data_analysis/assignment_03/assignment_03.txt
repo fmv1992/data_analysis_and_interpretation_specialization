@@ -46,7 +46,7 @@ Details:
 
 Notes:
     - The variables were scaled to have a mean of zero and an SD = 1. (so the
-      final binary variables do not have the 0 and 1 valu anymore.
+      final binary variables do not have the 0 and 1 value anymore).
 
 Tip:
     - For the results to become reproducible we can give a random seed/state
