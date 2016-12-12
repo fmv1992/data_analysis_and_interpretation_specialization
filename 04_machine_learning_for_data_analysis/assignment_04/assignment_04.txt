@@ -72,12 +72,6 @@ charateristics).
     assignment until the NC points shift less than a specified threshold or
     after a given amount of iterations.
 
-# ORDINARY LEAST SQUARES REGRESSION (CATEGORICAL):
-    ??
-
-# TUKEY'S HONEST SIGNIFICANCE TEST:
-    ??
-
 -------------------------------   Code Section   ------------------------------
 
 The instructors' code for this assignment had two flaws:
@@ -493,4 +487,44 @@ group1 group2 meandiff   lower    upper  reject
 --------------------------------------------------
 
 ----------------------   Interpretation Of The Results   ----------------------
-??
+
+# The Elbow Curve and The Number of Clusters
+Using the elbow curve I determined that the number of clusters should be three
+since the average distance of the clusters to their centroid decreased
+significantly compared to 2 clusters but not so significantly than 4 clusters.
+
+# PCA: Principal component analysis
+The PCA techinique was used to transform the 7 variables into 2 linearly
+uncorrelated variables.
+A scatterplot of the variables indicated that the clusters were not packed and
+with few overlap indicating that the within cluster variance was high but the
+number of clusters and the 'sorting' of the diamonds was satisfactory.
+
+# Means of each cluster
+    ## Overall findings: the clusters did not sort the diamonds into very
+    relevant groups. The means of many variables were equivalent between the
+    clusters. Most importantly the price variable was barely different between
+    the clusters. Its differentiation was less than 1%.
+    ## Cluster 0: This cluster presented the best value for color but not so
+    different than the other clusters.
+
+    Similar analyses could be executed for other variables but again, even our
+    target variable 'price' was not significantly sorted in the clustering.
+
+# Tukey Post Hoc Comparison
+Even though the clustering did not provide meaningful differences in our
+variables, Tukey's Honest Test did not reject any of the cluster comparisons.
+That means that it assesses the price variable in each cluster as significantly
+different from each other. This could be true but the significancy of less than
+1% in price mean between clusters is not significant enough to justify the
+clustering.
+
+# Conclusion
+The clustering technique was applied accordingly but the objectives of this
+lesson was not met. The clusters failed to provide a meaningful distintictive
+feature for each cluster and a diamond in cluster 0 could well be put into
+cluster 1 or 2 without much impact to the interpretability of each cluster.
+
+To further improve our findinds the clustering could be fine tuned to be more
+sensible to a given variable (mass for example if one wanted to isolate
+diamonds with more/less mass).
