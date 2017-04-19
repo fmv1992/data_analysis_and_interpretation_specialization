@@ -64,7 +64,7 @@ sklearn.metrics.accuracy_score(tar_test, predictions)
 from sklearn import tree
 #from StringIO import StringIO
 from io import StringIO
-#from StringIO import StringIO 
+#from StringIO import StringIO
 from IPython.display import Image
 out = StringIO()
 tree.export_graphviz(classifier, out_file=out)

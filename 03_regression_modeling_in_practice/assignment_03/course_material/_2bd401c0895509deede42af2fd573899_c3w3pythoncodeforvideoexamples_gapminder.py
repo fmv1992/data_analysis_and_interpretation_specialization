@@ -60,7 +60,7 @@ print (reg2.summary())
 ####################################################################################
 
 # adding internet use rate
-reg3 = smf.ols('femaleemployrate  ~ urbanrate_c + I(urbanrate_c**2) + internetuserate_c', 
+reg3 = smf.ols('femaleemployrate  ~ urbanrate_c + I(urbanrate_c**2) + internetuserate_c',
                data=sub1).fit()
 print (reg3.summary())
 

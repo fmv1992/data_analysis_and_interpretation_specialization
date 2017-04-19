@@ -47,7 +47,7 @@ clustervar['PARPRES']=preprocessing.scale(clustervar['PARPRES'].astype('float64'
 # split data into train and test sets
 clus_train, clus_test = train_test_split(clustervar, test_size=.3, random_state=123)
 
-# k-means cluster analysis for 1-9 clusters                                                           
+# k-means cluster analysis for 1-9 clusters
 from scipy.spatial.distance import cdist
 clusters=range(1,10)
 meandist=[]
@@ -56,7 +56,7 @@ for k in clusters:
     model=KMeans(n_clusters=k)
     model.fit(clus_train)
     clusassign=model.predict(clus_train)
-    meandist.append(sum(np.min(cdist(clus_train, model.cluster_centers_, 'euclidean'), axis=1)) 
+    meandist.append(sum(np.min(cdist(clus_train, model.cluster_centers_, 'euclidean'), axis=1))
     / clus_train.shape[0])
 
 """
@@ -88,7 +88,7 @@ plt.show()
 BEGIN multiple steps to merge cluster assignment with clustering variables to examine
 cluster variable means by cluster
 """
-# create a unique identifier variable from the index for the 
+# create a unique identifier variable from the index for the
 # cluster training data to merge with the cluster assignment variable
 clus_train.reset_index(level=0, inplace=True)
 # create a list that has the new index variable
@@ -105,8 +105,8 @@ newclus
 newclus.columns = ['cluster']
 
 # now do the same for the cluster assignment variable
-# create a unique identifier variable from the index for the 
-# cluster assignment dataframe 
+# create a unique identifier variable from the index for the
+# cluster assignment dataframe
 # to merge with cluster training data
 newclus.reset_index(level=0, inplace=True)
 # merge the cluster assignment dataframe with the cluster training variable dataframe
@@ -128,7 +128,7 @@ print(clustergrp)
 
 
 # validate clusters in training data by examining cluster differences in GPA using ANOVA
-# first have to merge GPA with clustering variables and cluster assignment data 
+# first have to merge GPA with clustering variables and cluster assignment data
 gpa_data=data_clean['GPA1']
 # split GPA data into train and test sets
 gpa_train, gpa_test = train_test_split(gpa_data, test_size=.3, random_state=123)
@@ -138,7 +138,7 @@ merged_train_all=pd.merge(gpa_train1, merged_train, on='index')
 sub1 = merged_train_all[['GPA1', 'cluster']].dropna()
 
 import statsmodels.formula.api as smf
-import statsmodels.stats.multicomp as multi 
+import statsmodels.stats.multicomp as multi
 
 gpamod = smf.ols(formula='GPA1 ~ C(cluster)', data=sub1).fit()
 print (gpamod.summary())

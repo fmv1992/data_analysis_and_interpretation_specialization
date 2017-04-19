@@ -14,7 +14,7 @@ def clean_string(s):
     separator."""
     s = str(s).lower().replace(' ', '_')
     return ''.join(filter(lambda x: x in universe_of_digits, s))
-    
+
 
 def clean_dataframe(df):
     """Cleans the dataframe."""
