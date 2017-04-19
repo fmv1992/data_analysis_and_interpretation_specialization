@@ -1,0 +1,5 @@
+?? Discuss the categorical OLS
+
+?? Discuss the Tukey Honesty Test
+
+?? Better discuss PCA
