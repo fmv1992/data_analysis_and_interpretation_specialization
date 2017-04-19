@@ -3,13 +3,16 @@
 Created on Mon Sep 21 10:18:43 2015
 
 @author: jml
+
+Warning: this script was provided by the course and it is not authored by me
+(monteiro/e061568/felipe vieira).
 """
 
 # ANOVA
 
 import numpy
 import pandas
-import statsmodels.formula.api as smf 
+import statsmodels.formula.api as smf
 import statsmodels.stats.multicomp as multi
 import seaborn
 import matplotlib.pyplot as plt
@@ -191,7 +194,7 @@ print ('chi-square value, p value, expected counts')
 cs1= scipy.stats.chi2_contingency(ct1)
 print (cs1)
 
-# set variable types 
+# set variable types
 sub2["USQUAN"] = sub2["USQUAN"].astype('category')
 sub2['TAB12MDX'] = sub2['TAB12MDX'].convert_objects(convert_numeric=True)
 
@@ -275,7 +278,7 @@ def incomegrp (row):
       return 2
    elif row['incomeperperson'] > 9425.326:
       return 3
-   
+
 data_clean['incomegrp'] = data_clean.apply (lambda row: incomegrp (row),axis=1)
 
 chk1 = data_clean['incomegrp'].value_counts(sort=False, dropna=False)
