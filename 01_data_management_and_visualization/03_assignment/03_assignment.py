@@ -2,7 +2,11 @@
 """
 Created on Sun Apr 10 17:54:35 2016
 
-@author: e061568
+Author: monteiro
+
+Description:
+
+Assignment 03
 """
 import pandas as pd  # version '0.18.0'
 import seaborn  # version '0.7.0'

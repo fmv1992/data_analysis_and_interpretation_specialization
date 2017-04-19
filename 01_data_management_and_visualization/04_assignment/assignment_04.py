@@ -4,6 +4,10 @@ Created on Sun Apr 17 14:00:51 2016
 
 Author: monteiro
 
+Description:
+
+Assignment 04
+
 """
 
 import pandas as pd  # version '0.18.0'
