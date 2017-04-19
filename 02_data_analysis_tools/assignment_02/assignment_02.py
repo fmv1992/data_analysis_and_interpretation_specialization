@@ -2,7 +2,7 @@
 """
 Created on Fri Apr  1 08:45:34 2016
 
-@author: monteiro
+Author: Felipe Vieira
 """
 import pandas as pd
 import numpy as np

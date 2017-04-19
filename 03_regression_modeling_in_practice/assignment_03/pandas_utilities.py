@@ -2,7 +2,7 @@
 """
 Created on Wed Apr 27 07:37:20 2016
 
-@author: e061568
+Author: Felipe Vieira
 """
 import pandas as pd
 import string
