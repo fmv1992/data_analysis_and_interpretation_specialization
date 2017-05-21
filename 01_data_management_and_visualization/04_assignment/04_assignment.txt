@@ -17,7 +17,7 @@ For the bivariate analysis I used income per person and CO2 emissions. Note that
 """
 Created on Sun Apr 17 14:00:51 2016
 
-Author: monteiro
+Author: Felipe M. Vieira
 
 """
 

@@ -2,7 +2,7 @@
 """
 Created on Sun Apr  3 21:39:04 2016
 
-Author: monteiro
+Author: Felipe M. Vieira
 
 Description:
 

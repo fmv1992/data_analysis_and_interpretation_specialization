@@ -2,7 +2,7 @@
 """
 Created on Thu Apr  7 07:41:45 2016
 
-Author: Felipe Vieira
+Author: Felipe M. Vieira
 """
 import pandas as pd  # version '0.18.0'
 import seaborn  # version '0.7.0'

@@ -2,7 +2,7 @@
 """
 Created on Tue May 17 07:49:53 2016
 
-Author: monteiro
+Author: Felipe M. Vieira
 
 Description: Logistic regression model
 
