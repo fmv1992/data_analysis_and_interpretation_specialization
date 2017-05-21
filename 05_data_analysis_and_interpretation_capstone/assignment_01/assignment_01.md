@@ -1,7 +1,7 @@
-# Assignment 01
+# Assignment 01: Identify Your Data and Research Question
 
 * Format: Blog entry
-    * *url*: XXX
+    * *url*: https://pydataexplorer.tumblr.com/post/160893685803/capstone-project-module-1-identify-your-data-and
 * Deliverables:
     * Project title:
         * Finding correlations between weather events and human/material losses
@@ -25,5 +25,5 @@
           could possibly predict future events.  
     * Data:
         * **Storm Event Data**
-        * File: XXX
+        * File: https://github.com/fmv1992/data_analysis_and_interpretation_specialization/tree/capstone/05_data_analysis_and_interpretation_capstone/data
         * Other support files are provided in PDF.
