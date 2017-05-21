@@ -2,7 +2,7 @@
 """
 Created on Wed Apr 27 07:37:20 2016
 
-@author: e061568
+Author: Felipe Vieira
 """
 import pandas as pd
 import string
@@ -14,7 +14,7 @@ def clean_string(s):
     separator."""
     s = str(s).lower().replace(' ', '_')
     return ''.join(filter(lambda x: x in universe_of_digits, s))
-    
+
 
 def clean_dataframe(df):
     """Cleans the dataframe."""

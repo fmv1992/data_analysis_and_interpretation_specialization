@@ -68,7 +68,7 @@ for idx in range(len(trees)):
    classifier=classifier.fit(pred_train,tar_train)
    predictions=classifier.predict(pred_test)
    accuracy[idx]=sklearn.metrics.accuracy_score(tar_test, predictions)
-   
+
 plt.cla()
 plt.plot(trees, accuracy)
 

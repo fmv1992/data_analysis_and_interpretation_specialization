@@ -32,7 +32,7 @@ pandas_utilities.clean_dataframe(infra_db)
 print('\n\nList of variables in the \'Infrastructure\' subset:')
 for code, name in zip(infra_db['indicator_name'], infra_db['indicator_code']):
     print(code, '[',name,']')
-    
+
 energetic_matrix = {
 'EG.ELC.COAL.ZS': 'coal',
 'EG.ELC.HYRO.ZS': 'hydroeletric',

@@ -1,0 +1,530 @@
+---------------------------------   Preamble   --------------------------------
+
+This same posting can be seen on GitHub:
+https://github.com/fmv1992/data_analysis_and_interpretation_specialization/tree/master/04_machine_learning_for_data_analysis/assignment_04
+It is easier to read if you read there!
+
+-----------------------------------   Post   ----------------------------------
+
+-------------------------------   Introduction   ------------------------------
+
+Data set: R dataset: "Prices of 50,000 round cut diamonds"
+    - Description: "A dataset containing the prices and other attributes of
+    almost 54,000 diamonds."
+    - Weblink:
+        https://github.com/fmv1992/data_analysis_and_interpretation_specialization/blob/course_04_machine_learning/04_machine_learning_for_data_analysis/data_sets/r_data_sets/ggplot2/diamonds.csv
+
+Research Question: When doing a clustering analysis there is no predefined
+research question. All we can hope for is that the clustering discriminates the
+individuals in meaningful distinct groups.
+
+Explanatory variables:
+    - Carat: weight of the diamond (0.2–5.01)
+            -> Transformed to mass (SI units; kg)
+    - Cut: quality of the cut (Fair, Good, Very Good, Premium, Ideal)
+    - Colour: diamond colour, from J (worst) to D (best)
+    - Clarity: a measurement of how clear the diamond is (I1 (worst), SI1, SI2,
+      VS1, VS2, VVS1, VVS2, IF (best))
+    - X: length in mm (0–10.74)
+    - Y: width in mm (0–58.9)
+    - Z: depth in mm (0–31.8)
+    - Depth: total depth percentage = z / mean(x, y) = 2 * z / (x + y) (43–79)
+        -> Dropped since it is believed to be indifferent to influence
+        a diamond's pricing
+    - Table: width of top of diamond relative to widest point (43–95)
+        -> Dropped since it is believed to be indifferent to influence
+        a diamond's pricing
+    - Mass: mass of the diamong (kg)
+
+Response variable: we hope that the clusters will group diamonds with different
+mass and prices mostly.
+
+Methodology: A K-Means Cluster Analysis was performed to group the diamond data
+set into groups with meaningful intra-group characteristics.
+Details:
+    - All the categorical variables (cut, color and clarity) were mapped into
+      numbers:
+        - In all the categories the corrisponding number are from lower ->
+          worst to greater -> best.
+
+Notes:
+    - The variables were scaled to have a mean of zero and an SD = 1. (so the
+      final binary variables do not have the 0 and 1 value anymore).
+
+Goal: group the diamonds into meaningful groupds (groups with distinct
+charateristics).
+
+-----------------------------------   Theory   --------------------------------
+
+# K-MEANS CLUSTER ANALYSIS:
+    The objective of this technique is to divide a group of observations into
+    a pre defined number of clusters.
+    First a pre defined number of clusters (NC) has to be specified.
+    Then NC points are randomly generated into the possible space.
+    Then for each observation it calculates the distance to all of the NC
+    points. The nearest of the NC points to the selected point group this point
+    into the NC cluster.
+    After this process is done for all points, each point has a NC cluster
+    assigned to it.
+    Then one recalculates the new NC points based on the centroid of all points
+    assigned to a cluster.
+    Finally one repeats this 'repositioning' of the NC points and cluster
+    assignment until the NC points shift less than a specified threshold or
+    after a given amount of iterations.
+
+-------------------------------   Code Section   ------------------------------
+
+The instructors' code for this assignment had two flaws:
+    1) It divided the initial data set into test and training set which does
+       not make sense for cluster analysis. In clustering problems there is no
+       way of checking that the labeling was done correctly. There is nothing
+       to be 'learn and tested'. No overfitting is possible.
+       Thus the test data set had zero components on it.
+    2) The code is overcomplicated to insert the cluster labels and GPA into
+       the processed dataframe. There is no need to 'reset_index' then merge
+       the dataframe.
+
+---------------   Code   --------------
+
+---------------   Code 1 --------------
+"""
+Data preparation for assignment 04.
+
+Prepares the diamond database found in
+
+https://vincentarelbundock.github.io/Rdatasets/datasets.html
+
+Some categorical variables are mapped to integers ranging from:
+    0: worst value in that categorical
+    ...
+    max: best value in that categorical
+
+"""
+
+# pylama:ignore=W0611
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+def return_processed_diamonds_data_set():
+    u"""Main function. Return processed diamonds dataset."""
+    # Set constants
+    CSVPATH = '../data_sets/r_data_sets/ggplot2/diamonds.csv'
+    DTYPES = {
+        'carat': np.float64,
+        'cut': pd.Categorical,
+        'color': pd.Categorical,
+        'clarity': pd.Categorical,
+        'depth': np.float64,
+        'table': np.float64,
+        'price': np.int64,
+        'x': np.float64,
+        'y': np.float64,
+        'z': np.float64,
+    }
+    PRICE_QUANTILE = 0.75
+
+    # Load data set.
+    df = pd.read_csv(CSVPATH, index_col=0, dtype=DTYPES)
+
+    # Categorize expensive, medium or cheap (our output variable).
+    is_expensive = df.price > df.price.quantile(PRICE_QUANTILE)
+    df['price_expensive'] = pd.Categorical.from_codes(
+        is_expensive,
+        categories=['cheap', 'expensive'])
+    df['price_expensive_binary'] = df.price_expensive.map(
+        {'expensive': 1, 'cheap': 0})
+
+    # Helper to categorize the clarity.
+    clarity_map = {
+        'I1': 0,    # Least clear
+        'SI1': 1,
+        'SI2': 2,
+        'VS1': 3,
+        'VS2': 4,
+        'VVS1': 5,
+        'VVS2': 6,
+        'IF': 7,    # Most clear
+    }
+    df.replace(to_replace={'clarity': clarity_map}, inplace=True)
+
+    # Helper to categorize color.
+    # 0 is the worst color (J)
+    # 6 is the best color (D)
+    df.color = df.color.apply(lambda x: ord('j') - ord(x.lower()))
+
+    # Helper to categorize cut
+    df.cut = df.cut.apply(str.lower)
+    CUT_SCALE = {
+        'fair': 0,
+        'good': 1,
+        'very good': 2,
+        'premium': 3,
+        'ideal': 4,
+    }
+    df.replace(to_replace={'cut': CUT_SCALE}, inplace=True)
+
+    # Creates a column with SI mass
+    CARAT_TO_KG = 200e-3
+    df['mass'] = df.carat * CARAT_TO_KG
+    df.drop('carat', axis=1, inplace=True)
+
+    # Gives a nice description for each variable.
+    description = {
+        'price': 'price in US dollars (\$326–\$18,823)',
+        # 'carat': 'weight of the diamond (0.2–5.01)',
+        'cut': 'quality of the cut (Fair, Good, Very Good, Premium, Ideal)',
+        'colour': 'diamond colour, from J (worst) to D (best)',
+        'color': 'diamond colour, from J (worst) to D (best)',
+        'clarity': 'a measurement of how clear the diamond is (I1 (worst), '
+            'SI1, SI2, VS1, VS2, VVS1, VVS2, IF (best))', # noqa
+        'x': 'length in mm (0–10.74)',
+        'y': 'width in mm (0–58.9)',
+        'z': 'depth in mm (0–31.8)',
+        'depth': 'total depth percentage = z / mean(x, y) = 2 * z / (x + y) '
+            '(43–79)', # noqa
+        'table': 'width of top of diamond relative to widest point (43–95)',
+    }
+    df.variable_description = description
+
+    return df
+
+
+# def transform_cut_scale_to_category_columns(df):
+#     u"""Transform the cut scale to category columns.
+#
+#     In order to create a couple of variables transform the cut scale to binary
+#     columns.
+#
+#     """
+#     for cut_type in df.cut.unique():
+#         cut_type = cut_type.replace(' ', '_')
+#         df['is_cut_' + cut_type] = (df.cut == cut_type).astype('float64')
+#     df.drop('cut', axis=1, inplace=True)
+#     return df
+
+
+# def return_proc_and_transf_data_set():
+#     u"""Combine the two functions above."""
+#     return transform_cut_scale_to_category_columns(
+#         return_processed_diamonds_data_set())
+
+if __name__ == '__main__':
+    return_processed_diamonds_data_set()
+
+---------------   Code 2 --------------
+
+u"""
+Coursera Course: Machine Learning for Data Analysis.
+
+    https://www.coursera.org/learn/machine-learning-data-analysis
+
+
+This course is one in a series of: Data Analysis and Interpretation
+
+Assignment 04: K-Means cluster analysis.
+"""
+
+# pylama:ignore=C101,W0611,W0612,R0914
+
+import pandas as pd
+import numpy as np
+import matplotlib.pylab as plt
+import seaborn as sns
+# sklearn imports.
+from sklearn import preprocessing
+from sklearn.model_selection import train_test_split
+from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
+# scipy imports
+from scipy.spatial.distance import cdist
+# statsmodels imports
+import statsmodels.formula.api as smf
+import statsmodels.stats.multicomp as multi
+
+# Local imports.
+import assignment_04_data_preparation
+
+
+def print_separator():
+    u"""Print a separator from between sections of text."""
+    quantity = 50
+    print(quantity*'-')
+    return None
+
+
+def main():
+    u"""Main function for assignment 03."""
+    # Load prepared data.
+    df = assignment_04_data_preparation.return_processed_diamonds_data_set()
+    price_series = df.price.copy()
+    # Drop variables:
+    #   1) Related to price. This will be our analyzed variable.
+    #   2) Cut (quality) since it is a result of human assessment.
+    df.drop(['price_expensive',
+             'price_expensive_binary',
+             'price',
+             # 'cut',
+             'depth',
+             'table',
+             ],  # noqa
+            axis=1,
+            inplace=True)
+
+    # Data management: data set has no nulls.
+    if df.isnull().sum().sum() != 0:
+        raise ValueError('Your data has unintended nulls.')
+
+    # There is a need to preserve the original data frame since we will look
+    # into the average of the original variables:
+    df_original = df.copy()
+    # Data normalization and casting.
+    for num_col in df.columns.tolist():
+        df[num_col] = preprocessing.scale(df[num_col].astype('float64'))
+    # print(df.describe())
+    # print_separator()
+
+    # Split data into training and test sets. In this case since it makes no
+    # sense to split the data into training and test set we delete the (empty)
+    # test set.
+    cluster_training_set, cluster_test_set = train_test_split(
+        df,
+        test_size=0.0,
+        random_state=1)
+    del cluster_test_set
+
+    # Decide upon a cluster number for the K-Mean clusterization.
+    cluster_nr = range(1, 10)
+    mean_distances = []
+    # A cluster will have a number of points. Each of the data set point has a
+    # distance to each of these points. Nevertheless only the minimum distance
+    # of a data set point to a 'mean point' should be considered for calculation
+    # in the mean distance.
+    for k_clusters in cluster_nr:
+        model = KMeans(
+            n_clusters=k_clusters,
+            random_state=1,
+            # max_iter=1000,
+            # n_jobs=3,
+        )
+        model.fit(cluster_training_set)
+        cluster_prediction = model.predict(cluster_training_set)
+        # Calculate the mean distance of each set of point to the clusters.
+        distances = cdist(cluster_training_set,
+                          model.cluster_centers_,
+                          metric='euclidean')
+        # With axis = 1 get the minimum distance of a point to a cluster and not
+        # the absolute minimum distance.
+        # In the end each point as a distance attributed to it (the minimum
+        # one). This attribute can also be acessed by the 'inertia_' property.
+        min_distance = np.min(distances, axis=1)
+        average_of_min_distances = (np.sum(min_distance)
+                                    / cluster_training_set.shape[0])  # noqa
+        # The
+        mean_distances.append(average_of_min_distances)
+        # print('cluster_centers', model.cluster_centers_)
+        # print('mean_distance', mean_distance)
+        # print('min_distance', mean_distance)
+
+    # Plot clusters mean distance.
+    ax = plt.gca()
+    ax.plot(cluster_nr, mean_distances)
+    plt.xlabel('Number of clusters')
+    plt.ylabel('Average distances')
+    plt.title('Selecting k with the Elbow Method')
+    # Plot a circle showing the point.
+    N_CLUSTERS = 3
+    selecting_circle = plt.Circle(
+        (N_CLUSTERS, mean_distances[N_CLUSTERS-1]),
+        0.1,
+        color='r',
+        fill=False,
+        # linewidth=,
+        )  # noqa
+    ax.add_artist(selecting_circle)
+    plt.savefig('n_clusters_versus_average_dist.png', dpi=500)
+    plt.close('all')
+    # Print result of selected number of elbows.
+    print('Selected n = 3 clusters')
+    print_separator()
+
+    # Create a solution with 3 clusters
+    model = KMeans(
+        n_clusters=N_CLUSTERS,
+        random_state=1
+    )
+    model.fit(cluster_training_set)
+    cluster_assignment = model.predict(cluster_training_set)
+
+    # Principal Component Analysis: convert a set of possibly correlated
+    # varibles into a set of linearily uncorrelated variables.
+    pca2 = PCA(2)
+    pca_coordinates = pca2.fit_transform(cluster_training_set)
+    x = pca_coordinates[:, 0]
+    y = pca_coordinates[:, 1]
+    ax = plt.gca()
+    ax.scatter(x, y, c=model.labels_)
+    plt.xlabel('Canonical variable 1')
+    plt.ylabel('Canonical variable 2')
+    plt.title('Scatterplot of Canonical Variables for 3 Clusters')
+    plt.savefig('clusters_on_canonical_variables.png', dpi=500)
+    plt.close('all')
+
+    # Do we use the test set for the k-means clustering?
+    # According to
+    # http://stackoverflow.com/questions/13394478/why-we-need-training-and-test-datasets-in-research
+    # which makes sense, there no test set in clustering analisys.
+    #
+    # Include price in the data frame and analyze the average price of diamonds
+    # in each cluster.
+    # It is worth saying that the original data frame must be restored here in
+    # order for its mean and non-normalized/non-scaled values to have meaningful
+    # value.
+    df_clustered = df_original.copy()
+    df_clustered['price'] = price_series
+    df_clustered['clusters'] = model.labels_
+
+    # Now group by cluster.
+    clustergb = df_clustered.groupby('clusters').mean()
+    print("Clustering variable means by cluster:")
+    print(df_clustered.groupby('clusters').mean())
+    print('Standard deviation of price by cluster:')
+    print(df_clustered.groupby('clusters').std())
+    print_separator()
+
+    # Test the correlation of price variable to each cluster.
+    price_ols_fit = smf.ols(
+        formula='price ~ C(clusters)',
+        data=df_clustered).fit()
+    print('Ordinary least squares regression for price versus clusters:')
+    print(price_ols_fit.summary())
+    print_separator()
+
+    multi_comparison = multi.MultiComparison(
+        df_clustered['price'],
+        df_clustered['clusters'])
+    result = multi_comparison.tukeyhsd()
+    print(result.summary())
+    print_separator()
+
+    return {
+        'training_set': cluster_training_set,
+        'dataframe': df,
+        'model': model,
+    }
+
+
+if __name__ == '__main__':
+    main()
+
+-----------   Code Output   -----------
+
+Selected n = 3 clusters
+--------------------------------------------------
+Clustering variable means by cluster:
+               cut     color   clarity         x         y         z  \
+clusters                                                               
+0         2.911383  3.423098  3.086285  5.734187  5.745404  3.540979   
+1         2.910538  3.404688  3.077804  5.726949  5.729044  3.536648   
+2         2.893211  3.399531  3.082971  5.734847  5.736285  3.540236   
+
+              mass        price  
+clusters                         
+0         0.159906  3957.253748  
+1         0.159249  3926.443058  
+2         0.159853  3929.636390  
+Standard deviation of price by cluster:
+               cut     color   clarity         x         y         z  \
+clusters                                                               
+0         1.116259  1.698119  1.784788  1.126100  1.280141  0.697444   
+1         1.115417  1.701147  1.765421  1.122187  1.113262  0.717313   
+2         1.118129  1.702397  1.767545  1.119376  1.111437  0.695285   
+
+              mass        price  
+clusters                         
+0         0.095345  4019.356790  
+1         0.094693  3995.981823  
+2         0.094696  3968.530272  
+--------------------------------------------------
+Ordinary least squares regression for price versus clusters:
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                  price   R-squared:                       0.000
+Model:                            OLS   Adj. R-squared:                 -0.000
+Method:                 Least Squares   F-statistic:                    0.2066
+Date:                Mon, 05 Dec 2016   Prob (F-statistic):              0.813
+Time:                        09:01:39   Log-Likelihood:            -5.2378e+05
+No. Observations:               53940   AIC:                         1.048e+06
+Df Residuals:                   53937   BIC:                         1.048e+06
+Df Model:                           2                                         
+Covariance Type:            nonrobust                                         
+====================================================================================
+                       coef    std err          t      P>|t|      [95.0% Conf. Int.]
+------------------------------------------------------------------------------------
+Intercept         3957.2537     42.041     94.128      0.000      3874.852  4039.655
+C(clusters)[T.1]   -30.8107     49.179     -0.627      0.531      -127.201    65.580
+C(clusters)[T.2]   -27.6174     50.441     -0.548      0.584      -126.482    71.247
+==============================================================================
+Omnibus:                    15096.296   Durbin-Watson:                   0.012
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):            34199.337
+Skew:                           1.618   Prob(JB):                         0.00
+Kurtosis:                       5.177   Cond. No.                         5.19
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+--------------------------------------------------
+Multiple Comparison of Means - Tukey HSD,FWER=0.05
+===============================================
+group1 group2 meandiff   lower    upper  reject
+-----------------------------------------------
+  0      1    -30.8107 -146.0742 84.4529 False 
+  0      2    -27.6174 -145.8392 90.6045 False 
+  1      2     3.1933   -85.3715 91.7582 False 
+-----------------------------------------------
+--------------------------------------------------
+
+----------------------   Interpretation Of The Results   ----------------------
+
+# The Elbow Curve and The Number of Clusters
+Using the elbow curve I determined that the number of clusters should be three
+since the average distance of the clusters to their centroid decreased
+significantly compared to 2 clusters but not so significantly than 4 clusters.
+
+# PCA: Principal component analysis
+The PCA techinique was used to transform the 7 variables into 2 linearly
+uncorrelated variables.
+A scatterplot of the variables indicated that the clusters were not packed and
+with few overlap indicating that the within cluster variance was high but the
+number of clusters and the 'sorting' of the diamonds was satisfactory.
+
+# Means of each cluster
+    ## Overall findings: the clusters did not sort the diamonds into very
+    relevant groups. The means of many variables were equivalent between the
+    clusters. Most importantly the price variable was barely different between
+    the clusters. Its differentiation was less than 1%.
+    ## Cluster 0: This cluster presented the best value for color but not so
+    different than the other clusters.
+
+    Similar analyses could be executed for other variables but again, even our
+    target variable 'price' was not significantly sorted in the clustering.
+
+# Tukey Post Hoc Comparison
+Even though the clustering did not provide meaningful differences in our
+variables, Tukey's Honest Test did not reject any of the cluster comparisons.
+That means that it assesses the price variable in each cluster as significantly
+different from each other. This could be true but the significancy of less than
+1% in price mean between clusters is not significant enough to justify the
+clustering.
+
+# Conclusion
+The clustering technique was applied accordingly but the objectives of this
+lesson was not met. The clusters failed to provide a meaningful distintictive
+feature for each cluster and a diamond in cluster 0 could well be put into
+cluster 1 or 2 without much impact to the interpretability of each cluster.
+
+To further improve our findinds the clustering could be fine tuned to be more
+sensible to a given variable (mass for example if one wanted to isolate
+diamonds with more/less mass).

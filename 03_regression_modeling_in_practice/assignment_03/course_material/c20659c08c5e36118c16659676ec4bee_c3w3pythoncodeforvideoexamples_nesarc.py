@@ -9,7 +9,7 @@ import numpy
 import pandas
 import statsmodels.api as sm
 import seaborn
-import statsmodels.formula.api as smf 
+import statsmodels.formula.api as smf
 
 # bug fix for display formats to avoid run time errors
 pandas.set_option('display.float_format', lambda x:'%.2f'%x)
@@ -67,8 +67,8 @@ data['S3AQ3C1']=data['S3AQ3C1'].replace(99, numpy.nan)
 
 # run this subset code to do the NDsymptoms regression (age 18-25, smoked in past month)
 # pandas gives observations missing on all symptoms (N=3) a value of zero, but should be nan
-# have to delete them 
-sub1=data[(data['AGE']<=25) & (data['CHECK321']==1) & (data['S3AQ3B1']==1) & 
+# have to delete them
+sub1=data[(data['AGE']<=25) & (data['CHECK321']==1) & (data['S3AQ3B1']==1) &
 (data['IDNUM']!=20346) & (data['IDNUM']!=36471) & (data['IDNUM']!=28724)]
 
 # run this code to do all other regression analyses
@@ -117,12 +117,12 @@ chk1c = sub1['S3AQ8B7J'].value_counts(sort=False, dropna=False)
 print (chk1c)
 
 # sum symptoms
-sub1['CWITHDR_COUNT'] = numpy.nansum([sub1['S3AQ8B7A'], sub1['S3AQ8B7B'], sub1['S3AQ8B7C'], 
+sub1['CWITHDR_COUNT'] = numpy.nansum([sub1['S3AQ8B7A'], sub1['S3AQ8B7B'], sub1['S3AQ8B7C'],
               sub1['S3AQ8B7D'], sub1['S3AQ8B7E'], sub1['S3AQ8B7F'],
               sub1['S3AQ8B7G'], sub1['S3AQ8B7H']], axis=0)
 
 # check to make sure sum code worked
-chksum=sub1[['IDNUM','S3AQ8B7A', 'S3AQ8B7B', 'S3AQ8B7C', 'S3AQ8B7D', 
+chksum=sub1[['IDNUM','S3AQ8B7A', 'S3AQ8B7B', 'S3AQ8B7C', 'S3AQ8B7D',
            'S3AQ8B7E', 'S3AQ8B7F', 'S3AQ8B7G', 'S3AQ8B7H', 'CWITHDR_COUNT']]
 chksum.head(n=50)
 
@@ -142,7 +142,7 @@ print (pandas.crosstab(sub1['CWITHDR_COUNT'], sub1['crit2']))
 #Current Larger amount or longer period criteria #3 DSM-IV
 sub1['S3AQ8B13']=sub1['S3AQ8B13'].replace(9, numpy.nan)
 sub1['S3AQ8B13']= sub1['S3AQ8B13'].map(recode1)
-  
+
 chk1d = sub1['S3AQ8B13'].value_counts(sort=False, dropna=False)
 print (chk1d)
 
@@ -194,7 +194,7 @@ print (chk1h)
 
 # sum all symptoms (np.nansum allows rows with some missing values to count all valid values)
 # instead of recoding the sum to nan
-sub1['NDSymptoms'] = numpy.nansum([sub1['crit1'], sub1['crit2'], sub1['S3AQ8B13'], 
+sub1['NDSymptoms'] = numpy.nansum([sub1['crit1'], sub1['crit2'], sub1['S3AQ8B13'],
               sub1['crit4'], sub1['S3AQ8B5'], sub1['crit6'],
               sub1['crit7']], axis=0 )
 chk2 = sub1['NDSymptoms'].value_counts(sort=False, dropna=False)
@@ -209,7 +209,7 @@ print(c2)
 def NICOTINEDEP (x):
    if x['TAB12MDX']==1:
       return 1
-   else: 
+   else:
       return 0
 sub1['NICOTINEDEP'] = sub1.apply (lambda x: NICOTINEDEP (x), axis=1)
 print (pandas.crosstab(sub1['TAB12MDX'], sub1['NICOTINEDEP']))
@@ -221,14 +221,14 @@ c6 = sub1["numbercigsmoked"].value_counts(sort=False, dropna=False)
 print(c6)
 
 def PANIC (x1):
-    if ((x1['S6Q1']==1 and x1['S6Q2']==1) or (x1['S6Q2']==1 and x1['S6Q3']==1) or 
-    (x1['S6Q3']==1 and x1['S6Q61']==1) or (x1['S6Q61']==1 and x1['S6Q62']==1) or 
-    (x1['S6Q62']==1 and x1['S6Q63']==1) or (x1['S6Q63']==1 and x1['S6Q64']==1) or 
-    (x1['S6Q64']==1 and x1['S6Q65']==1) or (x1['S6Q65']==1 and x1['S6Q66']==1) or 
-    (x1['S6Q66']==1 and x1['S6Q67']==1) or (x1['S6Q67']==1 and x1['S6Q68']==1) or 
-    (x1['S6Q68']==1 and x1['S6Q69']==1) or (x1['S6Q69']==1 and x1['S6Q610']==1) or 
-    (x1['S6Q610']==1 and x1['S6Q611']==1) or (x1['S6Q611']==1 and x1['S6Q612']==1) or 
-    (x1['S6Q612']==1 and x1['S6Q613']==1) or (x1['S6Q613']==1 and x1['S6Q7']==1) or 
+    if ((x1['S6Q1']==1 and x1['S6Q2']==1) or (x1['S6Q2']==1 and x1['S6Q3']==1) or
+    (x1['S6Q3']==1 and x1['S6Q61']==1) or (x1['S6Q61']==1 and x1['S6Q62']==1) or
+    (x1['S6Q62']==1 and x1['S6Q63']==1) or (x1['S6Q63']==1 and x1['S6Q64']==1) or
+    (x1['S6Q64']==1 and x1['S6Q65']==1) or (x1['S6Q65']==1 and x1['S6Q66']==1) or
+    (x1['S6Q66']==1 and x1['S6Q67']==1) or (x1['S6Q67']==1 and x1['S6Q68']==1) or
+    (x1['S6Q68']==1 and x1['S6Q69']==1) or (x1['S6Q69']==1 and x1['S6Q610']==1) or
+    (x1['S6Q610']==1 and x1['S6Q611']==1) or (x1['S6Q611']==1 and x1['S6Q612']==1) or
+    (x1['S6Q612']==1 and x1['S6Q613']==1) or (x1['S6Q613']==1 and x1['S6Q7']==1) or
     x1['S6Q7']==1):
         return 1
     else:
@@ -257,10 +257,10 @@ print(c9)
 # MULTIPLE REGRESSION & CONFIDENCE INTERVALS
 ##############################################################################
 
-# adding number of cigarettes smoked as an explanatory variable 
+# adding number of cigarettes smoked as an explanatory variable
 # center quantitative IVs for regression analysis
 sub1['numbercigsmoked_c'] = (sub1['numbercigsmoked'] - sub1['numbercigsmoked'].mean())
-print (sub1['numbercigsmoked_c'].mean()) 
+print (sub1['numbercigsmoked_c'].mean())
 
 sub3 = sub1[['NDSymptoms', 'numbercigsmoked', 'MAJORDEPLIFE']].dropna()
 
@@ -268,7 +268,7 @@ sub3 = sub1[['NDSymptoms', 'numbercigsmoked', 'MAJORDEPLIFE']].dropna()
 reg2 = smf.ols('NDSymptoms ~ MAJORDEPLIFE + numbercigsmoked_c', data=sub1).fit()
 print (reg2.summary())
 
-# linear regression analysis with dysphoria 
+# linear regression analysis with dysphoria
 reg3 = smf.ols('NDSymptoms ~ DYSLIFE', data=sub1).fit()
 print (reg3.summary())
 
@@ -279,7 +279,7 @@ print (reg4.summary())
 # multiple regression analysis with dysphoria & depression + other covariates
 # centering age variable
 sub1['age_c']=(sub1['AGE'] - sub1['AGE'].mean())
-print (sub1['age_c'].mean()) 
+print (sub1['age_c'].mean())
 
 reg5 = smf.ols('NDSymptoms ~ DYSLIFE + MAJORDEPLIFE + numbercigsmoked_c + age_c + SEX', data=sub1).fit()
 print (reg5.summary())

@@ -1,5 +1,5 @@
 """
-Data preparation for assignment 02.
+Data preparation for assignment 04.
 
 Prepares the diamond database found in
 
@@ -11,6 +11,7 @@ Some categorical variables are mapped to integers ranging from:
     max: best value in that categorical
 
 """
+
 # pylama:ignore=W0611
 import pandas as pd
 import numpy as np
@@ -79,11 +80,12 @@ def return_processed_diamonds_data_set():
     # Creates a column with SI mass
     CARAT_TO_KG = 200e-3
     df['mass'] = df.carat * CARAT_TO_KG
+    df.drop('carat', axis=1, inplace=True)
 
     # Gives a nice description for each variable.
     description = {
         'price': 'price in US dollars (\$326–\$18,823)',
-        'carat': 'weight of the diamond (0.2–5.01)',
+        # 'carat': 'weight of the diamond (0.2–5.01)',
         'cut': 'quality of the cut (Fair, Good, Very Good, Premium, Ideal)',
         'colour': 'diamond colour, from J (worst) to D (best)',
         'color': 'diamond colour, from J (worst) to D (best)',
@@ -101,35 +103,24 @@ def return_processed_diamonds_data_set():
     return df
 
 
-# def create_price_histogram(df, fname='diamonds_price_histogram.png'):
-#     u"""Create a histogram for diamond prices.
+# def transform_cut_scale_to_category_columns(df):
+#     u"""Transform the cut scale to category columns.
 #
-#     Create a histogram for diamond prices to enable classification of price
-#     ranges.
-#
-#     Arguments:
-#         df (Dataframe): The dataframe which has the price column.
-#
-#     Returns:
-#         bool: True if successful. False otherwise.
+#     In order to create a couple of variables transform the cut scale to binary
+#     columns.
 #
 #     """
-#     # print(df.price.describe())
-#     plt.cla()
-#     plt.close('all')
-#     plt.figure(1)
-#     xticks_range = range(0, 20000, 1000)
-#     price_plot = sns.distplot(df.price, rug=False, kde=False)
-#     price_plot.set(
-#         xticks=xticks_range,
-#         title='title',  # TODO
-#     )
-#     price_plot.set_xticklabels(labels=price_plot.get_xticks(),
-#                                rotation=90)
-#     plt.tight_layout()
-#     plt.savefig(fname, dpi=500)
-#     plt.close('all')
-#     return True
+#     for cut_type in df.cut.unique():
+#         cut_type = cut_type.replace(' ', '_')
+#         df['is_cut_' + cut_type] = (df.cut == cut_type).astype('float64')
+#     df.drop('cut', axis=1, inplace=True)
+#     return df
+
+
+# def return_proc_and_transf_data_set():
+#     u"""Combine the two functions above."""
+#     return transform_cut_scale_to_category_columns(
+#         return_processed_diamonds_data_set())
 
 if __name__ == '__main__':
     return_processed_diamonds_data_set()

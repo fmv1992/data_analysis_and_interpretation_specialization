@@ -1,8 +1,8 @@
 # Data Analysis and Interpretation
 
-## Machine Learning for Data Analysis
+## Regression Modeling in Practice
 
-### Assignment 04: Cluster Analysis
+### Assignment 03: Multiple Regression
 
 Specialization: https://www.coursera.org/specializations/data-analysis
 
@@ -12,4 +12,4 @@ Course: https://www.coursera.org/learn/machine-learning-data-analysis
 
 Coursera's assignments follow a tumblr post format. You can see the submission
 of this assignment on:
-https://pydataexplorer.tumblr.com/post/154355002958/machine-learning-for-data-analysis-assignment-04
+https://pydataexplorer.tumblr.com/post/144434951953/regression-modeling-in-practice-assignment-03

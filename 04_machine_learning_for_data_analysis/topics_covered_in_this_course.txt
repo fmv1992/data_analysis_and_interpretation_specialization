@@ -96,6 +96,27 @@ research questions.
 	:	if predictors are correlated lasso arbitrarily selects one
 	:	estimating p-values is not straightforward
 [_] LESSON 04
+	[_] Objective: group similar observations together
+		[_] Clusters should have
+			[_] Less variance within clusters
+			[_] More variance between clusters
+	[_] Unsupervised ML method: no response variable included in the analysis
+	[_] Can be used to create segmentation: eg. marketing analysis
+	[_] Can be used as a data reduction technique: each cluster is a new category
+
+	[_] K-means cluster analysis
+		[_] It is an iterative method:
+			1) Choose p = number of clusters random points as your initial centroid.
+			2) Iterate over all other points assigning them the category of the nearest point selected in (1).
+			3) Calculate the centroid of each category
+			4) Repeat the procedure until the location of the centroids change little.
+
+	[_] Canonical Discriminant Analysis:
+		[_] Creates a small number of variables
+		[_] Linear combinations of clustering variables
+		[_] Are ordered by proportion of variacne accounted for
+		[_] Majority of variance is accounted for by first few canonical variables
+
 [_] 
 [_] Topics of this course:
     [_] LESSON 01
