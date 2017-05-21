@@ -25,5 +25,5 @@
           could possibly predict future events.  
     * Data:
         * **Storm Event Data**
-        * File: https://github.com/fmv1992/data_analysis_and_interpretation_specialization/tree/capstone/05_data_analysis_and_interpretation_capstone/data
-        * Other support files are provided in PDF.
+        * Files: https://github.com/fmv1992/data_analysis_and_interpretation_specialization/tree/capstone/05_data_analysis_and_interpretation_capstone/data
+        * Other support files are provided in PDF in the link above.
