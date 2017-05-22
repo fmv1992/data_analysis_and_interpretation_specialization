@@ -40,7 +40,7 @@ Null hypothesis:
 '''
 Created on Tue May  3 07:24:49 2016
 
-@author: monteiro
+@author: Felipe M. Vieira
 '''
 import pandas as pd  # version '0.17.0'
 import seaborn  # version '0.7.0'

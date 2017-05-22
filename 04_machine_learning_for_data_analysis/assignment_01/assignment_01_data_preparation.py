@@ -11,7 +11,6 @@ Some categorical variables are mapped to integers ranging from:
     max: best value in that categorical
 
 """
-# # pylama:skip=1
 # pylama:ignore=W:ignore=C101
 import pandas as pd
 import numpy as np

@@ -2,7 +2,7 @@
 """
 Created on Tue May 17 07:49:53 2016
 
-Author: monteiro
+Author: Felipe M. Vieira
 
 Description: Logistic regression model
 
@@ -50,7 +50,7 @@ d = {'SG.GEN.PARL.ZS': 'propr_seats_woman_parliaments',
      'SG.GEN.LSOM.ZS': 'fem_leg_senoff_manag',
      'SG.LAW.NODC.HR': 'law_mandates_non_discr', # variable is not available...
      'SP.HOU.FEMA.ZS': 'fem_headed_households'}
-     
+
 db['series_code'] = db['series_code'].map(d)
 
 # rearranging data and excluding bogus variables
@@ -76,7 +76,7 @@ for quantitative in ['fem_leg_senoff_manag', 'firms_with_fem_top_manag',
     print('Centering variable {0}: mean before: {1:2.2f}'.format(quantitative, ct.loc[quantitative, :].mean(axis=0)))
     ct.loc[quantitative, :] -= ct.loc[quantitative, :].mean(axis=0)
     print('After centering: {0:2.2e}'.format(ct.loc[quantitative, :].mean(axis=0)))
-    
+
 # logistic regression:
 print('\nThe variables left in the model (see code above for the rationale) are:\n{0} where \'law_mandates_non_discr\' is the response variable.'.format('\n'.join(list(ct.index))))
 

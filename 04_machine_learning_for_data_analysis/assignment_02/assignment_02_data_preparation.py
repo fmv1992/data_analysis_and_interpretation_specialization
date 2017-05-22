@@ -1,5 +1,5 @@
 """
-Data preparation for assignment 01.
+Data preparation for assignment 02.
 
 Prepares the diamond database found in
 
@@ -11,7 +11,6 @@ Some categorical variables are mapped to integers ranging from:
     max: best value in that categorical
 
 """
-# pylama:skip=1
 # pylama:ignore=W0611
 import pandas as pd
 import numpy as np
@@ -102,33 +101,35 @@ def return_processed_diamonds_data_set():
     return df
 
 
-def create_price_histogram(df, fname='diamonds_price_histogram.png'):
-    u"""Create a histogram for diamond prices.
-    Create a histogram for diamond prices to enable classification of price ranges.
-
-    Arguments:
-        df (Dataframe): The dataframe which has the price column.
-
-    Returns:
-        bool: True if successful. False otherwise.
-
-    """
-    # print(df.price.describe())
-    plt.cla()
-    plt.close('all')
-    plt.figure(1)
-    xticks_range = range(0, 20000, 1000)
-    price_plot = sns.distplot(df.price, rug=False, kde=False)
-    price_plot.set(
-        xticks=xticks_range,
-        title='title', #TODO
-    )
-    price_plot.set_xticklabels(labels=price_plot.get_xticks(),
-                               rotation=90)
-    plt.tight_layout()
-    plt.savefig(fname, dpi=500)
-    plt.close('all')
-    return True
+# def create_price_histogram(df, fname='diamonds_price_histogram.png'):
+#     u"""Create a histogram for diamond prices.
+#
+#     Create a histogram for diamond prices to enable classification of price
+#     ranges.
+#
+#     Arguments:
+#         df (Dataframe): The dataframe which has the price column.
+#
+#     Returns:
+#         bool: True if successful. False otherwise.
+#
+#     """
+#     # print(df.price.describe())
+#     plt.cla()
+#     plt.close('all')
+#     plt.figure(1)
+#     xticks_range = range(0, 20000, 1000)
+#     price_plot = sns.distplot(df.price, rug=False, kde=False)
+#     price_plot.set(
+#         xticks=xticks_range,
+#         title='title',  # TODO
+#     )
+#     price_plot.set_xticklabels(labels=price_plot.get_xticks(),
+#                                rotation=90)
+#     plt.tight_layout()
+#     plt.savefig(fname, dpi=500)
+#     plt.close('all')
+#     return True
 
 if __name__ == '__main__':
     return_processed_diamonds_data_set()

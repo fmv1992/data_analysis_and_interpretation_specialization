@@ -11,7 +11,7 @@ import numpy as np
 import matplotlib.pylab as plt
 from sklearn.cross_validation import train_test_split
 from sklearn.linear_model import LassoLarsCV
- 
+
 #Load the dataset
 data = pd.read_csv("tree_addhealth.csv")
 
@@ -23,14 +23,14 @@ data_clean = data.dropna()
 recode1 = {1:1, 2:0}
 data_clean['MALE']= data_clean['BIO_SEX'].map(recode1)
 
-#select predictor variables and target variable as separate data sets  
+#select predictor variables and target variable as separate data sets
 predvar= data_clean[['MALE','HISPANIC','WHITE','BLACK','NAMERICAN','ASIAN',
 'AGE','ALCEVR1','ALCPROBS1','MAREVER1','COCEVER1','INHEVER1','CIGAVAIL','DEP1',
 'ESTEEM1','VIOL1','PASSIST','DEVIANT1','GPA1','EXPEL1','FAMCONCT','PARACTV',
 'PARPRES']]
 
 target = data_clean.SCHCONN1
- 
+
 # standardize predictors to have mean=0 and sd=1
 predictors=predvar.copy()
 from sklearn import preprocessing
@@ -58,7 +58,7 @@ predictors['PARACTV']=preprocessing.scale(predictors['PARACTV'].astype('float64'
 predictors['PARPRES']=preprocessing.scale(predictors['PARPRES'].astype('float64'))
 
 # split data into train and test sets
-pred_train, pred_test, tar_train, tar_test = train_test_split(predictors, target, 
+pred_train, pred_test, tar_train, tar_test = train_test_split(predictors, target,
                                                               test_size=.3, random_state=123)
 
 # specify the lasso regression model
@@ -89,7 +89,7 @@ plt.legend()
 plt.xlabel('-log(alpha)')
 plt.ylabel('Mean squared error')
 plt.title('Mean squared error on each fold')
-         
+
 
 # MSE from training and test data
 from sklearn.metrics import mean_squared_error

@@ -3,13 +3,11 @@ Coursera Course: Machine Learning for Data Analysis.
 
     https://www.coursera.org/learn/machine-learning-data-analysis
 
-
 This course is one in a series of: Data Analysis and Interpretation
 
 Assignment 02: Random Forests.
 """
 
-# # pylama: skip=1
 # pylama:ignore=C101,W0611
 
 import pandas as pd
@@ -24,12 +22,13 @@ from sklearn.model_selection import train_test_split
 import sklearn.metrics
 
 from assignment_02_data_preparation import return_processed_diamonds_data_set
-from assignment_02_data_preparation import create_price_histogram
+# The following function was abandoned.
+# from assignment_02_data_preparation import create_price_histogram
 import seaborn as sns
 
 
 def main():
-    u"""Main function for assignment 01."""
+    u"""Main function for assignment 02."""
     # Load prepared data.
     df = return_processed_diamonds_data_set()
     # Mass is already included as mass in SI units.
