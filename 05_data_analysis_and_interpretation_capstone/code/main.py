@@ -11,8 +11,13 @@ Assignment: Capstone.
 
 import control
 import zipfile
+import numpy as np
 import io
+import os
 import pandas as pd
+import matplotlib.pyplot as plt
+from data_utilities import python_utilities as pyu
+from data_utilities import pandas_utilities as pu
 
 
 def load_data(zippath):
@@ -32,7 +37,37 @@ def pre_treat_data(fileobj):
 
 def report_and_understand_nans(dataframe):
     """Help understanding if there are any patterns in dataset's nans."""
-    pass
+    bin_null_df = dataframe.isnull()
+    pyu.print_feature('Understanding NANs')
+    # Investigate nans distribution.
+    total_nans = bin_null_df.sum().sum() / (dataframe.shape[0] *
+                                            dataframe.shape[1])
+    print('Total nans: {0:1.1%}'.format(total_nans))
+    # Nans distribution per columns.
+    per_col_nans = bin_null_df.sum()/bin_null_df.sum().sum()
+    per_col_nans = per_col_nans[per_col_nans != 0].sort_values()
+    print('Concentrated in columns as such: \n{0}'.format(per_col_nans))
+    # Plot hexbin.
+    # Gather data for the hexbin.
+    x_es = []
+    y_es = []
+    for i, c in enumerate(bin_null_df.columns):
+        mask = bin_null_df.loc[:, c] == True
+        y = mask.index
+        x = np.ones_like(y) * i
+        x_es.append(x)
+        y_es.append(y)
+    x = np.array(x_es).flatten()
+    y = np.array(y_es).flatten()
+    fig = plt.figure()
+    # Plot the hexbin.
+    hexbin = plt.hexbin(x, y, gridsize=25)  # noqa
+    # Add a colorbar.
+    # cb = plt.colorbar()  # noqa
+    # Save figure.
+    fig.savefig(
+        os.path.join(control.OUTPUT_PATH, 'heatmap.png'),
+        dpi=300)
 
 
 def parse_date_columns(dataframe, columns=[], format=''):
@@ -53,6 +88,7 @@ def manage_dataset(dataframe):
         * all nans should be either filled or dropped
         * all redundant variables must be dropped (especially the date/time
         variables).
+        * all measure units must be in SI
 
     Arguments:
         dataframe (pandas.DataFrame): the dataframe to be managed.
@@ -60,7 +96,39 @@ def manage_dataset(dataframe):
     Returns:
         df (pandas.DataFrame): the managed dataframe
     """
-    pass
+    # Drop redundant variables.
+    dataframe = dataframe.drop(control.REDUNDANT_COLUMNS, axis=1)
+
+    # Drop entries which have absence of out response variables.
+    # In order to investigate losses we will reduce the dataframe for which
+    # weather phenomena have damages and injuries/deaths reported.
+    relevant_columns = dataframe.loc[:, control.RELEVANT_COLUMNS]
+    relevant_index = relevant_columns.notnull().all(axis=1)
+    dataframe = dataframe[relevant_index]
+
+    # Do unit conversion.
+    dataframe.loc[:, 'tor_length'] = (dataframe.loc[:, 'tor_length']
+                                      * control.MILES_TO_M)
+    dataframe.loc[:, 'tor_width'] = (dataframe.loc[:, 'tor_width']
+                                     * control.FEET_TO_M)
+
+    # Parse damage as values.
+    for damage_col in control.DAMAGE_COLUMNS:
+        # not_null = dataframe.loc[:, damage_col].notnull()
+        d = dataframe.loc[:, damage_col]
+        is_k_column = d.str.endswith('k').fillna(False)
+        is_m_column = d.str.endswith('m').fillna(False)
+        is_b_column = d.str.endswith('b').fillna(False)
+        multiplier = (1e3 * is_k_column
+                      + 1e6 * is_m_column
+                      + 1e9 * is_b_column)
+        # import ipdb; ipdb.set_trace()  # XXX BREAKPOINT
+        # is_k_column = (not_null & is_k_column)
+        # is_m_column = (not_null & is_m_column)
+        dataframe.loc[:, damage_col] = (d.str.slice(0, -1).astype('float')
+                                        * multiplier)
+
+    return dataframe
 
 
 def main():
@@ -72,12 +140,21 @@ def main():
     del csv_file_obj, treated_csv_file
     df = df_original.copy(True)
 
-    # Drop redundant columns
-    df = df.drop(control.REDUNDANT_COLUMNS, axis=1)
+    # Manage data set.
+    df = manage_dataset(df)
+
+    # Transform object columns to category.
+    df = pu.object_columns_to_category(df, inplace=False)
+    # Drop remaning object columns.
+    obj_cols = [x for x in df if str(df[x].dtype) == 'object']
+    df = df.drop(obj_cols, axis=1)
 
     # Parse datetimes. (http://strftime.org/)
     parse_date_columns(df, columns=['begin_date_time', 'end_date_time'],
                        format='%d%b%y:%H:%M:%S')
+
+    # Understand Nans.
+    # report_and_understand_nans(df)  # TODO: release me
 
     # Run debugger.
     import ipdb; ipdb.set_trace()  # XXX BREAKPOINT  # noqa

@@ -20,7 +20,15 @@ OUTPUT_PATH = os.path.join(BASE_PATH, 'output')
 
 # Columns and data related information.
 REDUNDANT_COLUMNS = ['begin_yearmonth', 'begin_day', 'end_yearmonth',
-                     'end_day', 'year', 'month_name', 'end_time', ]
+                     'end_day', 'year', 'month_name', 'end_time', 'begin_time']
+RELEVANT_COLUMNS = ['injuries_direct', 'injuries_indirect', 'deaths_direct',
+                    'deaths_indirect', 'damage_property', 'damage_crops',]
+DAMAGE_COLUMNS = ['damage_property', 'damage_crops',]
+
+FEET_TO_M = .3048
+MILES_TO_M = 1609
+
+
 
 if __name__ == '__main__':
     ALL_PATHS = tuple(eval(x) for x in dir() if x.endswith('_PATH'))
