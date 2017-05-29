@@ -18,6 +18,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from data_utilities import python_utilities as pyu
 from data_utilities import pandas_utilities as pu
+from data_utilities import matplotlib_utilities as mu
 
 
 def load_data(zippath):
@@ -99,6 +100,9 @@ def manage_dataset(dataframe):
     # Drop redundant variables.
     dataframe = dataframe.drop(control.REDUNDANT_COLUMNS, axis=1)
 
+    # Rename variables to be renamed.
+    dataframe.rename(columns=control.RENAME_COLUMNS, inplace=True)
+
     # Drop entries which have absence of out response variables.
     # In order to investigate losses we will reduce the dataframe for which
     # weather phenomena have damages and injuries/deaths reported.
@@ -134,6 +138,32 @@ def manage_dataset(dataframe):
 
     return dataframe
 
+def do_exploratory_analysis(dataframe):
+    """Execute exploratory analysis on the dataframe."""
+    # Drop duplicate column for this analysis.
+    df = dataframe.drop('end_date_time', axis=1)
+    columns = df.columns.copy()
+    # Expand dataframe.
+    expanded_df = pd.concat(
+        (df,
+         df.begin_date_time.dt.hour,
+         df.begin_date_time.dt.day,
+         df.begin_date_time.dt.month,
+         df.begin_date_time.dt.year),
+        axis=1,
+    )
+    import ipdb; ipdb.set_trace()  # XXX BREAKPOINT
+    expanded_df.columns = (columns.tolist()
+                           + ['begin_date_' + x for  x in
+                              ('hour', 'day', 'month', 'year')])
+    import ipdb; ipdb.set_trace()  # XXX BREAKPOINT
+    # Histogram each column.
+    mu.histogram_of_dataframe(expanded_df,
+                              output_path='./output/exploratory_analysis',
+                              kde=False,
+                              )
+    return None
+
 
 def main():
     """Main function."""
@@ -160,6 +190,9 @@ def main():
 
     # Understand Nans.
     # report_and_understand_nans(df)  # TODO: release me
+
+    # Execute exploratory_analysis.
+    do_exploratory_analysis(df)
 
     # Run debugger.
     import ipdb; ipdb.set_trace()  # XXX BREAKPOINT  # noqa

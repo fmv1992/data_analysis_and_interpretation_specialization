@@ -25,6 +25,11 @@ RELEVANT_COLUMNS = ['injuries_direct', 'injuries_indirect', 'deaths_direct',
                     'deaths_indirect', 'damage_property', 'damage_crops',]
 DAMAGE_COLUMNS = ['damage_property', 'damage_crops',]
 
+RENAME_COLUMNS = {
+    'magnitude': 'magnitude_of_wind_speeds_or_hail_size',
+}
+
+
 FEET_TO_M = .3048
 MILES_TO_M = 1609
 
