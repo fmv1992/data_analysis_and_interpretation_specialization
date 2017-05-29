@@ -1,7 +1,7 @@
 # Assignment 02
 
 * Format: Blog entry
-    * *url*: XXX
+    * *url*: https://pydataexplorer.tumblr.com/post/161197349233/capstone-project-module-2-data-management
 * Deliverables:
     * Draft of a *methods section*
     * Samples:
@@ -51,3 +51,13 @@ The sample consists of N=166,049 weather events.
 * *Latitude/Longitude*: degrees
 
 ## Statistical analyses
+
+The statistical analyses will be executed after some data exploration. They may
+include:
+
+* Variable reduction (Random Forests, PCA, LASSO, etc)
+* Mean comparison (ANOVA)
+* Regression (LASSO, Linear/Non-linear regression, etc)
+
+This is not an exhaustive list. One should look at the final report to have the
+exact techiniques described.

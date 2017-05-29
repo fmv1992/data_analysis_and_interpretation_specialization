@@ -128,6 +128,10 @@ def manage_dataset(dataframe):
         dataframe.loc[:, damage_col] = (d.str.slice(0, -1).astype('float')
                                         * multiplier)
 
+    # Create a total damage columns.
+    dataframe['damage_total'] = (dataframe['damage_crops']
+                                 + dataframe['damage_property'])
+
     return dataframe
 
 
@@ -145,13 +149,14 @@ def main():
 
     # Transform object columns to category.
     df = pu.object_columns_to_category(df, inplace=False)
-    # Drop remaning object columns.
-    obj_cols = [x for x in df if str(df[x].dtype) == 'object']
-    df = df.drop(obj_cols, axis=1)
 
     # Parse datetimes. (http://strftime.org/)
     parse_date_columns(df, columns=['begin_date_time', 'end_date_time'],
                        format='%d%b%y:%H:%M:%S')
+
+    # Drop remaning object columns.
+    obj_cols = [x for x in df if str(df[x].dtype) == 'object']
+    df = df.drop(obj_cols, axis=1)
 
     # Understand Nans.
     # report_and_understand_nans(df)  # TODO: release me
