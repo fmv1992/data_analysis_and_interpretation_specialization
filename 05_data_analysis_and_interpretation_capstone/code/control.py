@@ -22,8 +22,8 @@ OUTPUT_PATH = os.path.join(BASE_PATH, 'output')
 REDUNDANT_COLUMNS = ['begin_yearmonth', 'begin_day', 'end_yearmonth',
                      'end_day', 'year', 'month_name', 'end_time', 'begin_time']
 RELEVANT_COLUMNS = ['injuries_direct', 'injuries_indirect', 'deaths_direct',
-                    'deaths_indirect', 'damage_property', 'damage_crops',]
-DAMAGE_COLUMNS = ['damage_property', 'damage_crops',]
+                    'deaths_indirect', 'damage_property', 'damage_crops', ]
+DAMAGE_COLUMNS = ['damage_property', 'damage_crops', ]
 
 RENAME_COLUMNS = {
     'magnitude': 'magnitude_of_wind_speeds_or_hail_size',
@@ -32,7 +32,6 @@ RENAME_COLUMNS = {
 
 FEET_TO_M = .3048
 MILES_TO_M = 1609
-
 
 
 if __name__ == '__main__':
