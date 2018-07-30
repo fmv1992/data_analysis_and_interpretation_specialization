@@ -152,14 +152,24 @@ def do_exploratory_analysis(dataframe):
          df.begin_date_time.dt.year),
         axis=1,
     )
-    # import ipdb; ipdb.set_trace()  # XXX BREAKPOINT
     expanded_df.columns = (columns.tolist()
                            + ['begin_date_' + x for  x in
                               ('hour', 'day', 'month', 'year')])
-    # import ipdb; ipdb.set_trace()  # XXX BREAKPOINT
+
     # Histogram each column.
-    mu.histogram_of_dataframe(expanded_df,
-                              output_path='./output/exploratory_analysis',
+
+    numeric_cols = sorted(pu.get_numeric_columns(expanded_df))
+    non_numeric_cols = sorted(set(expanded_df.columns.tolist())
+                              - set(numeric_cols))
+    filled_df = pd.concat(
+        map(lambda x: x.reset_index(),
+            (expanded_df[numeric_cols].fillna(-1),
+            expanded_df[non_numeric_cols]  # Already filled with 'nan'.
+        )),
+        axis=1).drop('index', axis=1)
+    assert filled_df.shape == expanded_df.shape
+    mu.histogram_of_dataframe(filled_df,
+                              output_path='../output/exploratory_analyses',
                               kde=False,
                               )
     return None
