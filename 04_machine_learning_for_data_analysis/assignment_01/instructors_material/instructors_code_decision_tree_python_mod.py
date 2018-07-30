@@ -67,4 +67,7 @@ tree.export_graphviz(classifier, out_file=out)
 import pydotplus
 graph=pydotplus.graph_from_dot_data(out.getvalue())
 with open('graph.png', 'wb') as f:
-   f.write(graph.create_png())
+    try:
+        f.write(graph.create_png())
+    except pydotplus.graphviz.InvocationException:
+        print(__file__ + ': Graphviz not installed.')

@@ -76,7 +76,10 @@ def main():
         impurity=True,)
     graph = pydotplus.graph_from_dot_data(out.getvalue())
     with open('graph.png', 'wb') as f:
-        f.write(graph.create_png())
+        try:
+            f.write(graph.create_png())
+        except pydotplus.graphviz.InvocationException:
+            print(__file__ + ': Graphviz not installed.')
 
     # Histogram of Clarity Variable
     plt.figure(0)

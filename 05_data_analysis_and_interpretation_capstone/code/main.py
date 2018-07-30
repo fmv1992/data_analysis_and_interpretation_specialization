@@ -152,11 +152,11 @@ def do_exploratory_analysis(dataframe):
          df.begin_date_time.dt.year),
         axis=1,
     )
-    import ipdb; ipdb.set_trace()  # XXX BREAKPOINT
+    # import ipdb; ipdb.set_trace()  # XXX BREAKPOINT
     expanded_df.columns = (columns.tolist()
                            + ['begin_date_' + x for  x in
                               ('hour', 'day', 'month', 'year')])
-    import ipdb; ipdb.set_trace()  # XXX BREAKPOINT
+    # import ipdb; ipdb.set_trace()  # XXX BREAKPOINT
     # Histogram each column.
     mu.histogram_of_dataframe(expanded_df,
                               output_path='./output/exploratory_analysis',
@@ -195,7 +195,7 @@ def main():
     do_exploratory_analysis(df)
 
     # Run debugger.
-    import ipdb; ipdb.set_trace()  # XXX BREAKPOINT  # noqa
+    # import ipdb; ipdb.set_trace()  # XXX BREAKPOINT  # noqa
 
 
 if __name__ == '__main__':
