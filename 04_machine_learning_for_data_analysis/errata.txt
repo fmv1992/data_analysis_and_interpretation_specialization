@@ -1,6 +1,0 @@
-LESSON 01:
-    Picture in
-    https://www.coursera.org/learn/machine-learning-data-analysis/supplement/V2VNg/assignment-example
-    has two equal lines: '>0.112' where one should be '<0.112'
-    Video in 'Building a Decision Tree with Python'
-    has two equal lines with X[1] <= and X[1] <= around 7:45 

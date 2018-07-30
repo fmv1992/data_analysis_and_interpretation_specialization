@@ -1,6 +1,0 @@
-The objective of this bonus assignment is to extract meaningful insights from a
-public database found in:
-https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/quakes.html
-The content of the report should use the concepts learned in the course 'Data
-Analysis and Interpretation Specialization'.
-Extensive use of graphs and the discussion of the results should be included.
