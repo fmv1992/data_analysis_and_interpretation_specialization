@@ -36,8 +36,11 @@ import os
 os.unlink('iris.dot')
 import pydotplus
 dot_data = tree.export_graphviz(clf, out_file=None)
-graph = pydotplus.graph_from_dot_data(dot_data)
-graph.write_pdf("iris.pdf")
+try:
+    graph = pydotplus.graph_from_dot_data(dot_data)
+    graph.write_pdf("iris.pdf")
+except pydotplus.graphviz.InvocationException:
+    print(__file__ + ': Graphviz not installed.')
 from IPython.display import Image
 dot_data = tree.export_graphviz(clf, out_file=None,
                      feature_names=iris.feature_names,
@@ -45,6 +48,9 @@ dot_data = tree.export_graphviz(clf, out_file=None,
                      filled=True, rounded=True,
                      special_characters=True)
 graph = pydotplus.graph_from_dot_data(dot_data)
-img = graph.create_png()
-with open('iris.png', 'wb') as i_img:
-    i_img.write(img)
+try:
+    img = graph.create_png()
+    with open('iris.png', 'wb') as i_img:
+        i_img.write(img)
+except pydotplus.graphviz.InvocationException:
+    print(__file__ + ': Graphviz not installed.')

@@ -70,7 +70,11 @@ out = StringIO()
 tree.export_graphviz(classifier, out_file=out)
 import pydotplus
 graph=pydotplus.graph_from_dot_data(out.getvalue())
-Image(graph.create_png())
+
+try:
+    Image(graph.create_png())
+except pydotplus.graphviz.InvocationException:
+    print(__file__ + ': Graphviz not installed.')
 
 
 
