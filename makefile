@@ -1,7 +1,16 @@
 # Set variables. --- {{{
 SHELL := /bin/bash
+
+NOW := $(shell date -u +%Y-%m-%d_%Hh%Mm%Ss)
 ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-PYTHON_FILES := $(shell find . -iname "*.py")
+BASENAME := $(shell basename $(ROOT_DIR))
+
+PYTHON_FILES := $(shell  find . \
+        -path "*05_data*" \
+        -not -path "*instructor*" \
+        -not -iname "*instructor*" \
+        -iname "*.py")
+        #  -not -path "*05_data*" \
 # --- }}}
 
 # Project management. --- {{{
@@ -15,9 +24,17 @@ clean:
 	find ./output/ -type f -not -path '*/\.*' -print0 | xargs -0 rm -f
 
 %.py: .FORCE
-	MPLBACKEND=agg \
-	JOBLIB_TEMP_FOLDER=/tmp/ \
-		python3 $@
+	cd $$(dirname $@) && \
+		MPLBACKEND=agg \
+		JOBLIB_TEMP_FOLDER=/tmp/ \
+			python3 $$(basename $@)
+
+export_results: .FORCE
+	(find . -size '-100k' -type f -print0 ;\
+	 find . -iname '.gitkeep' -type f -print0) |\
+		tar -cvzf \
+		"$(shell dirname $(ROOT_DIR))/$(NOW)_$(BASENAME)_export_results.tar.gz" \
+		--null -T -
 
 .FORCE:
 # --- }}}
