@@ -1,0 +1,18 @@
+# Ignore everything
+*
+
+# But not these files...
+!*.md
+!*.txt
+!*.py
+!*.scala
+!*.sh
+!.gitignore
+!.gitkeep
+!makefile
+# etc...
+
+# ...even if they are in subdirectories
+!*/
+
+# vim: set fileformat=unix filetype=conf wrap :
