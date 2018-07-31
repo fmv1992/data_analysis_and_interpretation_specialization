@@ -31,6 +31,7 @@ clean:
 
 %.py: .FORCE
 	cd $$(dirname $@) && \
+		PYTHONPATH=$(PYTHONPATH):$(ROOT_DIR)/lib \
 		MPLBACKEND=agg \
 		JOBLIB_TEMP_FOLDER=/tmp/ \
 			python3 $$(basename $@)
