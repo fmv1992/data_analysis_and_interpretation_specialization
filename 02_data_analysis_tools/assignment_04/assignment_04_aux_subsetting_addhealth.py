@@ -24,4 +24,4 @@ db_subset.index.name = 'id'
 db_subset.rename(columns=col_map, inplace=True)
 
 db_subset.to_csv('03_national_longitudinal_study_of_adolescent_health_'
-                 'addhealth_subset.csv', col_map=col_map.values())
+                 'addhealth_subset.csv')
