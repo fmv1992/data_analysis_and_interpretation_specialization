@@ -34,7 +34,10 @@ import statsmodels.formula.api as smf  # version 0.6.1
 from project_library import DATASETS_PATH
 
 # loading the database
-db = pd.read_csv(os.path.join(DATASETS_PATH, 'world_bank_selected_agricultural_indicators.csv'))
+db = pd.read_csv(
+    os.path.join(
+        DATASETS_PATH,
+        'world_bank_selected_agricultural_indicators.csv'))
 db.drop(['series_name', 'index'], axis=1, inplace=True)
 
 # renaming variables into meaningful names

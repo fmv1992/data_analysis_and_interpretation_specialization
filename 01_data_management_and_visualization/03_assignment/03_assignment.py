@@ -18,8 +18,12 @@ import numpy as np
 from project_library import DATASETS_PATH
 
 # reads the input file
-db = pd.read_csv(os.path.join(DATASETS_PATH, '03_assignment_nesarc_subset.csv'),
-                 index_col=0, low_memory=False)
+db = pd.read_csv(
+    os.path.join(
+        DATASETS_PATH,
+        '03_assignment_nesarc_subset.csv'),
+    index_col=0,
+    low_memory=False)
 
 # renames some columns to meaningful names
 db.rename(columns={'numpers': 'n_persons',
