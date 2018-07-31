@@ -23,5 +23,6 @@ db = pd.read_csv(os.path.join(DATASETS_PATH, 'wdi_data_all_time_utf8_encoded.csv
 
 
 db.to_csv(
-    'wdi_data_all_time_utf8_encoded_and_compressed.csv',
+    os.path.join(DATASETS_PATH,
+    'wdi_data_all_time_utf8_encoded_and_compressed.csv'),
     compression='gzip')

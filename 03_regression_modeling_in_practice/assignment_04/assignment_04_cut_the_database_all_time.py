@@ -8,12 +8,17 @@ Description:
 Cuts the database to contain only the following variables:
 
 """
+import os
+
 import numpy as np
 import pandas as pd  # version '0.17.0'
 import pandas_utilities  # for cosmetic adjustments and data standardization
 
+from project_library import DATASETS_PATH
+
 db = pd.read_csv(
-    'wdi_data_all_time_utf8_encoded_and_compressed.csv.gz',
+    os.path.join(DATASETS_PATH,
+                 'wdi_data_all_time_utf8_encoded_and_compressed.csv.gz'),
     index_col=0)
 
 pandas_utilities.clean_dataframe(db)

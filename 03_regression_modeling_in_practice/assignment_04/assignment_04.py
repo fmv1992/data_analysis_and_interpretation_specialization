@@ -25,6 +25,8 @@ Response variable:
 Law mandates nondiscrimination based on gender in hiring (1=yes; 0=no)
     SG.LAW.NODC.HR
 """
+import os
+
 import pandas as pd  # version '0.17.0'
 import seaborn  # version '0.7.0'
 import matplotlib.pyplot as plt  # version'1.3.1'
@@ -34,9 +36,12 @@ import pandas_utilities  # for cosmetic adjustments and data standardization
 import statsmodels.api as sm
 import statsmodels.formula.api as smf  # version 0.6.1
 
+from project_library import DATASETS_PATH
+
 # data reading, selecting and managing
-db = pd.read_csv(
-    'world_bank_selected_non_discriminating_based_on_gender_indicators.csv')
+db = pd.read_csv(os.path.join(
+    DATASETS_PATH,
+    ('world_bank_selected_non_discriminating_based_on_gender_indicators.csv')))
 
 db['latest_indicator'] = pd.to_numeric(db['latest_indicator'], errors='coerce')
 

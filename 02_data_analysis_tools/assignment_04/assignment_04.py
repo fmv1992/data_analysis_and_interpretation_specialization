@@ -13,8 +13,11 @@ import scipy.stats
 
 from project_library import DATASETS_PATH
 
-db = pd.read_csv(os.path.join(DATASETS_PATH, '03_national_longitudinal_study_of_adolescent_health_')
-                 'addhealth_subset.csv', low_memory=False, index_col='id')
+db = pd.read_csv(os.path.join(
+    DATASETS_PATH,
+    '03_national_longitudinal_study_of_adolescent_health_addhealth_subset.csv',
+    low_memory=False,
+    index_col='id')
 
 db['does_great_exact_sciences'] = False
 db['does_great_human_sciences'] = False
