@@ -15,7 +15,8 @@ from project_library import DATASETS_PATH
 
 db = pd.read_csv(os.path.join(
     DATASETS_PATH,
-    '03_national_longitudinal_study_of_adolescent_health_addhealth_subset.csv',
+    ('03_national_longitudinal_study_of_adolescent_health_addhealth_subset'
+     '.csv')),
     low_memory=False,
     index_col='id')
 

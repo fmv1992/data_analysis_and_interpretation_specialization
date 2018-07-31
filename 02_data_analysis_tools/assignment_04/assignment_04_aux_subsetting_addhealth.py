@@ -26,7 +26,7 @@ db_subset = pd.read_csv(
     os.path.join(
         DATASETS_PATH,
         '03_national_longitudinal_study_of_adolescent_health_addhealth.csv',
-        usecols=col_map.keys()))
+        ))[list(col_map.keys())]
 db_subset.index.name = 'id'
 db_subset.rename(columns=col_map, inplace=True)
 

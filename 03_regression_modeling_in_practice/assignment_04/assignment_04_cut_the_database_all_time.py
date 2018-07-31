@@ -16,6 +16,10 @@ import pandas_utilities  # for cosmetic adjustments and data standardization
 
 from project_library import DATASETS_PATH
 
+from assignment_04_compress_the_original_db import compress_dataset
+
+compress_dataset()
+
 db = pd.read_csv(
     os.path.join(DATASETS_PATH,
                  'wdi_data_all_time_utf8_encoded_and_compressed.csv.gz'),
