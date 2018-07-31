@@ -13,8 +13,12 @@ import statsmodels.formula.api as smf  # version 0.6.1
 
 from project_library import DATASETS_PATH
 
-db = pd.read_csv(os.path.join(DATASETS_PATH, 'world_bank_infrastructure_indicators_from_1960_to_2015.csv'),
-                 engine='python', skiprows=4)
+db = pd.read_csv(
+    os.path.join(
+        DATASETS_PATH,
+        'world_bank_infrastructure_indicators_from_1960_to_2015.csv'),
+    engine='python',
+    skiprows=4)
 pandas_utilities.clean_dataframe(db)
 
 # data cleaning

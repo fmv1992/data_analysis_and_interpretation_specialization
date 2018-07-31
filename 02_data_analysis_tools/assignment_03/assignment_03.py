@@ -15,7 +15,11 @@ import scipy.stats
 from project_library import DATASETS_PATH
 
 # importing and cleaning of the database
-gapminder = pd.read_csv(os.path.join(DATASETS_PATH, '04_gapminder_quantitative.csv'), index_col='country')
+gapminder = pd.read_csv(
+    os.path.join(
+        DATASETS_PATH,
+        '04_gapminder_quantitative.csv'),
+    index_col='country')
 gapminder.rename(index=lambda x: str(x).lower(), inplace=True)
 gapminder.dropna(inplace=True)
 

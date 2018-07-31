@@ -33,7 +33,11 @@ from mpl_toolkits.basemap import Basemap
 
 def main():
     # Data reading and managing.
-    db = pd.read_csv(os.path.join(DATASETS_PATH, 'quakes.csv'), index_col='index')
+    db = pd.read_csv(
+        os.path.join(
+            DATASETS_PATH,
+            'quakes.csv'),
+        index_col='index')
     # Depth should be in meters to honor de SI.
     db['depth'] *= 1e3
     # Lets create a low ('l'), medium ('m') and high ('h') categories for the

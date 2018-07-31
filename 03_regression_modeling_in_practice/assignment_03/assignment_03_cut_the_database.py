@@ -26,7 +26,10 @@ import pandas_utilities  # for cosmetic adjustments and data standardization
 
 from project_library import DATASETS_PATH
 
-db = pd.read_csv(os.path.join(DATASETS_PATH, 'world_bank_all_indicators_2010.csv'))
+db = pd.read_csv(
+    os.path.join(
+        DATASETS_PATH,
+        'world_bank_all_indicators_2010.csv'))
 pandas_utilities.clean_dataframe(db)
 db.rename(columns={'2010_yr2010': '2010'}, inplace=True)
 

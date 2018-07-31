@@ -15,7 +15,14 @@ import matplotlib.pyplot as plt
 from project_library import DATASETS_PATH
 
 # loads the data base
-mars = pd.read_csv(os.path.join(DATASETS_PATH, '02_mars_craters_study.csv'), usecols=[0, 2, 3])
+mars = pd.read_csv(
+    os.path.join(
+        DATASETS_PATH,
+        '02_mars_craters_study.csv'),
+    usecols=[
+        0,
+        2,
+        3])
 # rename columns to lower case
 mars = mars.rename(columns=dict(zip(mars.columns,
                                     [x.lower() for x in mars.columns]),
