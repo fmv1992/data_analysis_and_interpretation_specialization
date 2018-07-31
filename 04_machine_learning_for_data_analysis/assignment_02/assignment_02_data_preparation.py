@@ -11,17 +11,22 @@ Some categorical variables are mapped to integers ranging from:
     max: best value in that categorical
 
 """
+
+import os
+
 # pylama:ignore=W0611
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+from project_library import DATASETS_PATH
+
 
 def return_processed_diamonds_data_set():
     u"""Main function. Return processed diamonds dataset."""
     # Set constants
-    CSVPATH = '../data_sets/r_data_sets/ggplot2/diamonds.csv'
+    CSVPATH = os.path.join(DATASETS_PATH, 'diamonds.csv')
     DTYPES = {
         'carat': np.float64,
         'cut': pd.Categorical,

@@ -37,4 +37,5 @@ variables_considered = ['AG.LND.AGRI.ZS', 'AG.LND.TRAC.ZS', 'AG.CON.FERT.ZS',
 db = db[db.series_code.isin(variables_considered)]
 db.index.name = 'index'
 
-db.to_csv('world_bank_selected_agricultural_indicators.csv')
+db.to_csv(os.path.join(DATASETS_PATH,
+                       'world_bank_selected_agricultural_indicators.csv'))
