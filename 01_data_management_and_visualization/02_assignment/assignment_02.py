@@ -7,12 +7,17 @@ Description:
 
 Assignment 02
 """
+
+import os
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+from project_library import DATASETS_PATH
+
 # reads data set
-df = pd.read_csv('04_gapminder.csv', low_memory=False)
+df = pd.read_csv(os.path.join(DATASETS_PATH, '04_gapminder.csv'), low_memory=False)
 # makes names uniform to lowercase
 df.country = df.country.apply(str.lower)
 # makes all columns numbers

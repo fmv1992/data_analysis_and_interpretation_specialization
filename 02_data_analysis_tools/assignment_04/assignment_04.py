@@ -3,12 +3,17 @@ Created on Fri Apr 15 08:17:14 2016
 
 Author: Felipe M. Vieira
 """
+
+import os
+
 import pandas as pd  # version '0.18.0'
 import seaborn  # version '0.7.0'
 import matplotlib.pyplot as plt  # version'1.3.1'
 import scipy.stats
 
-db = pd.read_csv('03_national_longitudinal_study_of_adolescent_health_'
+from project_library import DATASETS_PATH
+
+db = pd.read_csv(os.path.join(DATASETS_PATH, '03_national_longitudinal_study_of_adolescent_health_')
                  'addhealth_subset.csv', low_memory=False, index_col='id')
 
 db['does_great_exact_sciences'] = False

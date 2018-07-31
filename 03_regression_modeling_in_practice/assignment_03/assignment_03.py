@@ -19,6 +19,9 @@ AG.CON.FERT.ZS	Fertilizer consumption (kilograms per hectare of arable land)	Fer
 
 EA.PRD.AGRI.KD	Agriculture value added per worker (constant 2005 US$)	Agriculture value added per worker is a measure of agricultural productivity. Value added in agriculture measures the output of the agricultural sector (ISIC divisions 1-5) less the value of intermediate inputs. Agriculture comprises value added from forestry, hunting, and fishing as well as cultivation of crops and livestock production. Data are in constant 2005 U.S. dollars.	Derived from World Bank national accounts files and Food and Agriculture Organization, Production Yearbook and data files.
 """
+
+import os
+
 import pandas as pd  # version '0.17.0'
 import seaborn  # version '0.7.0'
 import matplotlib.pyplot as plt  # version'1.3.1'
@@ -28,8 +31,10 @@ import pandas_utilities  # for cosmetic adjustments and data standardization
 import statsmodels.api as sm
 import statsmodels.formula.api as smf  # version 0.6.1
 
+from project_library import DATASETS_PATH
+
 # loading the database
-db = pd.read_csv('world_bank_selected_agricultural_indicators.csv')
+db = pd.read_csv(os.path.join(DATASETS_PATH, 'world_bank_selected_agricultural_indicators.csv'))
 db.drop(['series_name', 'index'], axis=1, inplace=True)
 
 # renaming variables into meaningful names

@@ -7,13 +7,18 @@ Description:
 
 Assignment 03
 """
+
+import os
+
 import pandas as pd  # version '0.18.0'
 import seaborn  # version '0.7.0'
 import matplotlib.pyplot as plt  # version'1.3.1'
 import numpy as np
 
+from project_library import DATASETS_PATH
+
 # reads the input file
-db = pd.read_csv('03_assignment_nesarc_subset.csv',
+db = pd.read_csv(os.path.join(DATASETS_PATH, '03_assignment_nesarc_subset.csv'),
                  index_col=0, low_memory=False)
 
 # renames some columns to meaningful names

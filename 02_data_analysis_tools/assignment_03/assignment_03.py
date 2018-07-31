@@ -3,14 +3,19 @@ Created on Thu Apr  7 07:41:45 2016
 
 Author: Felipe M. Vieira
 """
+
+import os
+
 import pandas as pd  # version '0.18.0'
 import seaborn  # version '0.7.0'
 import matplotlib.pyplot as plt  # version'1.3.1'
 import itertools
 import scipy.stats
 
+from project_library import DATASETS_PATH
+
 # importing and cleaning of the database
-gapminder = pd.read_csv('04_gapminder_quantitative.csv', index_col='country')
+gapminder = pd.read_csv(os.path.join(DATASETS_PATH, '04_gapminder_quantitative.csv'), index_col='country')
 gapminder.rename(index=lambda x: str(x).lower(), inplace=True)
 gapminder.dropna(inplace=True)
 

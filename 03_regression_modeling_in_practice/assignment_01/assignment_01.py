@@ -8,13 +8,18 @@ Description:
 Assignment 01 for Regression Modelling in Practice
 
 """
+
+import os
+
 import pandas as pd  # version '0.17.0'
 import seaborn  # version '0.7.0'
 import matplotlib.pyplot as plt  # version'1.3.1'
 import scipy  # version 0.16.1
 import pandas_utilities  # for cosmetic adjustments and data standardization
 
-db = pd.read_csv('world_bank_all_indicators_2010.csv')
+from project_library import DATASETS_PATH
+
+db = pd.read_csv(os.path.join(DATASETS_PATH, 'world_bank_all_indicators_2010.csv'))
 db = db.rename(columns=lambda x: x.lower().replace(' ', '_'))
 
 unique_countries = db['country_name'].unique()[:-1]
@@ -24,7 +29,7 @@ for i in unique_countries:  # drops last since it is 'nan'
     print(i)
 print('\nTotal of {} countries'.format(len(unique_countries)))
 
-infra_db = pd.read_csv('world_bank_infrastructure_indicators_codebook.csv')
+infra_db = pd.read_csv(os.path.join(DATASETS_PATH, 'world_bank_infrastructure_indicators_codebook.csv'))
 pandas_utilities.clean_dataframe(infra_db)
 
 print('\n\nList of variables in the \'Infrastructure\' subset:')

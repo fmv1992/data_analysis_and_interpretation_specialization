@@ -26,12 +26,14 @@ import scipy
 import numpy as np
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
+
+from project_library import DATASETS_PATH
 from mpl_toolkits.basemap import Basemap
 
 
 def main():
     # Data reading and managing.
-    db = pd.read_csv('quakes.csv', index_col='index')
+    db = pd.read_csv(os.path.join(DATASETS_PATH, 'quakes.csv'), index_col='index')
     # Depth should be in meters to honor de SI.
     db['depth'] *= 1e3
     # Lets create a low ('l'), medium ('m') and high ('h') categories for the
@@ -39,6 +41,9 @@ def main():
 
     def mag_quali(x):
         u"""Maps a magnitude to a qualitative variable."""
+
+        import os
+
         if x <= 4.75:
             return 'l'
         elif x <= 5.25:

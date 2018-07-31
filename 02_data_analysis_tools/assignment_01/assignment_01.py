@@ -4,8 +4,10 @@ import statsmodels.formula.api as smf
 import statsmodels.stats.multicomp as multi
 import matplotlib.pyplot as plt
 
+from project_library import DATASETS_PATH
+
 # reads the relevant data for this assignment
-mars = pd.read_csv('02_mars_craters_study.csv', na_filter=True,
+mars = pd.read_csv(os.path.join(DATASETS_PATH, '02_mars_craters_study.csv'), na_filter=True,
                    usecols=['DIAM_CIRCLE_IMAGE', 'DEPTH_RIMFLOOR_TOPOG'],
                    dtype=np.float64)
 # cleans the data set
