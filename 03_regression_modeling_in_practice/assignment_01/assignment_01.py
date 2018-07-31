@@ -15,9 +15,8 @@ import matplotlib.pyplot as plt  # version'1.3.1'
 import scipy  # version 0.16.1
 import pandas_utilities  # for cosmetic adjustments and data standardization
 
-db = pd.read_csv('world_bank_all_indicators_2010.csv', engine='python',
-                 skipfooter=5)
-pandas_utilities.clean_dataframe(db)
+db = pd.read_csv('world_bank_all_indicators_2010.csv')
+db = db.rename(columns=lambda x: x.lower().replace(' ', '_'))
 
 unique_countries = db['country_name'].unique()[:-1]
 
@@ -42,7 +41,7 @@ energetic_matrix = {
 }
 plot_dict = {}
 for key, value in energetic_matrix.items():
-    plot_dict[value] = float(db.loc[(db.country_name=='Brazil') & (db.series_code==key), '2010_yr2010'])
+    plot_dict[value] = float(db.loc[(db.country_name=='Brazil') & (db.series_code==key), '2010_[yr2010]'])
 plt.bar(range(len(plot_dict)), list(plot_dict.values()), align='center')
 plt.xticks(range(len(plot_dict)), list(plot_dict.keys()))
 plt.title('Electric Energy Sources for Brazil')

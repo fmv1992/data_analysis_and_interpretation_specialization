@@ -6,17 +6,23 @@ ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 BASENAME := $(shell basename $(ROOT_DIR))
 
 PYTHON_FILES := $(shell  find . \
-        -path "*05_data*" \
+        -not -path "*bonus_assignment_01_fiji_earthquakes*" \
+        -not -path "*05_data*" \
         -not -path "*instructor*" \
         -not -iname "*instructor*" \
         -iname "*.py")
-        #  -not -path "*05_data*" \
+        #  -path "*05_data*" \
 # --- }}}
 
 # Project management. --- {{{
 all: run
 
 run: $(PYTHON_FILES)
+
+install:
+	# TODO: https://github.com/matplotlib/basemap
+	# Requires GEOS.
+	# TODO: pip install
 
 clean:
 	find . -iname '*.pyc' -print0 | xargs -0 rm -f
