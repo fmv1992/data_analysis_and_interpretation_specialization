@@ -16,9 +16,9 @@ import os
 
 # Path variables.
 BASE_PATH = os.path.dirname(
-        os.path.abspath(
-            os.path.dirname(
-                __file__)))
+    os.path.abspath(
+        os.path.dirname(
+            __file__)))
 DATA_PATH = os.path.join(BASE_PATH, 'data')
 ZIP_PATH = os.path.join(DATA_PATH, 'storm_event_data.zip')
 OUTPUT_PATH = os.path.join(BASE_PATH, 'output')

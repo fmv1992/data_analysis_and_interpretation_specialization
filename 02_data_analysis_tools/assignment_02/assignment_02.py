@@ -14,7 +14,7 @@ mars = pd.read_csv('02_mars_craters_study.csv', usecols=[0, 2, 3])
 # rename columns to lower case
 mars = mars.rename(columns=dict(zip(mars.columns,
                                     [x.lower() for x in mars.columns]),
-                   inplace=True))
+                                inplace=True))
 # takes a sample to plot and give a hunch on the unvenvess of the distribution
 mars_coords = mars[['latitude_circle_image',
                     'longitude_circle_image']].sample(n=2000)
@@ -49,7 +49,7 @@ print('Overall chi2 test:\nchi2: {0:.1f}\np: {1:0.3f}\n'.format(chi2, p))
 # iterates over all other latitudes to compare with the 'lower density' point
 col_of_interest = 1
 line_of_interest = 7
-p_bonferoni_adjusted = 0.05/9
+p_bonferoni_adjusted = 0.05 / 9
 print('Bonferoni Adjusted P: {0:.3f}\n\n'.format(p_bonferoni_adjusted))
 for enum_count, i in enumerate([0, 1, 2, 3, 4, 5, 6, 8, 9]):
     subset = observed_results_table.iloc[[i, line_of_interest], [0, 4]]
@@ -58,5 +58,3 @@ for enum_count, i in enumerate([0, 1, 2, 3, 4, 5, 6, 8, 9]):
           'chi2: {1:.1f}\np: {2:0.3f}\nIs Null Hyphothesis rejected?'
           ' {4}\n'.format(subset, chi2, p, enum_count,
                           p < p_bonferoni_adjusted))
-
-

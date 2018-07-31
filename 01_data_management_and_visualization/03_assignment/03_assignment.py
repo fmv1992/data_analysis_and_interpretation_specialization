@@ -17,8 +17,8 @@ db = pd.read_csv('03_assignment_nesarc_subset.csv',
                  index_col=0, low_memory=False)
 
 # renames some columns to meaningful names
-db.rename(columns={'numpers':'n_persons',
-                   's1q1g':'years_in_us'}, inplace=True)
+db.rename(columns={'numpers': 'n_persons',
+                   's1q1g': 'years_in_us'}, inplace=True)
 
 # converts years in us to int
 db.years_in_us = pd.to_numeric(db.years_in_us, errors='coerce')

@@ -23,7 +23,7 @@ db.loc[((db.grade_language_arts == True) &
        'does_great_human_sciences'] = True
 
 db.loc[((db.happy_at_school == 1) | (db.happy_at_school == 2)),
-        'is_happy_at_school'] = True
+       'is_happy_at_school'] = True
 
 cross_tab_exact = pd.crosstab(index=db.is_happy_at_school,
                               columns=[db.does_great_exact_sciences],
@@ -31,35 +31,38 @@ cross_tab_exact = pd.crosstab(index=db.is_happy_at_school,
 
 # displays the cross tabulation without moderation
 print('First cross tabulation: performance on exact sciences and happiness '
-'at school:')
+      'at school:')
 print(cross_tab_exact)
-print('Percent of happy students who do great in exact sciences and '
-      'are happy: {0:0.1%}\nPercent of happy students overall: '
-      '{1:0.1%}\n\n'.format(
-    cross_tab_exact.loc[True, True]/cross_tab_exact.loc['All', True],
-    cross_tab_exact.loc[True, 'All']/cross_tab_exact.loc['All', 'All'],)
-                           )
+print(
+    'Percent of happy students who do great in exact sciences and '
+    'are happy: {0:0.1%}\nPercent of happy students overall: '
+    '{1:0.1%}\n\n'.format(
+        cross_tab_exact.loc[True, True] / cross_tab_exact.loc
+        ['All', True],
+        cross_tab_exact.loc[True, 'All'] / cross_tab_exact.loc
+        ['All', 'All'],))
 
 # displays the cross tabulation with moderation
 cross_tab_full = pd.crosstab(index=db.is_happy_at_school,
-            columns=[db.does_great_exact_sciences,
-                     db.does_great_human_sciences],
-            margins=True)
+                             columns=[db.does_great_exact_sciences,
+                                      db.does_great_human_sciences],
+                             margins=True)
 print('Second cross tabulation: performance on exact sciences, human sciences'
       ' and happiness at school:')
 print(cross_tab_full)
-print('Percent of happy students who do great in exact sciences and human'
-      ' sciences and are happy: {0:0.1%}\n'
-      'Percent of happy students who do great in exact sciences but '
-      'NOT in human sciences and are happy: {2:0.1%}\n'
-      'Percent of happy students overall: {1:0.1%}\n\n'.format(
-    cross_tab_full.loc[True, (True, True)]/cross_tab_full.loc['All',
-                                                              (True, True)],
-    float(cross_tab_full.loc[True, 'All']/cross_tab_full.loc['All', 'All']),
-    cross_tab_full.loc[True, (True, False)]/cross_tab_full.loc['All',
-                                                               (True, False)]
-                                                               )
-     )
+print(
+    'Percent of happy students who do great in exact sciences and human'
+    ' sciences and are happy: {0:0.1%}\n'
+    'Percent of happy students who do great in exact sciences but '
+    'NOT in human sciences and are happy: {2:0.1%}\n'
+    'Percent of happy students overall: {1:0.1%}\n\n'.format(
+        cross_tab_full.loc[True, (True, True)] / cross_tab_full.loc
+        ['All', (True, True)],
+        float(
+            cross_tab_full.loc[True, 'All'] / cross_tab_full.loc
+            ['All', 'All']),
+        cross_tab_full.loc[True, (True, False)] / cross_tab_full.loc
+        ['All', (True, False)]))
 
 # removes sub totals from cross tabulations to do a chi squared analysis
 cross_tab_exact = cross_tab_exact.iloc[:-1, :-1]

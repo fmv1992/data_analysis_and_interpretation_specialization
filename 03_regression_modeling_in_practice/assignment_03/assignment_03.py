@@ -34,13 +34,13 @@ db.drop(['series_name', 'index'], axis=1, inplace=True)
 
 # renaming variables into meaningful names
 rename_vars_dict = {'AG.LND.AGRI.ZS': 'agr_land',
-'AG.LND.TRAC.ZS': 'agr_machinery',
-'AG.CON.FERT.ZS': 'fert_cons',
-'EA.PRD.AGRI.KD': 'agr_value_added',
-'AG.LND.PRCP.MM': 'precipitation_mm',
-'AG.LND.ARBL.ZS': 'arable_land',
-'AG.LND.AGRI.K2': 'agricultural_land'
-}
+                    'AG.LND.TRAC.ZS': 'agr_machinery',
+                    'AG.CON.FERT.ZS': 'fert_cons',
+                    'EA.PRD.AGRI.KD': 'agr_value_added',
+                    'AG.LND.PRCP.MM': 'precipitation_mm',
+                    'AG.LND.ARBL.ZS': 'arable_land',
+                    'AG.LND.AGRI.K2': 'agricultural_land'
+                    }
 db.series_code = db.series_code.map(rename_vars_dict)
 db['2010'] = pd.to_numeric(db['2010'], errors='coerce')
 
@@ -53,24 +53,32 @@ ct.dropna(axis=1, inplace=True)
 
 # centering all explanatory variables
 # Agricultural land (% of land area)
-print('Mean before centering for agr_land: {0:2.2f}'.format(ct.loc['agr_land'].mean()))
+print('Mean before centering for agr_land: {0:2.2f}'.format(
+    ct.loc['agr_land'].mean()))
 ct.loc['agr_land'] -= ct.loc['agr_land'].mean()
-print('Mean after centering for agr_land: {0:2.2e}'.format(ct.loc['agr_land'].mean()))
+print('Mean after centering for agr_land: {0:2.2e}'.format(
+    ct.loc['agr_land'].mean()))
 # Fertilizer consumption
-print('Mean before centering for fert_cons: {0:2.2f}'.format(ct.loc['fert_cons'].mean()))
+print('Mean before centering for fert_cons: {0:2.2f}'.format(
+    ct.loc['fert_cons'].mean()))
 ct.loc['fert_cons'] -= ct.loc['fert_cons'].mean()
-print('Mean after centering for fert_cons: {0:2.2e}'.format(ct.loc['fert_cons'].mean()))
+print('Mean after centering for fert_cons: {0:2.2e}'.format(
+    ct.loc['fert_cons'].mean()))
 #
-print('Mean before centering for arable_land: {0:2.2f}'.format(ct.loc['arable_land'].mean()))
+print('Mean before centering for arable_land: {0:2.2f}'.format(
+    ct.loc['arable_land'].mean()))
 ct.loc['arable_land'] -= ct.loc['arable_land'].mean()
-print('Mean after centering for arable_land: {0:2.2e}'.format(ct.loc['arable_land'].mean()))
+print('Mean after centering for arable_land: {0:2.2e}'.format(
+    ct.loc['arable_land'].mean()))
 
 # adjusting my response variable
 ct.loc['agr_value_added_per_worker_per_land'] = ct.loc['agr_value_added'] / ct.loc['agricultural_land']
 
 # regression
-reg1 = smf.ols('agr_value_added_per_worker_per_land ~ agr_land + fert_cons + arable_land', data=ct.T).fit()
-print('\n\n',reg1.summary())
+reg1 = smf.ols(
+    'agr_value_added_per_worker_per_land ~ agr_land + fert_cons + arable_land',
+    data=ct.T).fit()
+print('\n\n', reg1.summary())
 
 # qq plot
 plt.figure(1)
@@ -96,4 +104,7 @@ plt.close()
 
 # checking for confounding between arable land and agricultural land
 conf = scipy.stats.pearsonr(ct.loc['arable_land'], ct.loc['agricultural_land'])
-print('R value between arable land and agricultural land: {0:2.3f}\np-value: {1:2.3f}'.format(conf[0], conf[1]))
+print(
+    'R value between arable land and agricultural land: {0:2.3f}\np-value: {1:2.3f}'.format(
+        conf[0],
+        conf[1]))

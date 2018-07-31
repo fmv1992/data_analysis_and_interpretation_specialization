@@ -35,11 +35,11 @@ plt.show()
 plt.close(0)
 print('Univariate analysis: polity score:\nMean: \t{0:2.2f}\nMedian: '
       '\t{1:2.2f}\nMode: \t{2:2.2f}\nStandard Deviation: \t{3:2.2f}'.format(
-            gapminder.polityscore.dropna().mean(),
-            gapminder.polityscore.dropna().median(),
-            gapminder.polityscore.dropna().mode()[0],
-            gapminder.polityscore.dropna().std()
-))
+          gapminder.polityscore.dropna().mean(),
+          gapminder.polityscore.dropna().median(),
+          gapminder.polityscore.dropna().mode()[0],
+          gapminder.polityscore.dropna().std()
+      ))
 
 # bivariate analysis of co2emissions and incomeperperson
 plt.figure(1)

@@ -29,18 +29,21 @@ pandas_utilities.clean_dataframe(infra_db)
 
 print('\n\nList of variables in the \'Infrastructure\' subset:')
 for code, name in zip(infra_db['indicator_name'], infra_db['indicator_code']):
-    print(code, '[',name,']')
+    print(code, '[', name, ']')
 
 energetic_matrix = {
-'EG.ELC.COAL.ZS': 'coal',
-'EG.ELC.HYRO.ZS': 'hydroeletric',
-'EG.ELC.NGAS.ZS': 'natural_gas',
-'EG.ELC.NUCL.ZS': 'nuclear',
-'EG.ELC.PETR.ZS': 'oil_sources',
+    'EG.ELC.COAL.ZS': 'coal',
+    'EG.ELC.HYRO.ZS': 'hydroeletric',
+    'EG.ELC.NGAS.ZS': 'natural_gas',
+    'EG.ELC.NUCL.ZS': 'nuclear',
+    'EG.ELC.PETR.ZS': 'oil_sources',
 }
 plot_dict = {}
 for key, value in energetic_matrix.items():
-    plot_dict[value] = float(db.loc[(db.country_name=='Brazil') & (db.series_code==key), '2010_[yr2010]'])
+    plot_dict[value] = float(
+        db.loc
+        [(db.country_name == 'Brazil') & (db.series_code == key),
+         '2010_[yr2010]'])
 plt.bar(range(len(plot_dict)), list(plot_dict.values()), align='center')
 plt.xticks(range(len(plot_dict)), list(plot_dict.keys()))
 plt.title('Electric Energy Sources for Brazil')

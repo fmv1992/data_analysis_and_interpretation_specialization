@@ -28,6 +28,7 @@ import statsmodels.api as sm
 import statsmodels.formula.api as smf
 from mpl_toolkits.basemap import Basemap
 
+
 def main():
     # Data reading and managing.
     db = pd.read_csv('quakes.csv', index_col='index')
@@ -35,7 +36,6 @@ def main():
     db['depth'] *= 1e3
     # Lets create a low ('l'), medium ('m') and high ('h') categories for the
     # earthquakes considering the cutoff values of 4.75 and 5.25
-
 
     def mag_quali(x):
         u"""Maps a magnitude to a qualitative variable."""
@@ -47,7 +47,6 @@ def main():
             return 'h'
     serie = db['mag'].apply(mag_quali).astype('category')
     db.insert(4, 'mag_quali', serie)
-
 
     # Now it is time for some plotting: the lat and long
     # Lets improve it with a map of the world
@@ -93,7 +92,8 @@ def main():
     legend = ax1.legend(loc='best', frameon=True, fancybox=True,
                         shadow=True, markerscale=1.7)
 
-    # The frame is matplotlib.patches.Rectangle instance surrounding the legend.
+    # The frame is matplotlib.patches.Rectangle instance surrounding the
+    # legend.
     frame = legend.get_frame()
     frame.set_facecolor('0.5')
 
@@ -134,7 +134,6 @@ def main():
     # 'depth'.
     # Lets start with a linear regression:
 
-
     def linear_regression(v1, v2):
         plt.scatter(db[v1], db[v2])
         plt.title(
@@ -142,14 +141,13 @@ def main():
                 histogram_vars[v1].capitalize(),
                 histogram_vars[v2].capitalize()))
         print('Regression for {0} versus {1}:'.format(
-                histogram_vars[v1].capitalize(),
-                histogram_vars[v2].capitalize()))
+            histogram_vars[v1].capitalize(),
+            histogram_vars[v2].capitalize()))
         reg1 = smf.ols('db[v1] ~ db[v2]', data=db).fit()
-        print(reg1.summary(), '\n'*3)
+        print(reg1.summary(), '\n' * 3)
         plt.tight_layout()
         plt.savefig('scatter_{0}_{1}'.format(v1, v2), dpi=500)
         plt.close('all')
-
 
     for var1, var2 in [
         ['mag', 'depth'],

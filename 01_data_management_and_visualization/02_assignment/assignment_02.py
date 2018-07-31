@@ -23,12 +23,12 @@ for column in df.columns:
 
 # so i'm grouping by polityscore (2009 Democracy score (Polity))
 subset = df.loc[:, ['incomeperperson', 'armedforcesrate', 'internetuserate',
-               'polityscore']]
+                    'polityscore']]
 g = subset.groupby('polityscore')
 
 # frequency distribution 01: armed forces rate
 armed_forces_per_country = g.armedforcesrate.mean()
-print('mean armed forces rate per country',armed_forces_per_country)
+print('mean armed forces rate per country', armed_forces_per_country)
 armed_forces_per_country.plot.bar()
 plt.ylabel('Simple average of armed forces rate')
 plt.tight_layout()
@@ -37,18 +37,19 @@ plt.show()
 plt.close()
 
 # frequency distribution 02: number of countries in each group
-countries_per_polity_score = g.size()/g.size().sum()
-print('number of countries per polity score:\n',countries_per_polity_score,
-'better shown graphically:')
+countries_per_polity_score = g.size() / g.size().sum()
+print('number of countries per polity score:\n', countries_per_polity_score,
+      'better shown graphically:')
 print('Proportion of countries with polityscores >= 5: {0:1.1%}'.format(
-g.size().loc[5:10].sum()/g.size().sum()))
+    g.size().loc[5:10].sum() / g.size().sum()))
 countries_per_polity_score.plot.bar()
 plt.savefig('countries_per_polity_score.png', dpi=300)
 plt.show()
 plt.close()
 
 # frequency distribution 03: internet rate in the extremes
-internet_use_low = g['internetuserate'].get_group(-10).sum() / g.size().loc[-10]
+internet_use_low = g['internetuserate'].get_group(
+    -10).sum() / g.size().loc[-10]
 internet_use_high = g['internetuserate'].get_group(10).sum() / g.size().loc[10]
 print('average internet use rate of high polity score countries:',
       internet_use_high)

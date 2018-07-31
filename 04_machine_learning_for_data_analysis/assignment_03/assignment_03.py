@@ -32,7 +32,7 @@ from assignment_03_data_preparation import return_proc_and_transf_data_set
 def print_separator():
     u"""Prints a separator from between sections of text."""
     quantity = 50
-    print(quantity*'-')
+    print(quantity * '-')
     return None
 
 
@@ -43,7 +43,9 @@ def main():
     # Mass is already included as mass in SI units.
     df.drop(['carat'], inplace=True, axis=1)
     # Those are dummy variables not needed in our data set anymore.
-    df.drop(['price_expensive', 'price_expensive_binary'], inplace=True, axis=1)
+    df.drop(
+        ['price_expensive', 'price_expensive_binary'],
+        inplace=True, axis=1)
 
     # A bit of error checking.
     if df.isnull().sum().sum() != 0:
@@ -78,21 +80,21 @@ def main():
 
     # A few words about the LassoLarsCV:
 
-        # LASSO: least absolute shrinkage and selection operator (discussed in
-        # the course material.
+    # LASSO: least absolute shrinkage and selection operator (discussed in
+    # the course material.
 
-        # LARS: least angle regression: algorithm for linear regression models
-        # to high-dimensional data (aka 'a lot of categories').
-        # Compared to simple LASSO this model uses the LARS algorithm instead of
-        # the 'vanilla' 'coordinate_descent' of simple LASSO.
+    # LARS: least angle regression: algorithm for linear regression models
+    # to high-dimensional data (aka 'a lot of categories').
+    # Compared to simple LASSO this model uses the LARS algorithm instead of
+    # the 'vanilla' 'coordinate_descent' of simple LASSO.
 
-        # CV: cross validation: this sets the alpha parameter (refered to as
-        # lambda parameter in the course video) by cross validation.
-        # In the simple LARS this alpha (the penalty factor) is an input of the
-        # function.
-        # 'The alpha parameter controls the degree of sparsity of the
-        # coefficients estimated.
-        # If alpha = zero then the method is the same as OLS.
+    # CV: cross validation: this sets the alpha parameter (refered to as
+    # lambda parameter in the course video) by cross validation.
+    # In the simple LARS this alpha (the penalty factor) is an input of the
+    # function.
+    # 'The alpha parameter controls the degree of sparsity of the
+    # coefficients estimated.
+    # If alpha = zero then the method is the same as OLS.
 
     model = LassoLarsCV(
         cv=10,  # Number of folds.
@@ -122,7 +124,7 @@ def main():
     plt.xlabel('-log(alpha)')
     plt.title('Regression Coefficients Progression for Lasso Paths')
     plt.legend(predictors,
-        loc='best',)
+               loc='best',)
     plt.tight_layout()
     plt.savefig('result00.png', dpi=600)
     plt.close()
@@ -139,7 +141,6 @@ def main():
     # pprint(model.coef_ - model.coef_path_.T)
     # print_separator()
 
-
     # Plot mean square error for each fold.
     # To avoid getting dividebyzero warning map zero to an extremely low value.
     model.cv_alphas_ = list(
@@ -149,7 +150,7 @@ def main():
     plt.figure()
     plt.plot(model_log_alphas, model.cv_mse_path_, ':')
     plt.plot(model_log_alphas, model.cv_mse_path_.mean(axis=-1), 'k',
-            label='Average across the folds', linewidth=2)
+             label='Average across the folds', linewidth=2)
     plt.axvline(-np.log10(model.alpha_), linestyle='--', color='k',
                 label='alpha CV')
     plt.xlabel('-log(alpha)')
@@ -165,12 +166,11 @@ def main():
                                      model.predict(input_training))
     test_error = mean_squared_error(output_test,
                                     model.predict(input_test))
-    print ('Training data MSE')
+    print('Training data MSE')
     print(train_error)
-    print ('Test data MSE')
+    print('Test data MSE')
     print(test_error)
     print_separator()
-
 
     # R-square from training and test data.
     rsquared_train = model.score(
@@ -179,9 +179,9 @@ def main():
     rsquared_test = model.score(
         input_test,
         output_test)
-    print ('Training data R-square')
+    print('Training data R-square')
     print(rsquared_train)
-    print ('Test data R-square')
+    print('Test data R-square')
     print(rsquared_test)
     print_separator()
 
