@@ -33,7 +33,7 @@ import assignment_04_data_preparation
 def print_separator():
     u"""Print a separator from between sections of text."""
     quantity = 50
-    print(quantity*'-')
+    print(quantity * '-')
     return None
 
 
@@ -119,7 +119,7 @@ def main():
     # Plot a circle showing the point.
     N_CLUSTERS = 3
     selecting_circle = plt.Circle(
-        (N_CLUSTERS, mean_distances[N_CLUSTERS-1]),
+        (N_CLUSTERS, mean_distances[N_CLUSTERS - 1]),
         0.1,
         color='r',
         fill=False,

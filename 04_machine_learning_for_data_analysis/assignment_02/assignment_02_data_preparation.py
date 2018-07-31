@@ -88,12 +88,12 @@ def return_processed_diamonds_data_set():
         'colour': 'diamond colour, from J (worst) to D (best)',
         'color': 'diamond colour, from J (worst) to D (best)',
         'clarity': 'a measurement of how clear the diamond is (I1 (worst), '
-            'SI1, SI2, VS1, VS2, VVS1, VVS2, IF (best))', # noqa
+            'SI1, SI2, VS1, VS2, VVS1, VVS2, IF (best))',  # noqa
         'x': 'length in mm (0–10.74)',
         'y': 'width in mm (0–58.9)',
         'z': 'depth in mm (0–31.8)',
         'depth': 'total depth percentage = z / mean(x, y) = 2 * z / (x + y) '
-            '(43–79)', # noqa
+            '(43–79)',  # noqa
         'table': 'width of top of diamond relative to widest point (43–95)',
     }
     df.variable_description = description

@@ -58,9 +58,9 @@ def main():
 
     def depth_quali(x):
         u"""Map a depth to a categorical variable."""
-        if x <= 1*700e3/3:
+        if x <= 1 * 700e3 / 3:
             return 'l'
-        elif x <= 2*700e3/3:
+        elif x <= 2 * 700e3 / 3:
             return 'm'
         else:
             return 'h'
@@ -187,7 +187,7 @@ def main():
             histogram_vars[v1].capitalize(),
             histogram_vars[v2].capitalize()))
         reg1 = smf.ols('db[v1] ~ db[v2]', data=db).fit()
-        print(reg1.summary(), '\n'*3)
+        print(reg1.summary(), '\n' * 3)
         plt.tight_layout()
         plt.savefig(
             os.path.join('images', 'scatter_{0}_{1}'.format(v1, v2)),

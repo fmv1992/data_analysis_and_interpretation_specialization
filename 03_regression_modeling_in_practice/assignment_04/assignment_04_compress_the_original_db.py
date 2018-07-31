@@ -17,4 +17,6 @@ db = pd.read_csv('wdi_data_all_time_utf8_encoded.csv', index_col=0)
 # 2e8ad6da7f8a65633f0debdfc532b4923fb0514c  wdi_data_all_time_utf8_encoded.csv
 
 
-db.to_csv('wdi_data_all_time_utf8_encoded_and_compressed.csv', compression='gzip')
+db.to_csv(
+    'wdi_data_all_time_utf8_encoded_and_compressed.csv',
+    compression='gzip')

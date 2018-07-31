@@ -45,7 +45,7 @@ def report_and_understand_nans(dataframe):
                                             dataframe.shape[1])
     print('Total nans: {0:1.1%}'.format(total_nans))
     # Nans distribution per columns.
-    per_col_nans = bin_null_df.sum()/bin_null_df.sum().sum()
+    per_col_nans = bin_null_df.sum() / bin_null_df.sum().sum()
     per_col_nans = per_col_nans[per_col_nans != 0].sort_values()
     print('Concentrated in columns as such: \n{0}'.format(per_col_nans))
     # Plot hexbin.
@@ -138,6 +138,7 @@ def manage_dataset(dataframe):
 
     return dataframe
 
+
 def do_exploratory_analysis(dataframe):
     """Execute exploratory analysis on the dataframe."""
     # Drop duplicate column for this analysis.
@@ -153,7 +154,7 @@ def do_exploratory_analysis(dataframe):
         axis=1,
     )
     expanded_df.columns = (columns.tolist()
-                           + ['begin_date_' + x for  x in
+                           + ['begin_date_' + x for x in
                               ('hour', 'day', 'month', 'year')])
 
     # Histogram each column.
@@ -164,8 +165,8 @@ def do_exploratory_analysis(dataframe):
     filled_df = pd.concat(
         map(lambda x: x.reset_index(),
             (expanded_df[numeric_cols].fillna(-1),
-            expanded_df[non_numeric_cols]  # Already filled with 'nan'.
-        )),
+             expanded_df[non_numeric_cols]  # Already filled with 'nan'.
+             )),
         axis=1).drop('index', axis=1)
     assert filled_df.shape == expanded_df.shape
     mu.histogram_of_dataframe(filled_df,

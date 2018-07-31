@@ -8,6 +8,7 @@ import string
 
 universe_of_digits = string.ascii_lowercase + string.digits + '_'
 
+
 def clean_string(s):
     """Takes s as str input and makes it a standard lowercase with '_' as
     separator."""
