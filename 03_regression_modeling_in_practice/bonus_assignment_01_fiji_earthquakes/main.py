@@ -31,13 +31,16 @@ import scipy
 import numpy as np
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
+
 from mpl_toolkits.basemap import Basemap
+
+from project_library import DATASETS_PATH
 
 
 def main():
     u"""Main function."""
     # Data reading and managing.
-    db = pd.read_csv('quakes.csv')
+    db = pd.read_csv(os.path.join(DATASETS_PATH, 'quakes.csv'))
     db.drop('index', axis=1, inplace=True)
     print('original head:')
     print(db.head())
@@ -178,6 +181,9 @@ def main():
 
     def linear_regression(v1, v2):
         u"""Create a linear regression."""
+
+        import os
+
         plt.scatter(db[v1], db[v2])
         plt.title(
             '{0} versus {1} scatter plot.'.format(

@@ -3,14 +3,19 @@ Created on Fri Apr  1 08:45:34 2016
 
 Author: Felipe M. Vieira
 """
+
+import os
+
 import pandas as pd
 import numpy as np
 import scipy.stats
 import seaborn
 import matplotlib.pyplot as plt
 
+from project_library import DATASETS_PATH
+
 # loads the data base
-mars = pd.read_csv('02_mars_craters_study.csv', usecols=[0, 2, 3])
+mars = pd.read_csv(os.path.join(DATASETS_PATH, '02_mars_craters_study.csv'), usecols=[0, 2, 3])
 # rename columns to lower case
 mars = mars.rename(columns=dict(zip(mars.columns,
                                     [x.lower() for x in mars.columns]),

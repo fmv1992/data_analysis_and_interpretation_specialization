@@ -18,10 +18,15 @@ EA.PRD.AGRI.KD	Agriculture value added per worker (constant 2005 US$)	Agricultur
 Auxiliar variables:
 AG.LND.AGRI.K2	Agricultural land (sq. km)	Agricultural land refers to the share of land area that is arable, under permanent crops, and under permanent pastures. Arable land includes land defined by the FAO as land under temporary crops (double-cropped areas are counted once), temporary meadows for mowing or for pasture, land under market or kitchen gardens, and land temporarily fallow. Land abandoned as a result of shifting cultivation is excluded. Land under permanent crops is land cultivated with crops that occupy the land for long periods and need not be replanted after each harvest, such as cocoa, coffee, and rubber. This category includes land under flowering shrubs, fruit trees, nut trees, and vines, but excludes land under trees grown for wood or timber. Permanent pasture is land used for five or more years for forage, including natural and cultivated crops.	Food and Agriculture Organization, electronic files and web site.
 """
+
+import os
+
 import pandas as pd  # version '0.17.0'
 import pandas_utilities  # for cosmetic adjustments and data standardization
 
-db = pd.read_csv('world_bank_all_indicators_2010.csv')
+from project_library import DATASETS_PATH
+
+db = pd.read_csv(os.path.join(DATASETS_PATH, 'world_bank_all_indicators_2010.csv'))
 pandas_utilities.clean_dataframe(db)
 db.rename(columns={'2010_yr2010': '2010'}, inplace=True)
 
