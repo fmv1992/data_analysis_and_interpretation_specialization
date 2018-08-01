@@ -13,3 +13,5 @@ Research question:
 ## Data treatment
 
 ## Statistical analyses
+
+[comment]: # ( vim: set filetype=markdown fileformat=unix nowrap spell spelllang=en_us: )
