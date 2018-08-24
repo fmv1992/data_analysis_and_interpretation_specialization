@@ -169,15 +169,24 @@ def do_exploratory_analysis(dataframe):
              )),
         axis=1).drop('index', axis=1)
     assert filled_df.shape == expanded_df.shape
-    mu.histogram_of_dataframe(filled_df,
-                              output_path='../output/exploratory_analyses',
-                              kde=False,
-                              )
+    assert filled_df.isnull().sum().sum() == 0
+    # Remove categories with too many levels.
+    for cat_col in filled_df.filter(
+            (filled_df.dtypes == 'category'),
+            axis=1).columns:
+        if len(np.unique(filled_df[cat_col])) > 200:
+            filled_df = filled_df.drop(cat_col, axis=1)
+    mu.histogram_of_dataframe(
+        filled_df,
+        output_path=os.path.join(control.OUTPUT_PATH),
+        kde=False)
     return None
 
 
 def main():
     """Main function."""
+    # Run checks.
+    control.main()
     # Load and preprocess the dataframe.
     csv_file_obj = load_data(control.ZIP_PATH)
     treated_csv_file = pre_treat_data(csv_file_obj)
@@ -192,8 +201,10 @@ def main():
     df = pu.object_columns_to_category(df, inplace=False)
 
     # Parse datetimes. (http://strftime.org/)
-    parse_date_columns(df, columns=['begin_date_time', 'end_date_time'],
-                       format='%d%b%y:%H:%M:%S')
+    parse_date_columns(
+        df,
+        columns=['begin_date_time', 'end_date_time'],
+        format='%d%b%y:%H:%M:%S')
 
     # Drop remaning object columns.
     obj_cols = [x for x in df if str(df[x].dtype) == 'object']
@@ -210,4 +221,6 @@ def main():
 
 
 if __name__ == '__main__':
+    pd.options.display.max_columns = 100
+    pd.options.display.max_rows = 100
     main()

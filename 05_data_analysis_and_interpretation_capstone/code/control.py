@@ -39,7 +39,7 @@ FEET_TO_M = .3048
 MILES_TO_M = 1609
 
 
-if __name__ == '__main__':
+def main():
     ALL_PATHS = tuple(eval(x) for x in dir() if x.endswith('_PATH'))
     ALL_PATHS = tuple(os.path.abspath(x) for x in ALL_PATHS)
     PATHS_EXISTENCE = dict(zip(
@@ -50,3 +50,7 @@ if __name__ == '__main__':
             pass
         else:
             raise OSError('Path \'{0}\' does not exist.'.format(k))
+
+
+if __name__ == '__main__':
+    main()
